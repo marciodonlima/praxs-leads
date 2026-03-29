@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praxs Leads — Prospecção Food Service</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f0c;
+    --surface: #161812;
+    --surface2: #1e2019;
+    --border: #2e3028;
+    --border2: #3d4035;
+    --gold: #f5b800;
+    --gold-dim: #a67d00;
+    --gold-glow: rgba(245,184,0,0.10);
+    --green: #4a7c59;
+    --green-bright: #6aaa7d;
+    --text: #e8e6de;
+    --text-dim: #8a887e;
+    --text-muted: #555550;
+    --red: #a85d4a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  header {
+    padding: 28px 40px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+  }
+
+  .praxs-word {
+    font-family: 'Sora', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .praxs-word .a-letter { color: var(--gold); }
+
+  .praxs-divider { width: 1px; height: 20px; background: var(--border2); margin: 0 14px; }
+
+  .header-text h1 {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .header-text p {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 3px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .status-dot {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green-bright);
+    box-shadow: 0 0 8px var(--green-bright);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+
+  .app { flex: 1; display: flex; min-height: 0; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 270px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+  }
+
+  .sidebar-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sidebar-title {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .sidebar-count {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--gold-dim);
+    background: var(--gold-glow);
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+
+  .funil-stages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .stage-group {}
+
+  .stage-label {
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    padding: 0 4px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .prospect-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 5px;
+    cursor: default;
+    transition: border-color .15s;
+  }
+
+  .prospect-card:hover { border-color: var(--border2); }
+
+  .prospect-name { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .prospect-meta { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; line-height: 1.4; }
+
+  .prospect-actions { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+
+  .stage-btn {
+    font-size: 9px;
+    padding: 3px 7px;
+    border: 1px solid var(--border2);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .04em;
+    transition: all .15s;
+  }
+
+  .stage-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .stage-btn.del:hover { border-color: var(--red); color: #d47a66; }
+
+  .sidebar-empty {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .sidebar-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-clear {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 0;
+    transition: color .15s;
+  }
+
+  .btn-clear:hover { color: #d47a66; }
+
+  /* MAIN */
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 36px 40px 100px;
+  }
+
+  #intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 48px 0 32px;
+    gap: 20px;
+    animation: fadeIn .5s ease;
+  }
+
+  #intro h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--text);
+    max-width: 460px;
+  }
+
+  #intro h2 em { color: var(--gold); font-style: italic; }
+
+  #intro p {
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 400px;
+  }
+
+  .return-banner {
+    background: var(--gold-glow);
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: left;
+    width: 100%;
+    max-width: 460px;
+    line-height: 1.65;
+    display: none;
+  }
+
+  .return-banner strong { color: var(--gold); font-weight: 500; }
+
+  #form-section {
+    display: none;
+    flex-direction: column;
+    gap: 22px;
+    animation: fadeIn .4s ease;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+
+  .form-group label {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .form-group label span { color: var(--gold-dim); margin-left: 4px; }
+
+  input[type="text"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 14px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color .2s;
+    width: 100%;
+  }
+
+  input:focus { border-color: var(--gold-dim); }
+
+  .chip-group { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .chip {
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all .15s;
+    user-select: none;
+  }
+
+  .chip:hover { border-color: var(--border2); color: var(--text); }
+  .chip.selected { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
+
+  #chat-section {
+    display: none;
+    flex-direction: column;
+    animation: fadeIn .4s ease;
+  }
+
+  .chat-context {
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+
+  .ctx-item { display: flex; flex-direction: column; gap: 3px; }
+  .ctx-label { color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; font-size: 9px; }
+  .ctx-value { color: var(--gold); }
+
+  .messages { display: flex; flex-direction: column; gap: 24px; }
+
+  .msg { display: flex; flex-direction: column; gap: 7px; animation: fadeIn .4s ease; }
+
+  .msg-label {
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+  }
+
+  .msg.agent .msg-label { color: var(--gold-dim); }
+  .msg.user .msg-label { color: var(--green); }
+
+  .msg-body { line-height: 1.75; color: var(--text-dim); font-size: 14px; }
+  .msg.agent .msg-body { color: var(--text); }
+
+  .msg-body h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--gold);
+    margin: 18px 0 8px;
+  }
+
+  .msg-body h3:first-child { margin-top: 0; }
+  .msg-body strong { color: var(--text); font-weight: 500; }
+
+  .msg-body ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; margin: 8px 0; }
+  .msg-body li { padding-left: 16px; position: relative; color: var(--text-dim); }
+  .msg-body li::before { content: '—'; position: absolute; left: 0; color: var(--gold-dim); }
+
+  /* Card de prospect inline */
+  .prospect-inline {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin: 6px 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .prospect-inline-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .prospect-inline-meta { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+
+  .btn-add-prospect {
+    font-size: 10px;
+    padding: 5px 12px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 2px;
+    background: var(--gold-glow);
+    color: var(--gold);
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .05em;
+    white-space: nowrap;
+    transition: all .15s;
+    flex-shrink: 0;
+  }
+
+  .btn-add-prospect:hover { background: rgba(245,184,0,.2); }
+  .btn-add-prospect.added { border-color: var(--green); color: var(--green-bright); background: rgba(74,124,89,.1); cursor: default; }
+
+  .thinking {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    padding: 6px 0;
+  }
+
+  .thinking-dots span {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    animation: blink 1.2s ease-in-out infinite;
+    margin: 0 2px;
+  }
+
+  .thinking-dots span:nth-child(2) { animation-delay: .2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: .4s; }
+
+  #followup-area {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    animation: fadeIn .4s ease;
+  }
+
+  #followup-area label {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .followup-row { display: flex; gap: 10px; }
+  .followup-row input { flex: 1; }
+
+  .suggestions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2px; }
+
+  .suggestion-chip {
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 11px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .15s;
+  }
+
+  .suggestion-chip:hover { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
+
+  .btn {
+    padding: 12px 22px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+
+  .btn-primary { background: var(--gold); color: #0e0f0c; font-weight: 500; }
+  .btn-primary:hover { background: #ffc61a; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text-dim); }
+  .btn-ghost:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+  .error-msg {
+    padding: 12px 16px;
+    background: rgba(168,93,74,.1);
+    border: 1px solid var(--red);
+    border-radius: 2px;
+    color: #d47a66;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="praxs-word">pr<span class="a-letter">a</span>xs</div>
+  <div class="praxs-divider"></div>
+  <div class="header-text">
+    <h1>Leads</h1>
+    <p>Prospecção · Food Service</p>
+  </div>
+  <div class="status-dot">
+    <div class="dot"></div>
+    operacional
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">Meu funil</span>
+      <span class="sidebar-count" id="total-count">0 prospects</span>
+    </div>
+    <div class="funil-stages" id="funil-stages">
+      <div class="sidebar-empty" id="funil-empty">
+        Nenhum prospect ainda.<br><br>Faça uma busca e adicione oportunidades ao seu funil com um clique.
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <button class="btn-clear" onclick="clearFunil()">Limpar funil</button>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <main>
+
+    <div id="intro">
+      <h2>Descubra oportunidades reais de <em>food service</em> na sua cidade</h2>
+      <div class="return-banner" id="return-banner"></div>
+      <p>Informe onde você atua e o segmento desejado. O agente mapeia oportunidades com busca real na web — e lembra o que você já prospectou para não repetir.</p>
+      <button class="btn btn-primary" style="padding:14px 34px" onclick="showForm()">Iniciar busca →</button>
+    </div>
+
+    <div id="form-section">
+      <div class="form-group">
+        <label>Cidade <span>*</span></label>
+        <input type="text" id="cidade" placeholder="Ex: Rio de Janeiro, Belo Horizonte, Curitiba...">
+      </div>
+      <div class="form-group">
+        <label>Segmento <span>*</span></label>
+        <div class="chip-group" id="segmentos">
+          <div class="chip" data-val="Restaurantes e bares">Restaurantes e bares</div>
+          <div class="chip" data-val="Dark kitchens">Dark kitchens</div>
+          <div class="chip" data-val="Padarias e confeitarias">Padarias e confeitarias</div>
+          <div class="chip" data-val="Redes de fast food">Redes de fast food</div>
+          <div class="chip" data-val="Hotéis e resorts">Hotéis e resorts</div>
+          <div class="chip" data-val="Cozinhas corporativas">Cozinhas corporativas</div>
+          <div class="chip" data-val="Franquias alimentícias">Franquias alimentícias</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Perfil do cliente ideal</label>
+        <input type="text" id="perfil" placeholder="Ex: negócios em expansão, novos empreendedores...">
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button class="btn btn-ghost" onclick="showIntro()">← Voltar</button>
+        <button class="btn btn-primary" onclick="gerarPlano()">Buscar oportunidades →</button>
+      </div>
+    </div>
+
+    <div id="chat-section">
+      <div class="chat-context" id="chat-context"></div>
+      <div class="messages" id="messages"></div>
+      <div id="followup-area">
+        <label>Pergunta de acompanhamento</label>
+        <div class="suggestions" id="suggestions"></div>
+        <div class="followup-row">
+          <input type="text" id="followup-input" placeholder="Ex: Como abordar o primeiro prospect da lista?" onkeydown="if(event.key==='Enter') enviarFollowup()">
+          <button class="btn btn-primary" onclick="enviarFollowup()">Enviar</button>
+        </div>
+        <div style="margin-top:14px">
+          <button class="btn btn-ghost" onclick="novaBusca()" style="font-size:10px;padding:9px 16px">+ Nova busca</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const API_URL = '/.netlify/functions/api';
+
+//  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
+let conversationHistory = [];
+let userContext = {};
+let funil = {};
+let adicionadosNestaSessao = [];
+
+const STAGES = [
+  { key: 'novo',      label: 'Para contatar',    color: '#f5b800' },
+  { key: 'contatado', label: 'Contatado',         color: '#6aaa7d' },
+  { key: 'reuniao',   label: 'Reunião marcada',   color: '#5b9bd5' },
+  { key: 'proposta',  label: 'Proposta enviada',  color: '#9b7fdb' },
+];
+
+// ---- STORAGE ----
+function saveFunil() {
+  try { localStorage.setItem('praxs_leads_funil', JSON.stringify(funil)); } catch(e) {}
+}
+
+function loadFunil() {
+  try {
+    const raw = localStorage.getItem('praxs_leads_funil');
+    if (raw) funil = JSON.parse(raw);
+  } catch(e) { funil = {}; }
+  renderFunil();
+}
+
+// ---- FUNIL ----
+function addProspect(name, meta) {
+  const id = 'p_' + Date.now();
+  funil[id] = { name, meta, stage: 'novo', addedAt: new Date().toISOString() };
+  saveFunil();
+  renderFunil();
+}
+
+function moveStage(id, stageKey) {
+  if (funil[id]) { funil[id].stage = stageKey; saveFunil(); renderFunil(); }
+}
+
+function removeProspect(id) {
+  delete funil[id];
+  saveFunil();
+  renderFunil();
+}
+
+function clearFunil() {
+  if (!confirm('Limpar todos os prospects do funil?')) return;
+  funil = {};
+  saveFunil();
+  renderFunil();
+}
+
+function renderFunil() {
+  const container = document.getElementById('funil-stages');
+  const emptyEl = document.getElementById('funil-empty');
+  const countEl = document.getElementById('total-count');
+  const total = Object.keys(funil).length;
+
+  countEl.textContent = total + (total === 1 ? ' prospect' : ' prospects');
+
+  if (total === 0) {
+    container.innerHTML = '';
+    container.appendChild(emptyEl);
+    return;
+  }
+
+  container.innerHTML = '';
+
+  STAGES.forEach(stage => {
+    const items = Object.entries(funil).filter(([,v]) => v.stage === stage.key);
+    if (!items.length) return;
+
+    const group = document.createElement('div');
+    group.className = 'stage-group';
+    group.innerHTML = `<div class="stage-label"><span>${stage.label}</span><span style="background:${stage.color};width:6px;height:6px;border-radius:50%;display:inline-block"></span></div>`;
+
+    items.forEach(([id, p]) => {
+      const card = document.createElement('div');
+      card.className = 'prospect-card';
+
+      const otherStages = STAGES.filter(s => s.key !== stage.key);
+      const btns = otherStages.map(s =>
+        `<button class="stage-btn" onclick="moveStage('${id}','${s.key}')">${s.label.split(' ')[0]}</button>`
+      ).join('') + `<button class="stage-btn del" onclick="removeProspect('${id}')">Remover</button>`;
+
+      card.innerHTML = `
+        <div class="prospect-name">${escapeHtml(p.name)}</div>
+        <div class="prospect-meta">${escapeHtml(p.meta)}</div>
+        <div class="prospect-actions">${btns}</div>`;
+      group.appendChild(card);
+    });
+
+    container.appendChild(group);
+  });
+
+  checkReturn();
+}
+
+// ---- NAVEGAÇÃO ----
+function showIntro() {
+  document.getElementById('intro').style.display = 'flex';
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('chat-section').style.display = 'none';
+  checkReturn();
+}
+
+function showForm() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('form-section').style.display = 'flex';
+  document.getElementById('chat-section').style.display = 'none';
+}
+
+function novaBusca() {
+  conversationHistory = [];
+  adicionadosNestaSessao = [];
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('followup-area').style.display = 'none';
+  showForm();
+}
+
+function checkReturn() {
+  const total = Object.keys(funil).length;
+  const banner = document.getElementById('return-banner');
+  if (total === 0) { banner.style.display = 'none'; return; }
+
+  const novos = Object.values(funil).filter(p => p.stage === 'novo').length;
+  const contatados = Object.values(funil).filter(p => p.stage === 'contatado').length;
+
+  let msg = `<strong>Bem-vindo de volta.</strong> `;
+  if (novos > 0) msg += `Você tem <strong>${novos} prospect${novos>1?'s':''}</strong> aguardando primeiro contato. `;
+  if (contatados > 0) msg += `<strong>${contatados}</strong> já contatado${contatados>1?'s':''} — hora de follow-up?`;
+  msg += ` Faça uma nova busca para descobrir mais oportunidades.`;
+
+  banner.innerHTML = msg;
+  banner.style.display = 'block';
+}
+
+// ---- CHIPS ----
+document.querySelectorAll('.chip-group .chip').forEach(chip => {
+  chip.addEventListener('click', () => chip.classList.toggle('selected'));
+});
+
+function getSelected(groupId) {
+  return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val);
+}
+
+// ---- BUSCA ----
+async function gerarPlano() {
+  const cidade = document.getElementById('cidade').value.trim();
+  const segmentos = getSelected('segmentos');
+  const perfil = document.getElementById('perfil').value.trim();
+
+  if (!cidade) { alert('Informe a cidade onde você atua.'); return; }
+  if (!segmentos.length) { alert('Selecione ao menos um segmento.'); return; }
+
+  const nomesFunil = Object.values(funil).map(p => p.name);
+  const funilCtx = nomesFunil.length
+    ? `\n\nIMPORTANTE: O arquiteto já tem estes prospects no funil (NÃO repita, busque NOVOS): ${nomesFunil.join(', ')}.`
+    : '';
+
+  userContext = { cidade, segmentos, perfil };
+
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('chat-section').style.display = 'flex';
+  adicionadosNestaSessao = [];
+
+  const total = Object.keys(funil).length;
+  document.getElementById('chat-context').innerHTML = `
+    <div class="ctx-item"><div class="ctx-label">Cidade</div><div class="ctx-value">${cidade}</div></div>
+    <div class="ctx-item"><div class="ctx-label">Segmento</div><div class="ctx-value">${segmentos.join(', ')}</div></div>
+    ${perfil ? `<div class="ctx-item"><div class="ctx-label">Perfil</div><div class="ctx-value">${perfil}</div></div>` : ''}
+    ${total ? `<div class="ctx-item"><div class="ctx-label">No funil</div><div class="ctx-value">${total} prospects</div></div>` : ''}
+  `;
+
+  const prompt = `Sou arquiteto e quero prospectar clientes no mercado de food service.
+
+Cidade: ${cidade}
+Segmentos: ${segmentos.join(', ')}
+Perfil do cliente: ${perfil || 'não definido'}${funilCtx}
+
+Faça buscas reais na web e me retorne:
+
+### Oportunidades encontradas
+Liste 4 a 6 empresas REAIS. Para cada uma use EXATAMENTE este formato numa linha separada:
+**[PROSPECT] Nome da empresa | Bairro/Cidade | Motivo da oportunidade | Contato ou link**
+
+### Estratégia de abordagem
+Como me posicionar para esse segmento nessa cidade.
+
+### Script de primeiro contato
+Mensagem pronta para WhatsApp — natural, sem parecer robô.
+
+### Próxima ação
+Uma única ação concreta para fazer hoje.`;
+
+  conversationHistory = [{ role: 'user', content: prompt }];
+  addUserMsg(`Buscar oportunidades: ${segmentos.join(', ')} em ${cidade}`);
+  await callAPI();
+}
+
+async function enviarFollowup() {
+  const input = document.getElementById('followup-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  conversationHistory.push({ role: 'user', content: msg });
+  addUserMsg(msg);
+  await callAPI();
+}
+
+// ---- MENSAGENS ----
+function addUserMsg(text) {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = `<div class="msg-label">Você</div><div class="msg-body">${escapeHtml(text)}</div>`;
+  msgs.appendChild(el);
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function showThinking() {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.id = 'thinking';
+  el.className = 'thinking';
+  el.innerHTML = `<div class="thinking-dots"><span></span><span></span><span></span></div><span id="thinking-text">Buscando oportunidades reais...</span>`;
+  msgs.appendChild(el);
+  el.scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateThinking(msg) {
+  const el = document.getElementById('thinking-text');
+  if (el) el.textContent = msg;
+}
+
+function removeThinking() {
+  const el = document.getElementById('thinking');
+  if (el) el.remove();
+}
+
+function addAgentMsg(rawText) {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg agent';
+  el.innerHTML = `<div class="msg-label">Praxs Leads</div><div class="msg-body">${formatMarkdown(rawText)}</div>`;
+  msgs.appendChild(el);
+  injectProspectCards(el, rawText);
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function injectProspectCards(container, rawText) {
+  const lines = rawText.split('\n');
+  lines.forEach(line => {
+    if (!line.includes('[PROSPECT]')) return;
+    const clean = line.replace(/\*+/g,'').replace('[PROSPECT]','').trim();
+    const parts = clean.split('|').map(s => s.trim());
+    if (parts.length < 2) return;
+
+    const name = parts[0];
+    const meta = parts.slice(1, 3).join(' · ');
+    if (adicionadosNestaSessao.includes(name)) return;
+
+    // Encontra o elemento no DOM que contém esse nome
+    const allStrongs = container.querySelectorAll('strong, li');
+    allStrongs.forEach(node => {
+      if (!node.textContent.includes(name)) return;
+      if (node.querySelector('.prospect-inline')) return;
+
+      const card = document.createElement('div');
+      card.className = 'prospect-inline';
+
+      const info = document.createElement('div');
+      info.innerHTML = `<div class="prospect-inline-name">${escapeHtml(name)}</div><div class="prospect-inline-meta">${escapeHtml(meta)}</div>`;
+
+      const btn = document.createElement('button');
+      btn.className = 'btn-add-prospect';
+      btn.textContent = '+ Funil';
+      btn.onclick = () => {
+        addProspect(name, meta);
+        btn.textContent = 'No funil ✓';
+        btn.classList.add('added');
+        btn.disabled = true;
+        adicionadosNestaSessao.push(name);
+      };
+
+      card.appendChild(info);
+      card.appendChild(btn);
+
+      const parent = node.closest('li') || node.parentElement;
+      if (parent && parent.parentNode) {
+        parent.parentNode.insertBefore(card, parent.nextSibling);
+      }
+    });
+  });
+}
+
+// ---- API ----
+async function callAPI() {
+  showThinking();
+
+  const systemPrompt = `Você é um agente especializado em prospecção de clientes para arquitetos no mercado de food service brasileiro.
+
+Seu papel é fornecer orientações práticas, diretas e específicas para a realidade do Brasil. Você conhece bem o mercado de food service, as associações do setor (ABF, ABRASEL), feiras como Expo Franchising ABF, grupos de WhatsApp e LinkedIn de empresários de alimentação, e como arquitetos podem se posicionar nesse nicho.
+
+Quando listar prospects ou oportunidades, use EXATAMENTE este formato (cada um em linha separada):
+**[PROSPECT] Nome ou tipo de negócio | Bairro/Região | Motivo da oportunidade | Como encontrar**
+
+Seja objetivo e acionável. Use ### para subtítulos. Escreva em português do Brasil de forma natural e profissional.`;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        system: systemPrompt,
+        messages: conversationHistory
+      })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || 'Erro na API');
+
+    const finalText = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    conversationHistory.push({ role: 'assistant', content: finalText });
+    removeThinking();
+    addAgentMsg(finalText);
+    showFollowup();
+
+  } catch(err) {
+    removeThinking();
+    const msgs = document.getElementById('messages');
+    const el = document.createElement('div');
+    el.className = 'error-msg';
+    el.textContent = 'Erro: ' + err.message;
+    msgs.appendChild(el);
+  }
+}
+
+function formatMarkdown(text) {
+  return text
+    .replace(/\[PROSPECT\]/g, '')
+    .replace(/### (.+)/g, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^[\-\*] (.+)/gm, '<li>$1</li>')
+    .replace(/(<li>[\s\S]+?<\/li>)/g, m => `<ul>${m}</ul>`)
+    .replace(/\n\n/g, '<br><br>');
+}
+
+function escapeHtml(t) {
+  return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showFollowup() {
+  const fa = document.getElementById('followup-area');
+  fa.style.display = 'flex';
+  document.getElementById('suggestions').innerHTML = [
+    'Gere um script de WhatsApp para o primeiro prospect',
+    'Como me apresentar sem portfólio no segmento?',
+    'Qual o ticket médio de um projeto de cozinha profissional?',
+    'Como identificar se o negócio ainda não tem arquiteto?'
+  ].map(s => `<div class="suggestion-chip" onclick="useSuggestion(this)">${s}</div>`).join('');
+  fa.scrollIntoView({ behavior: 'smooth' });
+}
+
+function useSuggestion(el) {
+  document.getElementById('followup-input').value = el.textContent;
+  document.getElementById('followup-input').focus();
+}
+
+loadFunil();
+</script>
+</body>
+</html>
