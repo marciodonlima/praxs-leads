@@ -722,7 +722,7 @@
     <h1>Leads <span style="font-size:9px;padding:2px 7px;border:1px solid var(--gold-dim);border-radius:2px;letter-spacing:.08em;color:var(--gold-dim);margin-left:6px;vertical-align:middle">LIGHT</span></h1>
     <p>Prospecção · Food Service</p>
   </div>
-  <a href="scripts.html" style="margin-left:auto;font-size:11px;color:var(--text-muted);font-family:DM Mono,monospace;text-decoration:none;letter-spacing:.08em;transition:color .15s" onmouseover="this.style.color='#f5b800'" onmouseout="this.style.color=''" >Scripts →</a>
+  <a href="scripts.html" style="margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:9px 18px;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:4px;font-size:11px;color:var(--gold);font-family:'DM Mono',monospace;text-decoration:none;letter-spacing:.08em;font-weight:500;transition:all .2s" onmouseover="this.style.background='rgba(245,184,0,0.18)';this.style.borderColor='var(--gold)'" onmouseout="this.style.background='var(--gold-glow)';this.style.borderColor='var(--gold-dim)'">✦ Scripts de Abordagem</a>
   <div class="status-dot" style="margin-left:16px">
     <div class="dot"></div>
     operacional
@@ -792,8 +792,9 @@
           <input type="text" id="followup-input" placeholder="Ex: Como abordar o primeiro prospect da lista?" onkeydown="if(event.key==='Enter') enviarFollowup()">
           <button class="btn btn-primary" onclick="enviarFollowup()">Enviar</button>
         </div>
-        <div style="margin-top:14px">
-          <button class="btn btn-ghost" onclick="novaBusca()" style="font-size:10px;padding:9px 16px">+ Nova busca</button>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;gap:12px;align-items:center">
+          <button class="btn btn-primary" onclick="novaBusca()" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;font-size:12px">🔍 Nova busca</button>
+          <span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">Buscar em outro segmento ou cidade</span>
         </div>
       </div>
     </div>
