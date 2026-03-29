@@ -1070,8 +1070,8 @@ Uma única ação concreta para fazer hoje.`;
 
   conversationHistory = [{ role: 'user', content: prompt }];
   addUserMsg(`Buscar oportunidades: ${segmentos.join(', ')} em ${cidade}`);
-  await callAPI();
   renderBaseProspects(segmentos);
+  await callAPI();
 }
 
 async function enviarFollowup() {
@@ -1241,7 +1241,18 @@ Use ### para subtítulos. Escreva em português do Brasil.`;
       })
     });
 
-    const data = await res.json();
+    const rawText = await res.text();
+
+    // Detecta se o servidor retornou HTML em vez de JSON (Render dormindo)
+    if (rawText.trim().startsWith('<') || rawText.trim().startsWith('<!')) {
+      throw new Error('O servidor está acordando (plano gratuito do Render). Aguarde 30-60 segundos e tente novamente. Isso só acontece após longos períodos sem uso.');
+    }
+
+    let data;
+    try { data = JSON.parse(rawText); } catch(e) {
+      throw new Error('Resposta inválida do servidor. Tente novamente em instantes.');
+    }
+
     if (!res.ok) throw new Error(data.error?.message || 'Erro na API');
 
     const finalText = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
@@ -1295,41 +1306,44 @@ function useSuggestion(el) {
 // Redes nacionais em expansão — atualização Q1 2026
 const PROSPECTS_BASE = {
   "Dark Kitchen": [
-    { nome: "ATW Delivery Brands", tipo: "Holding de dark kitchens — modelo 3 em 1", oportunidade: "Maior holding de dark kitchens do mundo, expansão ativa em todas as capitais. Cada unidade opera 3 marcas em uma cozinha — exige projeto técnico especializado.", sinal: "Buscando franqueados ativamente", contato: "atw.com.br", instagram: "@atwdeliverybrands", abrangencia: "Nacional" },
+    { nome: "ATW Delivery Brands", tipo: "Holding de dark kitchens — modelo 3 em 1", oportunidade: "Maior holding de dark kitchens do mundo, expansão ativa em todas as capitais. Cada unidade opera 3 marcas em uma cozinha — exige projeto técnico especializado.", sinal: "Buscando franqueados ativamente", contato: "atwdeliverybrands.com.br", instagram: "", abrangencia: "Nacional" },
     { nome: "Grupo HSH (Home Sushi Home)", tipo: "Rede de dark kitchens — 3 marcas em 1 cozinha", oportunidade: "Faturou R$ 59 milhões em 2025, presente em 12 estados. Meta de 15 novas franquias em 2026. Alta padronização de cozinha exigida.", sinal: "Plano agressivo de expansão anunciado em 2026", contato: "homesushihome.com.br", instagram: "@homesushihome", abrangencia: "Nacional" },
-    { nome: "China in Box / Gendai / Owan (TrendFoods)", tipo: "Grupo multimarcas — dark kitchens", oportunidade: "Opera 150+ dark kitchens das marcas do grupo. Modelo de expansão por dark kitchen é prioridade.", sinal: "Grupo em expansão contínua", contato: "chinaingbox.com.br", instagram: "@chinaingbox", abrangencia: "Nacional" },
-    { nome: "KitchenCentral", tipo: "Hub de dark kitchens compartilhadas", oportunidade: "Opera em SP, RJ e BH. Cada novo hub é um projeto completo de cozinha profissional.", sinal: "Expansão para novas capitais prevista", contato: "kitchencentral.com.br", instagram: "@kitchencentral", abrangencia: "SP, RJ, BH" },
-    { nome: "L'Entrecôte de Paris (SMZTO)", tipo: "Franquia gourmet — dark kitchen", oportunidade: "Opera 33 dark kitchens com ticket médio superior ao físico. Meta de 80 dark kitchens em 3 anos.", sinal: "Meta oficial publicada — expansão em andamento", contato: "lentrecote.com.br", instagram: "@lentrecotedeparis", abrangencia: "SP e expansão" },
-    { nome: "Mr. Fit — modelo nuvem", tipo: "Alimentação saudável — dark kitchen", oportunidade: "Investimento de R$ 25 mil por unidade. Expansão nacional, franqueados em busca de pontos.", sinal: "Modelo mais barato do mercado — alta demanda", contato: "mrfit.com.br", instagram: "@mrfitbrasil", abrangencia: "Nacional" }
+    { nome: "China in Box / Gendai / Owan (TrendFoods)", tipo: "Grupo multimarcas — dark kitchens", oportunidade: "Opera 150+ dark kitchens das marcas do grupo. Modelo de expansão por dark kitchen é prioridade.", sinal: "Grupo em expansão contínua", contato: "chinaingbox.com.br", instagram: "@chinaingboxbrasil", abrangencia: "Nacional" },
+    { nome: "KitchenCentral", tipo: "Hub de dark kitchens compartilhadas", oportunidade: "Opera em SP, RJ e BH. Cada novo hub é um projeto completo de cozinha profissional.", sinal: "Expansão para novas capitais prevista", contato: "kitchencentral.com.br", instagram: "", abrangencia: "SP, RJ, BH" },
+    { nome: "L'Entrecôte de Paris (SMZTO)", tipo: "Franquia gourmet — dark kitchen", oportunidade: "Opera 33 dark kitchens com ticket médio superior ao físico. Meta de 80 dark kitchens em 3 anos.", sinal: "Meta oficial publicada — expansão em andamento", contato: "lentrecotedeparis.com.br", instagram: "", abrangencia: "SP e expansão" },
+    { nome: "Mr. Fit — modelo nuvem", tipo: "Alimentação saudável — dark kitchen", oportunidade: "Investimento de R$ 25 mil por unidade. Expansão nacional, franqueados em busca de pontos.", sinal: "Modelo mais barato do mercado — alta demanda", contato: "mrfit.com.br", instagram: "@mrfit", abrangencia: "Nacional" }
   ],
   "Hamburgueria": [
     { nome: "La Brasa Burger", tipo: "Hamburgueria artesanal — modelo 4 em 1", oportunidade: "70 unidades físicas, 140 com dark kitchens. Faturou R$ 130 mi em 2024. Meta de 20 novas unidades em 2025.", sinal: "Expansão ativa em todas as regiões", contato: "labrasaburger.com.br", instagram: "@labrasaburger", abrangencia: "Nacional" },
-    { nome: "Cabana Burger", tipo: "Hamburgueria premium — shoppings e ruas", oportunidade: "26 unidades, expansão para MG, PR e DF em 2025. Unidade padrão de 120m² exige projeto completo.", sinal: "Entrada em novos estados anunciada", contato: "cabanaburger.com.br", instagram: "@cabanaburger", abrangencia: "SP, RJ, MG, PR, DF" },
-    { nome: "Johnny Rockets", tipo: "Hamburgueria temática — shoppings", oportunidade: "Segunda maior operação da rede no mundo. Projetos de alto padrão exigidos em shoppings.", sinal: "Crescimento consistente no franchising", contato: "johnnyrockets.com.br", instagram: "@johnnyrocketsbrasil", abrangencia: "Nacional" },
+    { nome: "Cabana Burger", tipo: "Hamburgueria premium — shoppings e ruas", oportunidade: "26 unidades, expansão para MG, PR e DF em 2025. Unidade padrão de 120m² exige projeto completo.", sinal: "Entrada em novos estados anunciada", contato: "cabana.com.br", instagram: "@cabanaburger", abrangencia: "SP, RJ, MG, PR, DF" },
+    { nome: "Johnny Rockets", tipo: "Hamburgueria temática — shoppings", oportunidade: "Segunda maior operação da rede no mundo. Projetos de alto padrão exigidos em shoppings.", sinal: "Crescimento consistente no franchising", contato: "johnnyrockets.com.br", instagram: "@johnnyrockets_br", abrangencia: "Nacional" },
     { nome: "Usina Burger", tipo: "Hamburgueria artesanal — identidade industrial", oportunidade: "9 unidades em 2025, R$ 10,2 mi faturados. Expansão acelerada prevista para 2026.", sinal: "CEO declarou expansão como foco de 2026", contato: "usinaburguer.com.br", instagram: "@usinaburger", abrangencia: "Regional" },
     { nome: "N1 Chicken", tipo: "Frango frito — dark kitchen e loja física", oportunidade: "Investimento a partir de R$ 119 mil. Dois formatos de projeto: dark kitchen e loja.", sinal: "Expansão nacional em andamento", contato: "n1chicken.com.br", instagram: "@n1chicken", abrangencia: "Nacional" }
   ],
   "Café": [
     { nome: "Cheirin Bão", tipo: "Cafeteria com café especial sul-mineiro", oportunidade: "Mais de 900 unidades em todos os estados. Maior rede de cafeterias especiais do país.", sinal: "Sempre captando novos pontos", contato: "cheirinbao.com.br", instagram: "@cheirinbao", abrangencia: "Nacional" },
     { nome: "Sterna Café", tipo: "Cafeteria premium de cafés especiais", oportunidade: "Crescimento de 40% em 2024. Meta de 100 unidades, 40 novas em 2025. Lojas instagramáveis.", sinal: "11 contratos assinados início de 2025", contato: "sternacafe.com.br", instagram: "@sternacafe", abrangencia: "Nacional" },
-    { nome: "Mr. Black Café", tipo: "Cafeteria gourmet — fundada em BH", oportunidade: "40 unidades, R$ 33 mi faturados em 2025. Expansão para novas praças em 2026.", sinal: "Premiada ABF 4 estrelas — franqueado gestor buscado", contato: "mrblackcafe.com.br", instagram: "@mrblackcafe", abrangencia: "MG, SP, RJ" },
-    { nome: "Grão Espresso", tipo: "Cafeteria — shoppings e centros comerciais", oportunidade: "240+ lojas em 23 estados. Expansão em cidades do interior.", sinal: "Captando franqueados para novas praças", contato: "graoespresso.com.br", instagram: "@graoespresso", abrangencia: "Nacional" },
+    { nome: "Mr. Black Café", tipo: "Cafeteria gourmet — fundada em BH", oportunidade: "40 unidades, R$ 33 mi faturados em 2025. Expansão para novas praças em 2026.", sinal: "Premiada ABF 4 estrelas — franqueado gestor buscado", contato: "mrblackcafe.com.br", instagram: "", abrangencia: "MG, SP, RJ" },
+    { nome: "Grão Espresso", tipo: "Cafeteria — shoppings e centros comerciais", oportunidade: "240+ lojas em 23 estados. Expansão em cidades do interior.", sinal: "Captando franqueados para novas praças", contato: "graoespresso.com.br", instagram: "", abrangencia: "Nacional" },
     { nome: "Casa Bauducco", tipo: "Cafeteria + empório — quiosque e loja completa", oportunidade: "180+ unidades. Dois formatos: quiosque menor e loja completa.", sinal: "Expansão contínua em shoppings", contato: "casabauducco.com.br", instagram: "@casabauducco", abrangencia: "Nacional" }
   ],
   "Restaurante À la Carte": [
     { nome: "Divino Fogão", tipo: "Culinária brasileira — shoppings e dark kitchens", oportunidade: "40 anos de mercado, 173 restaurantes + dark kitchens. Megaloja de 600m² inaugurada em SP em 2025.", sinal: "Novo conceito de megaloja prevê mais unidades", contato: "divinofogao.com.br", instagram: "@divinofogao", abrangencia: "Nacional" },
-    { nome: "Griletto", tipo: "Grelhados — praças de alimentação", oportunidade: "Expansão voltada para shoppings. Cozinha para grelhados exige ventilação e equipamentos específicos.", sinal: "Captando franqueados para novos shoppings", contato: "griletto.com.br", instagram: "@griletto", abrangencia: "Nacional" },
-    { nome: "Mei Mei", tipo: "Culinária asiática — praças de alimentação", oportunidade: "40m² médios, R$ 250 mil/mês faturados. Expansão em SP, RJ e DF.", sinal: "Retorno 30-48 meses — modelo validado", contato: "meimei.com.br", instagram: "@meimeirestaurante", abrangencia: "SP, RJ, DF" },
+    { nome: "Griletto", tipo: "Grelhados — praças de alimentação", oportunidade: "Expansão voltada para shoppings. Cozinha para grelhados exige ventilação e equipamentos específicos.", sinal: "Captando franqueados para novos shoppings", contato: "griletto.com.br", instagram: "", abrangencia: "Nacional" },
+    { nome: "Mei Mei", tipo: "Culinária asiática — praças de alimentação", oportunidade: "40m² médios, R$ 250 mil/mês faturados. Expansão em SP, RJ e DF.", sinal: "Retorno 30-48 meses — modelo validado", contato: "meiemei.com.br", instagram: "", abrangencia: "SP, RJ, DF" },
     { nome: "Espetto Carioca", tipo: "Espetinhos — restaurante e dark kitchen", oportunidade: "Modelo híbrido: restaurante físico + dark kitchen. Expansão para cidades menores.", sinal: "Dark kitchen valida expansão para novas praças", contato: "espettocarioca.com.br", instagram: "@espettocarioca", abrangencia: "Nacional" },
-    { nome: "Lug's", tipo: "Frango no balde e pratos executivos", oportunidade: "160+ unidades vendidas, expansão nacional e Europa. Dois modelos: shopping e restaurante completo.", sinal: "Expansão internacional sinaliza solidez", contato: "lugsfrango.com.br", instagram: "@lugsfrango", abrangencia: "Nacional" }
+    { nome: "Lug's", tipo: "Frango no balde e pratos executivos", oportunidade: "160+ unidades vendidas, expansão nacional e Europa. Dois modelos: shopping e restaurante completo.", sinal: "Expansão internacional sinaliza solidez", contato: "lugs.com.br", instagram: "", abrangencia: "Nacional" }
   ],
   "Buffet Self-Service": [
-    { nome: "Panéle (Grupo ATNZO)", tipo: "Culinária italiana — self-service customizável", oportunidade: "Investimento de R$ 89 mil, retorno 12-16 meses. Alta rotatividade exige cozinha bem planejada.", sinal: "Modelo enxuto em expansão nacional", contato: "panele.com.br", instagram: "@panelerestaurante", abrangencia: "Nacional" },
-    { nome: "Churras Express Brasil", tipo: "Espetos — quiosque, loja, container e móvel", oportunidade: "Investimento R$ 60-120 mil, retorno 4-8 meses. Múltiplos formatos = múltiplos projetos.", sinal: "Alta adaptabilidade — forte demanda", contato: "churrasexpress.com.br", instagram: "@churrasexpress", abrangencia: "Nacional" },
-    { nome: "Brasileirinho Delivery", tipo: "Culinária brasileira — delivery e self-service", oportunidade: "Cozinha com produção em larga escala exige projeto técnico detalhado.", sinal: "Franqueados em formação, novos pontos buscados", contato: "brasileirinhodelivery.com.br", instagram: "@brasileirinhodelivery", abrangencia: "Nacional" },
-    { nome: "Churrascaria Terra do Fogo", tipo: "Churrascaria — praças de alimentação", oportunidade: "Shoppings com alto fluxo. Cozinha de churrasco exige especificações técnicas rigorosas.", sinal: "Expansão contínua em praças de alimentação", contato: "terradofogo.com.br", instagram: "@terradofogo", abrangencia: "Nacional" }
+    { nome: "Panéle (Grupo ATNZO)", tipo: "Culinária italiana — self-service customizável", oportunidade: "Investimento de R$ 89 mil, retorno 12-16 meses. Alta rotatividade exige cozinha bem planejada.", sinal: "Modelo enxuto em expansão nacional", contato: "panele.com.br", instagram: "", abrangencia: "Nacional" },
+    { nome: "Churras Express Brasil", tipo: "Espetos — quiosque, loja, container e móvel", oportunidade: "Investimento R$ 60-120 mil, retorno 4-8 meses. Múltiplos formatos = múltiplos projetos.", sinal: "Alta adaptabilidade — forte demanda", contato: "churrasexpress.com.br", instagram: "", abrangencia: "Nacional" },
+    { nome: "Brasileirinho Delivery", tipo: "Culinária brasileira — delivery e self-service", oportunidade: "Cozinha com produção em larga escala exige projeto técnico detalhado.", sinal: "Franqueados em formação, novos pontos buscados", contato: "brasileirinho.com.br", instagram: "", abrangencia: "Nacional" },
+    { nome: "Churrascaria Terra do Fogo", tipo: "Churrascaria — praças de alimentação", oportunidade: "Shoppings com alto fluxo. Cozinha de churrasco exige especificações técnicas rigorosas.", sinal: "Expansão contínua em praças de alimentação", contato: "terradofogo.com.br", instagram: "", abrangencia: "Nacional" }
   ]
 };
+
+// Lookup global para prospects da base (evita JSON em atributos onclick)
+const BASE_LOOKUP = {};
 
 function renderBaseProspects(segmentos) {
   const msgs = document.getElementById('messages');
@@ -1337,52 +1351,73 @@ function renderBaseProspects(segmentos) {
 
   const section = document.createElement('div');
   section.className = 'base-section';
+  section.innerHTML = '<div class="divider-section"></div>';
 
-  let html = `<div class="divider-section"></div>
-    <div class="base-header">
-      <span class="base-title">Base Praxs Leads Light — redes em expansão</span>
-    </div>`;
+  const header = document.createElement('div');
+  header.className = 'base-header';
+  header.innerHTML = '<span class="base-title">Base Praxs Leads Light — redes em expansão</span>';
+  section.appendChild(header);
 
   segmentos.forEach(seg => {
     const prospects = PROSPECTS_BASE[seg];
-    if (!prospects) return;
+    if (!prospects || !prospects.length) return;
 
-    html += `<div style="margin-bottom:20px">
-      <div class="base-header">
-        <span class="base-title" style="color:var(--text-muted)">${seg}</span>
-        <span class="base-count">${prospects.length} redes</span>
-      </div>
-      <div class="base-cards">`;
+    const segEl = document.createElement('div');
+    segEl.style.marginBottom = '20px';
+    segEl.innerHTML = `<div class="base-header">
+      <span class="base-title" style="color:var(--text-muted)">${escapeHtml(seg)}</span>
+      <span class="base-count">${prospects.length} redes</span>
+    </div>`;
+
+    const cardsEl = document.createElement('div');
+    cardsEl.className = 'base-cards';
 
     prospects.forEach((p, idx) => {
-      const cardId = 'base_' + seg.replace(/\s/g,'_') + '_' + idx;
-      html += `<div class="base-card" id="${cardId}">
+      const cardId = 'base_' + seg.replace(/[^a-z0-9]/gi,'_') + '_' + idx;
+      BASE_LOOKUP[cardId] = p;
+
+      const card = document.createElement('div');
+      card.className = 'base-card';
+      card.id = cardId;
+
+      const searchQuery = encodeURIComponent(p.nome + ' franquia food service');
+      const siteLink = `<a href="https://www.google.com/search?q=${searchQuery}" target="_blank" class="prospect-link">🔍 Pesquisar</a>`;
+      const instaLink = p.instagram
+        ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${escapeHtml(p.instagram)}</a>`
+        : '';
+
+      card.innerHTML = `
         <div class="base-card-header">
-          <div>
+          <div style="flex:1">
             <div class="base-card-name">${escapeHtml(p.nome)}</div>
             <div class="base-card-tipo">${escapeHtml(p.tipo)}</div>
           </div>
-          <button class="btn-add-prospect" id="btn_${cardId}" onclick="addFromBase('${cardId}', ${JSON.stringify(p).replace(/'/g, '&#39;')})">+ Funil</button>
+          <button class="btn-add-prospect" id="btn_${cardId}">+ Funil</button>
         </div>
         <div class="base-card-oportunidade">${escapeHtml(p.oportunidade)}</div>
         <div class="base-card-sinal">${escapeHtml(p.sinal)}</div>
         <div class="base-card-links">
-          <a href="https://${p.contato}" target="_blank" class="prospect-link">🌐 Site</a>
-          ${p.instagram ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${p.instagram}</a>` : ''}
+          ${siteLink}${instaLink}
           <span class="base-card-abrangencia">${escapeHtml(p.abrangencia)}</span>
-        </div>
-      </div>`;
+        </div>`;
+
+      const btn = card.querySelector('button');
+      btn.addEventListener('click', () => addFromBase(cardId));
+
+      cardsEl.appendChild(card);
     });
 
-    html += '</div></div>';
+    segEl.appendChild(cardsEl);
+    section.appendChild(segEl);
   });
 
-  section.innerHTML = html;
   msgs.appendChild(section);
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function addFromBase(cardId, p) {
+function addFromBase(cardId) {
+  const p = BASE_LOOKUP[cardId];
+  if (!p) return;
   const id = 'p_' + Date.now();
   funil[id] = {
     name: p.nome,
