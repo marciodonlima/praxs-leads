@@ -198,6 +198,132 @@
   .stage-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
   .stage-btn.del:hover { border-color: var(--red); color: #d47a66; }
 
+  .prospect-links { display: flex; gap: 6px; margin-top: 7px; flex-wrap: wrap; }
+
+  .prospect-link {
+    font-size: 9px;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .04em;
+    transition: all .15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    background: none;
+  }
+  .prospect-link:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .prospect-link.maps:hover { border-color: #4a9eff; color: #4a9eff; }
+  .prospect-link.insta:hover { border-color: #E1306C; color: #E1306C; }
+  .prospect-link.phone:hover { border-color: var(--green-bright); color: var(--green-bright); }
+
+  .prospect-notes {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    margin-top: 5px;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* Modal de edição */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn .2s ease;
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 28px;
+    width: 420px;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .modal-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: -4px;
+  }
+
+  .modal-label {
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .modal input, .modal textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color .2s;
+    width: 100%;
+  }
+
+  .modal textarea { resize: vertical; min-height: 70px; }
+  .modal input:focus, .modal textarea:focus { border-color: var(--gold-dim); }
+
+  .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 4px; }
+
+  .btn-modal-save {
+    flex: 1;
+    padding: 11px;
+    background: var(--gold);
+    color: #0e0f0c;
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-modal-save:hover { background: #ffc61a; }
+
+  .btn-modal-cancel {
+    padding: 11px 18px;
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--text-dim);
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-modal-cancel:hover { border-color: var(--red); color: #d47a66; }
+
   .sidebar-empty {
     padding: 20px;
     text-align: center;
@@ -630,7 +756,7 @@ function loadFunil() {
 // ---- FUNIL ----
 function addProspect(name, meta) {
   const id = 'p_' + Date.now();
-  funil[id] = { name, meta, stage: 'novo', addedAt: new Date().toISOString() };
+  funil[id] = { name, meta, stage: 'novo', addedAt: new Date().toISOString(), phone: '', instagram: '', maps: '', notes: '' };
   saveFunil();
   renderFunil();
 }
@@ -650,6 +776,61 @@ function clearFunil() {
   funil = {};
   saveFunil();
   renderFunil();
+}
+
+function openEditModal(id) {
+  const p = funil[id];
+  if (!p) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'edit-modal';
+
+  overlay.innerHTML = `
+    <div class="modal">
+      <div class="modal-title">${escapeHtml(p.name)}</div>
+      <div class="modal-row">
+        <div>
+          <label class="modal-label">Telefone / WhatsApp</label>
+          <input type="text" id="edit-phone" placeholder="Ex: 21999999999" value="${escapeHtml(p.phone||'')}">
+        </div>
+        <div>
+          <label class="modal-label">Instagram</label>
+          <input type="text" id="edit-insta" placeholder="@usuario" value="${escapeHtml(p.instagram||'')}">
+        </div>
+      </div>
+      <div>
+        <label class="modal-label">Link Google Maps</label>
+        <input type="text" id="edit-maps" placeholder="Cole o link do Maps aqui" value="${escapeHtml(p.maps||'')}">
+      </div>
+      <div>
+        <label class="modal-label">Observações</label>
+        <textarea id="edit-notes" placeholder="Ex: Estão abrindo segunda unidade, falei com o sócio João...">${escapeHtml(p.notes||'')}</textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="btn-modal-save" onclick="saveEdit('${id}')">Salvar</button>
+      </div>
+    </div>`;
+
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.body.appendChild(overlay);
+}
+
+function closeModal() {
+  const m = document.getElementById('edit-modal');
+  if (m) m.remove();
+}
+
+function saveEdit(id) {
+  if (!funil[id]) return;
+  funil[id].phone     = document.getElementById('edit-phone').value.trim();
+  funil[id].instagram = document.getElementById('edit-insta').value.trim();
+  funil[id].maps      = document.getElementById('edit-maps').value.trim();
+  funil[id].notes     = document.getElementById('edit-notes').value.trim();
+  saveFunil();
+  renderFunil();
+  closeModal();
 }
 
 function renderFunil() {
@@ -683,11 +864,26 @@ function renderFunil() {
       const otherStages = STAGES.filter(s => s.key !== stage.key);
       const btns = otherStages.map(s =>
         `<button class="stage-btn" onclick="moveStage('${id}','${s.key}')">${s.label.split(' ')[0]}</button>`
-      ).join('') + `<button class="stage-btn del" onclick="removeProspect('${id}')">Remover</button>`;
+      ).join('') + `<button class="stage-btn" onclick="openEditModal('${id}')">Editar</button>` +
+                   `<button class="stage-btn del" onclick="removeProspect('${id}')">Remover</button>`;
+
+      // Links de acesso rápido
+      let links = '';
+      if (p.phone) links += `<a class="prospect-link phone" href="https://wa.me/55${p.phone.replace(/\D/g,'')}" target="_blank">📱 WhatsApp</a>`;
+      if (p.instagram) {
+        const handle = p.instagram.replace('@','');
+        links += `<a class="prospect-link insta" href="https://instagram.com/${handle}" target="_blank">📷 Instagram</a>`;
+      }
+      if (p.maps) links += `<a class="prospect-link maps" href="${escapeHtml(p.maps)}" target="_blank">📍 Maps</a>`;
+
+      const linksHtml = links ? `<div class="prospect-links">${links}</div>` : '';
+      const notesHtml = p.notes ? `<div class="prospect-notes">${escapeHtml(p.notes)}</div>` : '';
 
       card.innerHTML = `
         <div class="prospect-name">${escapeHtml(p.name)}</div>
         <div class="prospect-meta">${escapeHtml(p.meta)}</div>
+        ${linksHtml}
+        ${notesHtml}
         <div class="prospect-actions">${btns}</div>`;
       group.appendChild(card);
     });
