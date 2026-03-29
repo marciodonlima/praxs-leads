@@ -725,7 +725,7 @@
 </div>
 
 <script>
-const API_URL = '/.netlify/functions/api';
+const API_URL = 'https://praxs-leads-production.up.railway.app';
 
 //  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
 let conversationHistory = [];
@@ -1046,19 +1046,38 @@ function addAgentMsg(rawText) {
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+function parseProspectLine(line) {
+  const clean = line.replace(/\*+/g,'').replace('[PROSPECT]','').trim();
+  const parts = clean.split('|').map(s => s.trim());
+  if (parts.length < 2) return null;
+
+  const name = parts[0];
+  const motivo = parts[1] || '';
+  let instagram = '', phone = '', maps = '', meta = motivo;
+
+  parts.forEach(p => {
+    if (p.startsWith('instagram:')) instagram = p.replace('instagram:','').trim();
+    else if (p.startsWith('tel:')) phone = p.replace('tel:','').trim();
+    else if (p.startsWith('maps:')) maps = p.replace('maps:','').trim();
+  });
+
+  // meta = bairro + motivo (primeiros dois campos sem prefixo)
+  const plainParts = parts.filter(p => !p.startsWith('instagram:') && !p.startsWith('tel:') && !p.startsWith('maps:'));
+  meta = plainParts.slice(1, 3).join(' · ');
+
+  return { name, meta, instagram, phone, maps };
+}
+
 function injectProspectCards(container, rawText) {
   const lines = rawText.split('\n');
   lines.forEach(line => {
     if (!line.includes('[PROSPECT]')) return;
-    const clean = line.replace(/\*+/g,'').replace('[PROSPECT]','').trim();
-    const parts = clean.split('|').map(s => s.trim());
-    if (parts.length < 2) return;
+    const parsed = parseProspectLine(line);
+    if (!parsed) return;
 
-    const name = parts[0];
-    const meta = parts.slice(1, 3).join(' · ');
+    const { name, meta, instagram, phone, maps } = parsed;
     if (adicionadosNestaSessao.includes(name)) return;
 
-    // Encontra o elemento no DOM que contém esse nome
     const allStrongs = container.querySelectorAll('strong, li');
     allStrongs.forEach(node => {
       if (!node.textContent.includes(name)) return;
@@ -1067,14 +1086,35 @@ function injectProspectCards(container, rawText) {
       const card = document.createElement('div');
       card.className = 'prospect-inline';
 
+      // Links de preview
+      let linksHtml = '';
+      if (phone) linksHtml += `<a href="https://wa.me/55${phone.replace(/\D/g,'')}" target="_blank" style="font-size:10px;color:var(--green-bright);text-decoration:none;font-family:DM Mono,monospace">📱 WhatsApp</a>`;
+      if (instagram) linksHtml += `<a href="https://instagram.com/${instagram.replace('@','')}" target="_blank" style="font-size:10px;color:#E1306C;text-decoration:none;font-family:DM Mono,monospace">📷 Instagram</a>`;
+      if (maps) linksHtml += `<a href="${maps}" target="_blank" style="font-size:10px;color:#4a9eff;text-decoration:none;font-family:DM Mono,monospace">📍 Maps</a>`;
+
       const info = document.createElement('div');
-      info.innerHTML = `<div class="prospect-inline-name">${escapeHtml(name)}</div><div class="prospect-inline-meta">${escapeHtml(meta)}</div>`;
+      info.style.flex = '1';
+      info.innerHTML = `
+        <div class="prospect-inline-name">${escapeHtml(name)}</div>
+        <div class="prospect-inline-meta">${escapeHtml(meta)}</div>
+        ${linksHtml ? `<div style="display:flex;gap:10px;margin-top:5px;flex-wrap:wrap">${linksHtml}</div>` : ''}`;
 
       const btn = document.createElement('button');
       btn.className = 'btn-add-prospect';
       btn.textContent = '+ Funil';
       btn.onclick = () => {
-        addProspect(name, meta);
+        // Adiciona com todos os dados preenchidos
+        const id = 'p_' + Date.now();
+        funil[id] = {
+          name, meta, stage: 'novo',
+          addedAt: new Date().toISOString(),
+          phone: phone || '',
+          instagram: instagram || '',
+          maps: maps || '',
+          notes: ''
+        };
+        saveFunil();
+        renderFunil();
         btn.textContent = 'No funil ✓';
         btn.classList.add('added');
         btn.disabled = true;
@@ -1098,12 +1138,17 @@ async function callAPI() {
 
   const systemPrompt = `Você é um agente especializado em prospecção de clientes para arquitetos no mercado de food service brasileiro.
 
-Seu papel é fornecer orientações práticas, diretas e específicas para a realidade do Brasil. Você conhece bem o mercado de food service, as associações do setor (ABF, ABRASEL), feiras como Expo Franchising ABF, grupos de WhatsApp e LinkedIn de empresários de alimentação, e como arquitetos podem se posicionar nesse nicho.
+Use a busca na web para encontrar negócios REAIS na cidade informada. Para cada prospect encontrado, busque também o Instagram, telefone e link do Google Maps.
 
-Quando listar prospects ou oportunidades, use EXATAMENTE este formato (cada um em linha separada):
-**[PROSPECT] Nome ou tipo de negócio | Bairro/Região | Motivo da oportunidade | Como encontrar**
+Quando listar prospects, use EXATAMENTE este formato em uma única linha por prospect:
+**[PROSPECT] Nome da empresa | Bairro | Motivo da oportunidade | instagram:@handle | tel:numero | maps:URL**
 
-Seja objetivo e acionável. Use ### para subtítulos. Escreva em português do Brasil de forma natural e profissional.`;
+Se não encontrar algum dado, omita apenas aquele campo. Exemplo:
+**[PROSPECT] Dark Kitchen Cozinha Hub | Botafogo | Abriram segunda unidade em março | instagram:@cozinhahub | maps:https://maps.google.com/...**
+
+Após listar os prospects, inclua estratégia de abordagem, script de primeiro contato e próxima ação.
+
+Use ### para subtítulos. Escreva em português do Brasil.`;
 
   try {
     const res = await fetch(API_URL, {
@@ -1113,6 +1158,7 @@ Seja objetivo e acionável. Use ### para subtítulos. Escreva em português do B
         model: 'claude-sonnet-4-20250514',
         max_tokens: 2000,
         system: systemPrompt,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: conversationHistory
       })
     });
