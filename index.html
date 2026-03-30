@@ -223,11 +223,6 @@
         </div>
       </div>
       
-      <div class="form-group">
-        <label>Perfil de cliente ideal / Observações</label>
-        <input type="text" id="perfil" placeholder="Ex: Negócios em expansão, Franquias, Empreendedores locais...">
-      </div>
-      
       <div style="display:flex;gap:10px;margin-top:10px">
         <button class="btn-ghost" onclick="showIntro()">← Voltar</button>
         <button class="btn" style="flex:1" onclick="gerarPlano()">Buscar oportunidades →</button>
@@ -375,7 +370,7 @@ function renderFunil() {
       
       const siteLink = p.contato ? `<a href="https://${p.contato.replace('https://','')}" target="_blank" class="prospect-link site">🔗 Site</a>` : '';
       const instaLink = p.instagram ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${escapeHtml(p.instagram)}</a>` : '';
-      const linksHtml = (siteLink || instaLink) ? `<div class="prospect-links" style="margin-bottom:8px;">${siteLink}${instaLink}</div>` : '';
+      const linksHtml = (siteLink || instaLink) ? `<div class="prospect-links">${siteLink}${instaLink}</div>` : '';
 
       card.innerHTML = `
         <div class="prospect-name">${escapeHtml(p.name)}</div>
@@ -481,7 +476,6 @@ function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').re
 document.querySelectorAll('.chip-group .chip').forEach(chip => { chip.addEventListener('click', () => chip.classList.toggle('selected')); });
 function getSelected(groupId) { return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val); }
 
-// BASE PREMIUM: DADOS COMPLETOS RESTAURADOS COM INSTAGRAM E SITE (CONTATO)
 const PROSPECTS_BASE = {
   "Dark Kitchen": [
     { nome: "ATW Delivery Brands", contato: "atwdeliverybrands.com.br", instagram: "@atwdeliverybrands", tipo: "Holding de dark kitchens", oportunidade: "Maior holding do mundo. Operam 3 marcas em cada cozinha.", sinal: "Buscando franqueados", abrangencia: "Nacional", dor: "Cruzamento do fluxo de motoboys com o lixo e reposição de estoque", abordagem: "Desenhar layouts que impedem a contaminação cruzada e aprovam rápido" },
@@ -532,7 +526,6 @@ async function gerarPlano() {
   const cidadeInput = document.getElementById('cidade').value.trim();
   const cidade = cidadeInput || 'sua região';
   const segmentos = getSelected('segmentos');
-  const perfil = document.getElementById('perfil').value.trim();
 
   if (!cidadeInput) { alert('Por favor, informe a cidade.'); return; }
   if (!segmentos.length) { alert('Selecione ao menos um segmento alvo.'); return; }
@@ -600,7 +593,6 @@ async function gerarPlano() {
   const systemPrompt = `Você é um agente de prospecção para arquitetos de food service.
 Cidade: ${cidade}
 Segmentos: ${segmentos.join(', ')}
-Perfil: ${perfil || 'geral'}
 
 Aja rápido. Liste no máximo 4 estabelecimentos REAIS que estão crescendo nessa cidade. Para cada um use EXATAMENTE este formato numa linha separada:
 **[PROSPECT] Nome da empresa | Bairro ou Cidade | Motivo de ser uma oportunidade | instagram:@handle | tel:numero | maps:URL**
