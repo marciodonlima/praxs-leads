@@ -512,7 +512,6 @@
   .msg-body li { padding-left: 16px; position: relative; color: var(--text-dim); }
   .msg-body li::before { content: '—'; position: absolute; left: 0; color: var(--gold-dim); }
 
-  /* Card de prospect inline */
   .prospect-inline {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -690,7 +689,30 @@
 
   .base-card-sinal::before { content: '↑'; position: absolute; left: 0; color: var(--green-bright); }
 
-  .base-card-links { display: flex; gap: 6px; flex-wrap: wrap; }
+  /* NOVO CSS: Estilo para a secção de inteligência do card */
+  .base-card-intel {
+    margin: 12px 0;
+    padding: 12px 0 4px 0;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .intel-item {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .intel-item strong {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  .intel-dor strong { color: #d47a66; }
+  .intel-abord strong { color: var(--gold); }
+
+  .base-card-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
 
   .base-card-abrangencia {
     font-size: 9px;
@@ -708,7 +730,6 @@
     margin: 24px 0;
   }
 
-  /* NOVO: Estilo para o botão de Nova Busca no final dos cards */
   .btn-nova-busca {
     display: block;
     width: 100%;
@@ -752,7 +773,6 @@
 </header>
 
 <div class="app">
-
   <div class="sidebar">
     <div class="sidebar-header">
       <span class="sidebar-title">Meu funil</span>
@@ -769,11 +789,10 @@
   </div>
 
   <main>
-
     <div id="intro">
       <h2>Descubra oportunidades reais de <em>food service</em> na sua cidade</h2>
       <div class="return-banner" id="return-banner"></div>
-      <p>Informe onde você atua e o segmento desejado. O agente mapeia oportunidades com busca real na web — e lembra o que você já prospectou para não repetir.</p>
+      <p>Informe onde você atua e o segmento desejado. O radar mapeia oportunidades estratégicas com inteligência de abordagem comercial.</p>
       <button class="btn btn-primary" style="padding:14px 34px" onclick="showForm()">Iniciar busca →</button>
     </div>
 
@@ -818,14 +837,12 @@
         </div>
       </div>
     </div>
-
   </main>
 </div>
 
 <script>
 const API_URL = 'COLE_URL_DO_RAILWAY_AQUI';
 
-//  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
 let conversationHistory = [];
 let userContext = {};
 let funil = {};
@@ -838,97 +855,48 @@ const STAGES = [
   { key: 'proposta',  label: 'Proposta enviada',  color: '#9b7fdb' },
 ];
 
-// ---- STORAGE ----
-function saveFunil() {
-  try { localStorage.setItem('praxs_leads_funil', JSON.stringify(funil)); } catch(e) {}
-}
+function saveFunil() { try { localStorage.setItem('praxs_leads_funil', JSON.stringify(funil)); } catch(e) {} }
+function loadFunil() { try { const raw = localStorage.getItem('praxs_leads_funil'); if (raw) funil = JSON.parse(raw); } catch(e) { funil = {}; } renderFunil(); }
 
-function loadFunil() {
-  try {
-    const raw = localStorage.getItem('praxs_leads_funil');
-    if (raw) funil = JSON.parse(raw);
-  } catch(e) { funil = {}; }
-  renderFunil();
-}
-
-// ---- FUNIL ----
 function addProspect(name, meta) {
   const id = 'p_' + Date.now();
   funil[id] = { name, meta, stage: 'novo', addedAt: new Date().toISOString(), phone: '', instagram: '', maps: '', notes: '' };
-  saveFunil();
-  renderFunil();
+  saveFunil(); renderFunil();
 }
 
-function moveStage(id, stageKey) {
-  if (funil[id]) { funil[id].stage = stageKey; saveFunil(); renderFunil(); }
-}
-
-function removeProspect(id) {
-  delete funil[id];
-  saveFunil();
-  renderFunil();
-}
-
-function clearFunil() {
-  if (!confirm('Limpar todos os prospects do funil?')) return;
-  funil = {};
-  saveFunil();
-  renderFunil();
-}
+function moveStage(id, stageKey) { if (funil[id]) { funil[id].stage = stageKey; saveFunil(); renderFunil(); } }
+function removeProspect(id) { delete funil[id]; saveFunil(); renderFunil(); }
+function clearFunil() { if (!confirm('Limpar todos os prospects do funil?')) return; funil = {}; saveFunil(); renderFunil(); }
 
 function openEditModal(id) {
   const p = funil[id];
   if (!p) return;
-
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.id = 'edit-modal';
-
   overlay.innerHTML = `
     <div class="modal">
       <div class="modal-title">${escapeHtml(p.name)}</div>
       <div class="modal-row">
-        <div>
-          <label class="modal-label">Telefone / WhatsApp</label>
-          <input type="text" id="edit-phone" placeholder="Ex: 21999999999" value="${escapeHtml(p.phone||'')}">
-        </div>
-        <div>
-          <label class="modal-label">Instagram</label>
-          <input type="text" id="edit-insta" placeholder="@usuario" value="${escapeHtml(p.instagram||'')}">
-        </div>
+        <div><label class="modal-label">Telefone / WhatsApp</label><input type="text" id="edit-phone" placeholder="Ex: 21999999999" value="${escapeHtml(p.phone||'')}"></div>
+        <div><label class="modal-label">Instagram</label><input type="text" id="edit-insta" placeholder="@usuario" value="${escapeHtml(p.instagram||'')}"></div>
       </div>
-      <div>
-        <label class="modal-label">Link Google Maps</label>
-        <input type="text" id="edit-maps" placeholder="Cole o link do Maps aqui" value="${escapeHtml(p.maps||'')}">
-      </div>
-      <div>
-        <label class="modal-label">Observações</label>
-        <textarea id="edit-notes" placeholder="Ex: Estão abrindo segunda unidade, falei com o sócio João...">${escapeHtml(p.notes||'')}</textarea>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-modal-cancel" onclick="closeModal()">Cancelar</button>
-        <button class="btn-modal-save" onclick="saveEdit('${id}')">Salvar</button>
-      </div>
+      <div><label class="modal-label">Link Google Maps</label><input type="text" id="edit-maps" placeholder="Cole o link do Maps aqui" value="${escapeHtml(p.maps||'')}"></div>
+      <div><label class="modal-label">Observações</label><textarea id="edit-notes" placeholder="Ex: Falei com o sócio...">${escapeHtml(p.notes||'')}</textarea></div>
+      <div class="modal-actions"><button class="btn-modal-cancel" onclick="closeModal()">Cancelar</button><button class="btn-modal-save" onclick="saveEdit('${id}')">Salvar</button></div>
     </div>`;
-
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
   document.body.appendChild(overlay);
 }
 
-function closeModal() {
-  const m = document.getElementById('edit-modal');
-  if (m) m.remove();
-}
-
+function closeModal() { const m = document.getElementById('edit-modal'); if (m) m.remove(); }
 function saveEdit(id) {
   if (!funil[id]) return;
-  funil[id].phone     = document.getElementById('edit-phone').value.trim();
+  funil[id].phone = document.getElementById('edit-phone').value.trim();
   funil[id].instagram = document.getElementById('edit-insta').value.trim();
-  funil[id].maps      = document.getElementById('edit-maps').value.trim();
-  funil[id].notes     = document.getElementById('edit-notes').value.trim();
-  saveFunil();
-  renderFunil();
-  closeModal();
+  funil[id].maps = document.getElementById('edit-maps').value.trim();
+  funil[id].notes = document.getElementById('edit-notes').value.trim();
+  saveFunil(); renderFunil(); closeModal();
 }
 
 function renderFunil() {
@@ -936,21 +904,14 @@ function renderFunil() {
   const emptyEl = document.getElementById('funil-empty');
   const countEl = document.getElementById('total-count');
   const total = Object.keys(funil).length;
-
   countEl.textContent = total + (total === 1 ? ' prospect' : ' prospects');
 
-  if (total === 0) {
-    container.innerHTML = '';
-    container.appendChild(emptyEl);
-    return;
-  }
-
+  if (total === 0) { container.innerHTML = ''; container.appendChild(emptyEl); return; }
   container.innerHTML = '';
 
   STAGES.forEach(stage => {
     const items = Object.entries(funil).filter(([,v]) => v.stage === stage.key);
     if (!items.length) return;
-
     const group = document.createElement('div');
     group.className = 'stage-group';
     group.innerHTML = `<div class="stage-label"><span>${stage.label}</span><span style="background:${stage.color};width:6px;height:6px;border-radius:50%;display:inline-block"></span></div>`;
@@ -958,104 +919,58 @@ function renderFunil() {
     items.forEach(([id, p]) => {
       const card = document.createElement('div');
       card.className = 'prospect-card';
-
       const otherStages = STAGES.filter(s => s.key !== stage.key);
-      const btns = otherStages.map(s =>
-        `<button class="stage-btn" onclick="moveStage('${id}','${s.key}')">${s.label.split(' ')[0]}</button>`
-      ).join('') + `<button class="stage-btn" onclick="openEditModal('${id}')">Editar</button>` +
-                   `<button class="stage-btn del" onclick="removeProspect('${id}')">Remover</button>`;
-
-      // Links de acesso rápido
+      const btns = otherStages.map(s => `<button class="stage-btn" onclick="moveStage('${id}','${s.key}')">${s.label.split(' ')[0]}</button>`).join('') + 
+                   `<button class="stage-btn" onclick="openEditModal('${id}')">Editar</button>` + `<button class="stage-btn del" onclick="removeProspect('${id}')">Remover</button>`;
+      
       let links = '';
       if (p.phone) links += `<a class="prospect-link phone" href="https://wa.me/55${p.phone.replace(/\D/g,'')}" target="_blank">📱 WhatsApp</a>`;
-      if (p.instagram) {
-        const handle = p.instagram.replace('@','');
-        links += `<a class="prospect-link insta" href="https://instagram.com/${handle}" target="_blank">📷 Instagram</a>`;
-      }
+      if (p.instagram) { const handle = p.instagram.replace('@',''); links += `<a class="prospect-link insta" href="https://instagram.com/${handle}" target="_blank">📷 Instagram</a>`; }
       if (p.maps) links += `<a class="prospect-link maps" href="${escapeHtml(p.maps)}" target="_blank">📍 Maps</a>`;
 
       const linksHtml = links ? `<div class="prospect-links">${links}</div>` : '';
       const notesHtml = p.notes ? `<div class="prospect-notes">${escapeHtml(p.notes)}</div>` : '';
 
-      card.innerHTML = `
-        <div class="prospect-name">${escapeHtml(p.name)}</div>
-        <div class="prospect-meta">${escapeHtml(p.meta)}</div>
-        ${linksHtml}
-        ${notesHtml}
-        <div class="prospect-actions">${btns}</div>`;
+      card.innerHTML = `<div class="prospect-name">${escapeHtml(p.name)}</div><div class="prospect-meta">${escapeHtml(p.meta)}</div>${linksHtml}${notesHtml}<div class="prospect-actions">${btns}</div>`;
       group.appendChild(card);
     });
-
     container.appendChild(group);
   });
-
   checkReturn();
 }
 
-// ---- NAVEGAÇÃO ----
-function showIntro() {
-  document.getElementById('intro').style.display = 'flex';
-  document.getElementById('form-section').style.display = 'none';
-  document.getElementById('chat-section').style.display = 'none';
-  checkReturn();
-}
-
-function showForm() {
-  document.getElementById('intro').style.display = 'none';
-  document.getElementById('form-section').style.display = 'flex';
-  document.getElementById('chat-section').style.display = 'none';
-}
-
-function novaBusca() {
-  conversationHistory = [];
-  adicionadosNestaSessao = [];
-  document.getElementById('messages').innerHTML = '';
-  document.getElementById('followup-area').style.display = 'none';
-  showForm();
-}
+function showIntro() { document.getElementById('intro').style.display = 'flex'; document.getElementById('form-section').style.display = 'none'; document.getElementById('chat-section').style.display = 'none'; checkReturn(); }
+function showForm() { document.getElementById('intro').style.display = 'none'; document.getElementById('form-section').style.display = 'flex'; document.getElementById('chat-section').style.display = 'none'; }
+function novaBusca() { conversationHistory = []; adicionadosNestaSessao = []; document.getElementById('messages').innerHTML = ''; document.getElementById('followup-area').style.display = 'none'; showForm(); }
 
 function checkReturn() {
   const total = Object.keys(funil).length;
   const banner = document.getElementById('return-banner');
   if (total === 0) { banner.style.display = 'none'; return; }
-
   const novos = Object.values(funil).filter(p => p.stage === 'novo').length;
   const contatados = Object.values(funil).filter(p => p.stage === 'contatado').length;
-
   let msg = `<strong>Bem-vindo de volta.</strong> `;
   if (novos > 0) msg += `Você tem <strong>${novos} prospect${novos>1?'s':''}</strong> aguardando primeiro contato. `;
   if (contatados > 0) msg += `<strong>${contatados}</strong> já contatado${contatados>1?'s':''} — hora de follow-up?`;
   msg += ` Faça uma nova busca para descobrir mais oportunidades.`;
-
-  banner.innerHTML = msg;
-  banner.style.display = 'block';
+  banner.innerHTML = msg; banner.style.display = 'block';
 }
 
-// ---- CHIPS ----
-document.querySelectorAll('.chip-group .chip').forEach(chip => {
-  chip.addEventListener('click', () => chip.classList.toggle('selected'));
-});
+document.querySelectorAll('.chip-group .chip').forEach(chip => { chip.addEventListener('click', () => chip.classList.toggle('selected')); });
+function getSelected(groupId) { return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val); }
 
-function getSelected(groupId) {
-  return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val);
-}
-
-// ---- BUSCA ----
 async function gerarPlano() {
   const cidade = document.getElementById('cidade').value.trim();
   const segmentos = getSelected('segmentos');
   const perfil = document.getElementById('perfil').value.trim();
 
-  if (!cidade) { alert('Informe a cidade onde você atua.'); return; }
+  if (!cidade) { alert('Informe a cidade onde atua.'); return; }
   if (!segmentos.length) { alert('Selecione ao menos um segmento.'); return; }
 
   const nomesFunil = Object.values(funil).map(p => p.name);
-  const funilCtx = nomesFunil.length
-    ? `\n\nIMPORTANTE: O arquiteto já tem estes prospects no funil (NÃO repita, busque NOVOS): ${nomesFunil.join(', ')}.`
-    : '';
+  const funilCtx = nomesFunil.length ? `\n\nIMPORTANTE: O arquiteto já tem estes prospects no funil (NÃO repita, busque NOVOS): ${nomesFunil.join(', ')}.` : '';
 
   userContext = { cidade, segmentos, perfil };
-
   document.getElementById('form-section').style.display = 'none';
   document.getElementById('chat-section').style.display = 'flex';
   adicionadosNestaSessao = [];
@@ -1069,43 +984,17 @@ async function gerarPlano() {
   `;
 
   const prompt = `Sou arquiteto e quero prospectar clientes no mercado de food service.
-
 Cidade: ${cidade}
 Segmentos: ${segmentos.join(', ')}
 Perfil do cliente: ${perfil || 'não definido'}${funilCtx}
 
-Faça buscas reais na web e me retorne:
-
-### Oportunidades encontradas
-Liste 4 a 6 empresas REAIS. Para cada uma use EXATAMENTE este formato numa linha separada:
-**[PROSPECT] Nome da empresa | Bairro/Cidade | Motivo da oportunidade | Contato ou link**
-
-### Estratégia de abordagem
-Como me posicionar para esse segmento nessa cidade.
-
-### Script de primeiro contato
-Mensagem pronta para WhatsApp — natural, sem parecer robô.
-
-### Próxima ação
-Uma única ação concreta para fazer hoje.`;
+Faça buscas reais na web e retorne oportunidades com ESTRATÉGIA.`;
 
   conversationHistory = [{ role: 'user', content: prompt }];
-  addUserMsg(`Buscar oportunidades: ${segmentos.join(', ')} em ${cidade}`);
+  addUserMsg(`Buscar oportunidades estratégicas: ${segmentos.join(', ')} em ${cidade}`);
   renderBaseProspects(segmentos);
-  await callAPI();
 }
 
-async function enviarFollowup() {
-  const input = document.getElementById('followup-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-  conversationHistory.push({ role: 'user', content: msg });
-  addUserMsg(msg);
-  await callAPI();
-}
-
-// ---- MENSAGENS ----
 function addUserMsg(text) {
   const msgs = document.getElementById('messages');
   const el = document.createElement('div');
@@ -1115,272 +1004,55 @@ function addUserMsg(text) {
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function showThinking() {
-  const msgs = document.getElementById('messages');
-  const el = document.createElement('div');
-  el.id = 'thinking';
-  el.className = 'thinking';
-  el.innerHTML = `<div class="thinking-dots"><span></span><span></span><span></span></div><span id="thinking-text">Buscando oportunidades reais...</span>`;
-  msgs.appendChild(el);
-  el.scrollIntoView({ behavior: 'smooth' });
-}
+function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>'); }
 
-function updateThinking(msg) {
-  const el = document.getElementById('thinking-text');
-  if (el) el.textContent = msg;
-}
-
-function removeThinking() {
-  const el = document.getElementById('thinking');
-  if (el) el.remove();
-}
-
-function addAgentMsg(rawText) {
-  const msgs = document.getElementById('messages');
-  const el = document.createElement('div');
-  el.className = 'msg agent';
-  el.innerHTML = `<div class="msg-label">Praxs Leads</div><div class="msg-body">${formatMarkdown(rawText)}</div>`;
-  msgs.appendChild(el);
-  injectProspectCards(el, rawText);
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function parseProspectLine(line) {
-  const clean = line.replace(/\*+/g,'').replace('\[PROSPECT\]','').trim();
-  const parts = clean.split('|').map(s => s.trim());
-  if (parts.length < 2) return null;
-
-  const name = parts[0];
-  const motivo = parts[1] || '';
-  let instagram = '', phone = '', maps = '', meta = motivo;
-
-  parts.forEach(p => {
-    if (p.startsWith('instagram:')) instagram = p.replace('instagram:','').trim();
-    else if (p.startsWith('tel:')) phone = p.replace('tel:','').trim();
-    else if (p.startsWith('maps:')) maps = p.replace('maps:','').trim();
-  });
-
-  // meta = bairro + motivo (primeiros dois campos sem prefixo)
-  const plainParts = parts.filter(p => !p.startsWith('instagram:') && !p.startsWith('tel:') && !p.startsWith('maps:'));
-  meta = plainParts.slice(1, 3).join(' · ');
-
-  return { name, meta, instagram, phone, maps };
-}
-
-function injectProspectCards(container, rawText) {
-  const lines = rawText.split('\n');
-  lines.forEach(line => {
-    if (!line.includes('[PROSPECT]')) return;
-    const parsed = parseProspectLine(line);
-    if (!parsed) return;
-
-    const { name, meta, instagram, phone, maps } = parsed;
-    if (adicionadosNestaSessao.includes(name)) return;
-
-    const allStrongs = container.querySelectorAll('strong, li');
-    allStrongs.forEach(node => {
-      if (!node.textContent.includes(name)) return;
-      if (node.querySelector('.prospect-inline')) return;
-
-      const card = document.createElement('div');
-      card.className = 'prospect-inline';
-
-      // Links de preview
-      let linksHtml = '';
-      if (phone) linksHtml += `<a href="https://wa.me/55${phone.replace(/\D/g,'')}" target="_blank" style="font-size:10px;color:var(--green-bright);text-decoration:none;font-family:DM Mono,monospace">📱 WhatsApp</a>`;
-      if (instagram) linksHtml += `<a href="https://instagram.com/${instagram.replace('@','')}" target="_blank" style="font-size:10px;color:#E1306C;text-decoration:none;font-family:DM Mono,monospace">📷 Instagram</a>`;
-      if (maps) linksHtml += `<a href="${maps}" target="_blank" style="font-size:10px;color:#4a9eff;text-decoration:none;font-family:DM Mono,monospace">📍 Maps</a>`;
-
-      const info = document.createElement('div');
-      info.style.flex = '1';
-      info.innerHTML = `
-        <div class="prospect-inline-name">${escapeHtml(name)}</div>
-        <div class="prospect-inline-meta">${escapeHtml(meta)}</div>
-        ${linksHtml ? `<div style="display:flex;gap:10px;margin-top:5px;flex-wrap:wrap">${linksHtml}</div>` : ''}`;
-
-      const btn = document.createElement('button');
-      btn.className = 'btn-add-prospect';
-      btn.textContent = '+ Funil';
-      btn.onclick = () => {
-        // Adiciona com todos os dados preenchidos
-        const id = 'p_' + Date.now();
-        funil[id] = {
-          name, meta, stage: 'novo',
-          addedAt: new Date().toISOString(),
-          phone: phone || '',
-          instagram: instagram || '',
-          maps: maps || '',
-          notes: ''
-        };
-        saveFunil();
-        renderFunil();
-        btn.textContent = 'No funil ✓';
-        btn.classList.add('added');
-        btn.disabled = true;
-        adicionadosNestaSessao.push(name);
-      };
-
-      card.appendChild(info);
-      card.appendChild(btn);
-
-      const parent = node.closest('li') || node.parentElement;
-      if (parent && parent.parentNode) {
-        parent.parentNode.insertBefore(card, parent.nextSibling);
-      }
-    });
-  });
-}
-
-// ---- API ----
-async function callAPI() {
-  showThinking();
-
-  const systemPrompt = `Você é um agente especializado em prospecção de clientes para arquitetos no mercado de food service brasileiro.
-
-Use a busca na web para encontrar negócios REAIS na cidade informada. Para cada prospect encontrado, busque também o Instagram, telefone e link do Google Maps.
-
-Quando listar prospects, use EXATAMENTE este formato em uma única linha por prospect:
-**[PROSPECT] Nome da empresa | Bairro | Motivo da oportunidade | instagram:@handle | tel:numero | maps:URL**
-
-Se não encontrar algum dado, omita apenas aquele campo. Exemplo:
-**[PROSPECT] Dark Kitchen Cozinha Hub | Botafogo | Abriram segunda unidade em março | instagram:@cozinhahub | maps:https://maps.google.com/...**
-
-Após listar os prospects, inclua estratégia de abordagem, script de primeiro contato e próxima ação.
-
-Use ### para subtítulos. Escreva em português do Brasil.`;
-
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
-        system: systemPrompt,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: conversationHistory
-      })
-    });
-
-    const rawText = await res.text();
-
-    // Detecta se o servidor retornou HTML em vez de JSON (Render dormindo)
-    if (rawText.trim().startsWith('<') || rawText.trim().startsWith('<!')) {
-      throw new Error('O servidor está acordando (plano gratuito do Render). Aguarde 30-60 segundos e tente novamente. Isso só acontece após longos períodos sem uso.');
-    }
-
-    let data;
-    try { data = JSON.parse(rawText); } catch(e) {
-      throw new Error('Resposta inválida do servidor. Tente novamente em instantes.');
-    }
-
-    if (!res.ok) throw new Error(data.error?.message || 'Erro na API');
-
-    const finalText = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
-    conversationHistory.push({ role: 'assistant', content: finalText });
-    removeThinking();
-    addAgentMsg(finalText);
-    showFollowup();
-
-  } catch(err) {
-    removeThinking();
-    const msgs = document.getElementById('messages');
-    const el = document.createElement('div');
-    el.className = 'error-msg';
-    el.textContent = 'Erro: ' + err.message;
-    msgs.appendChild(el);
-  }
-}
-
-function formatMarkdown(text) {
-  return text
-    .replace(/\[PROSPECT\]/g, '')
-    .replace(/### (.+)/g, '<h3>$1</h3>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^[\-\*] (.+)/gm, '<li>$1</li>')
-    .replace(/(<li>[\s\S]+?<\/li>)/g, m => `<ul>${m}</ul>`)
-    .replace(/\n\n/g, '<br><br>');
-}
-
-function escapeHtml(t) {
-  return String(t).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>');
-}
-
-function showFollowup() {
-  const fa = document.getElementById('followup-area');
-  fa.style.display = 'flex';
-  document.getElementById('suggestions').innerHTML = [
-    'Gere um script de WhatsApp para o primeiro prospect',
-    'Como me apresentar sem portfólio no segmento?',
-    'Qual o ticket médio de um projeto de cozinha profissional?',
-    'Como identificar se o negócio ainda não tem arquiteto?'
-  ].map(s => `<div class="suggestion-chip" onclick="useSuggestion(this)">${s}</div>`).join('');
-  fa.scrollIntoView({ behavior: 'smooth' });
-}
-
-function useSuggestion(el) {
-  document.getElementById('followup-input').value = el.textContent;
-  document.getElementById('followup-input').focus();
-}
-
-// ---- BASE DE PROSPECTS LIGHT ----
-// Redes nacionais e potências regionais (Eixo RJ/SP) — atualização Q1 2026
+// ---- NOVA BASE INTELIGENTE (LIGHT) ----
 const PROSPECTS_BASE = {
   "Dark Kitchen": [
-    // Nacionais
-    { nome: "ATW Delivery Brands", tipo: "Holding de dark kitchens", oportunidade: "Maior holding de dark kitchens do mundo. Cada unidade opera 3 marcas em uma cozinha.", sinal: "Buscando franqueados ativamente", contato: "atwdeliverybrands.com.br", instagram: "", abrangencia: "Nacional" },
-    { nome: "Grupo HSH (Home Sushi Home)", tipo: "Rede de dark kitchens", oportunidade: "Meta de 15 novas franquias em 2026. Alta padronização de cozinha exigida.", sinal: "Plano agressivo de expansão anunciado", contato: "homesushihome.com.br", instagram: "@homesushihome", abrangencia: "Nacional" },
-    { nome: "China in Box / Gendai", tipo: "Grupo multimarcas", oportunidade: "Opera 150+ dark kitchens. Modelo de expansão focado em cozinhas fechadas.", sinal: "Grupo em expansão contínua", contato: "chinaingbox.com.br", instagram: "@chinaingboxbrasil", abrangencia: "Nacional" },
-    { nome: "KitchenCentral", tipo: "Hub de dark kitchens compartilhadas", oportunidade: "Cada novo hub é um galpão transformado em um complexo de cozinhas profissionais.", sinal: "Expansão para novas capitais", contato: "kitchencentral.com.br", instagram: "", abrangencia: "SP, RJ, BH" },
-    // Regionais RJ/SP
-    { nome: "Mimic", tipo: "Hub de cozinhas para marcas digitais", oportunidade: "Parceira de marcas como Patties e Cia do Restaurante. Projetos de alta performance e fluxo intenso.", sinal: "Crescimento de operações em SP", contato: "mimic.com.br", instagram: "@mimicbrasil", abrangencia: "São Paulo" },
-    { nome: "Local Kitchens RJ", tipo: "Complexo de cozinhas industriais", oportunidade: "Galpões adaptados na Zona Sul e Tijuca para delivery de alta demanda. Necessidade constante de retrofit.", sinal: "Alta rotatividade de operadores", contato: "", instagram: "", abrangencia: "Rio de Janeiro" },
-    { nome: "Smart Kitchens", tipo: "Cozinhas modulares para delivery", oportunidade: "Construção de módulos de 15m² a 30m² otimizados para iFood. Demanda por projetos de exaustão complexos.", sinal: "Novos polos inaugurados", contato: "smartkitchens.com.br", instagram: "", abrangencia: "SP e RJ" }
+    { nome: "ATW Delivery Brands", tipo: "Holding de dark kitchens", oportunidade: "A maior holding de dark kitchens do mundo, operando várias marcas na mesma cozinha.", sinal: "Buscando franqueados ativamente", contato: "atwdeliverybrands.com.br", instagram: "", abrangencia: "Nacional",
+      dor: "Gargalo no fluxo: cruzamento constante de entregadores de marcas diferentes com o lixo e reposição de stock.",
+      abordagem: "Foque na sua capacidade de criar layouts limpos que impedem a contaminação cruzada num espaço reduzido." },
+    { nome: "Mimic", tipo: "Hub de cozinhas para marcas digitais", oportunidade: "Parceira de marcas gigantes. Exigem projetos de altíssima performance.", sinal: "Crescimento de operações em SP", contato: "mimic.com.br", instagram: "@mimicbrasil", abrangencia: "SP",
+      dor: "Exaustão subdimensionada. Cozinhas a operar no limite sofrem com aquecimento extremo do ambiente.",
+      abordagem: "Apresente-se como especialista na compatibilização rigorosa dos sistemas de AVAC (exaustão/ventilação)." },
+    { nome: "Grupo HSH (Home Sushi Home)", tipo: "Rede de dark kitchens", oportunidade: "Meta de 15 novas franquias. Alta padronização de cozinha exigida.", sinal: "Plano agressivo de expansão anunciado", contato: "homesushihome.com.br", instagram: "@homesushihome", abrangencia: "Nacional",
+      dor: "Padronização de montagem cara. Precisam replicar as cozinhas em diferentes formatos de imóveis sem estourar o orçamento.",
+      abordagem: "Venda a ideia de criar um 'projeto modular base', facilitando a aprovação sanitária rápida para novos franqueados." }
   ],
   "Hamburgueria": [
-    // Nacionais
-    { nome: "La Brasa Burger", tipo: "Hamburgueria artesanal", oportunidade: "140 unidades com dark kitchens. Meta de 20 novas unidades em 2025.", sinal: "Expansão ativa em todas as regiões", contato: "labrasaburger.com.br", instagram: "@labrasaburger", abrangencia: "Nacional" },
-    { nome: "Cabana Burger", tipo: "Hamburgueria premium", oportunidade: "Expansão para MG, PR e DF. Unidade padrão de 120m² exige projeto arquitetônico completo.", sinal: "Entrada em novos estados", contato: "cabana.com.br", instagram: "@cabanaburger", abrangencia: "SP, RJ, MG, PR, DF" },
-    { nome: "Johnny Rockets", tipo: "Hamburgueria temática", oportunidade: "Projetos de alto padrão exigidos em shoppings centers.", sinal: "Crescimento no franchising", contato: "johnnyrockets.com.br", instagram: "@johnnyrockets_br", abrangencia: "Nacional" },
-    // Regionais RJ/SP
-    { nome: "T.T. Burger", tipo: "Hamburgueria premium (Grupo Trigo)", oportunidade: "Marca carioca consolidada com forte expansão em SP e novos bairros do RJ. Projetos com design industrial sofisticado.", sinal: "Novas lojas de rua e shopping", contato: "ttburger.com.br", instagram: "@t.t.burger", abrangencia: "RJ, SP, ES, DF" },
-    { nome: "Patties", tipo: "Ultra-smash burger", oportunidade: "Fenômeno em São Paulo. Lojas super compactas focadas em volume e delivery. Desafio de fluxo operacional extremo.", sinal: "Expansão acelerada em pontos de rua", contato: "patties.com.br", instagram: "@pattiesburger", abrangencia: "São Paulo" },
-    { nome: "B de Burger", tipo: "Hamburgueria na brasa", oportunidade: "Rede carioca focada em grelhas parilla. Projetos exigem engenharia rigorosa de exaustão e salão premium.", sinal: "Constante retrofit e novas praças", contato: "bdeburger.com", instagram: "@bdeburger", abrangencia: "Rio de Janeiro" },
-    { nome: "Z Deli Sandwiches", tipo: "Deli e hamburgueria premiada", oportunidade: "Restaurantes de altíssimo fluxo em SP. Cozinhas trabalham no limite da capacidade, exigindo layout cirúrgico.", sinal: "Abertura de cozinhas de apoio", contato: "zdeli.com.br", instagram: "@zdelisandwiches", abrangencia: "São Paulo" }
+    { nome: "La Brasa Burger", tipo: "Hamburgueria artesanal", oportunidade: "140 unidades com operações pesadas de chapa. Meta de 20 novas lojas.", sinal: "Expansão ativa em todas as regiões", contato: "labrasaburger.com.br", instagram: "@labrasaburger", abrangencia: "Nacional",
+      dor: "O fumo e a gordura das chapas frequentemente invadem o salão, estragando a experiência do cliente.",
+      abordagem: "Não fale de estética primeiro. Ofereça um diagnóstico do sistema de exaustão e retenção de odores." },
+    { nome: "T.T. Burger", tipo: "Hamburgueria premium", oportunidade: "Marca carioca consolidada com forte expansão em SP e novos bairros do RJ.", sinal: "Novas lojas de rua e shopping", contato: "ttburger.com.br", instagram: "@t.t.burger", abrangencia: "RJ e SP",
+      dor: "Manter a forte identidade visual \"industrial carioca\" adaptada a shoppings, que têm regras rígidas de infraestrutura.",
+      abordagem: "Mostre que sabe dialogar com engenheiros de shoppings para aprovar fachadas ousadas sem atrasar a obra." },
+    { nome: "Patties", tipo: "Ultra-smash burger", oportunidade: "Fenómeno em SP. Lojas super compactas focadas em volume e delivery intenso.", sinal: "Expansão acelerada", contato: "patties.com.br", instagram: "@pattiesburger", abrangencia: "SP",
+      dor: "Cozinha com fluxo de produção estilo linha de montagem num espaço minúsculo. Cada centímetro conta.",
+      abordagem: "Fale sobre ergonomia operacional: como o desenho correto do balcão de montagem corta 3 segundos de cada pedido." }
   ],
   "Café": [
-    // Nacionais
-    { nome: "Cheirin Bão", tipo: "Cafeteria com café especial", oportunidade: "Mais de 900 unidades. Maior rede de cafeterias especiais do país.", sinal: "Sempre captando novos pontos", contato: "cheirinbao.com.br", instagram: "@cheirinbao", abrangencia: "Nacional" },
-    { nome: "Sterna Café", tipo: "Cafeteria premium", oportunidade: "Meta de 40 novas unidades. Foco em lojas instagramáveis e bem desenhadas.", sinal: "11 contratos assinados recentemente", contato: "sternacafe.com.br", instagram: "@sternacafe", abrangencia: "Nacional" },
-    { nome: "Casa Bauducco", tipo: "Cafeteria + empório", oportunidade: "Dois formatos: quiosque menor e loja completa em shoppings.", sinal: "Expansão contínua", contato: "casabauducco.com.br", instagram: "@casabauducco", abrangencia: "Nacional" },
-    // Regionais RJ/SP
-    { nome: "The Slow Bakery", tipo: "Padaria artesanal e café", oportunidade: "Operação carioca que mistura fábrica e salão. Necessidade de vitrines complexas e controle de temperatura na produção.", sinal: "Abertura de novas 'filiais-satélite'", contato: "theslowbakery.com.br", instagram: "@theslowbakery", abrangencia: "Rio de Janeiro" },
-    { nome: "We Coffee", tipo: "Cafeteria instagramável asiática", oportunidade: "As lojas são verdadeiras obras de arquitetura futurista em SP. Investimento altíssimo em design de interiores e vitrines.", sinal: "Expansão viral e filas constantes", contato: "wecoffee.com.br", instagram: "@wecoffee.br", abrangencia: "São Paulo" },
-    { nome: "Curto Café", tipo: "Café especial e torrefação", oportunidade: "Modelo de negócio disruptivo no Centro do RJ. Sempre reformulando o espaço e adicionando novas ilhas de serviço.", sinal: "Expansão orgânica da operação", contato: "curtocafe.com.br", instagram: "@curtocafe", abrangencia: "Rio de Janeiro" },
-    { nome: "Coffee Lab", tipo: "Laboratório de torra e degustação", oportunidade: "Pioneiros em SP. O maquinário de torra faz parte do projeto de interiores. Constante atualização técnica.", sinal: "Referência no setor, sempre em obras", contato: "coffeelab.com.br", instagram: "@coffeelab_br", abrangencia: "São Paulo" }
+    { nome: "Sterna Café", tipo: "Cafeteria premium", oportunidade: "Foco em lojas esteticamente instagramáveis para atrair o público jovem.", sinal: "11 contratos assinados recentemente", contato: "sternacafe.com.br", instagram: "@sternacafe", abrangencia: "Nacional",
+      dor: "O salão é lindo, mas a retaguarda (lavagem, stock, preparação) costuma ficar apertada e desorganizada.",
+      abordagem: "Ofereça o projeto do 'coração escondido': um fluxo de retaguarda que sustente a beleza do salão." },
+    { nome: "The Slow Bakery", tipo: "Padaria artesanal e café", oportunidade: "Operação carioca que mistura fábrica e salão de alto nível.", sinal: "Abertura de novas filiais-satélite", contato: "theslowbakery.com.br", instagram: "@theslowbakery", abrangencia: "RJ",
+      dor: "Controlo de temperatura sensível para a fermentação natural que colide com o calor dos fornos à vista do público.",
+      abordagem: "Realce a sua especialização no conforto térmico e no desenho de vitrinas técnicas refrigeradas." }
   ],
   "Restaurante À la Carte": [
-    // Nacionais
-    { nome: "Divino Fogão", tipo: "Culinária brasileira", oportunidade: "Megaloja de 600m² inaugurada. Novo conceito prevê mudanças estruturais na rede.", sinal: "Novo conceito de megaloja", contato: "divinofogao.com.br", instagram: "@divinofogao", abrangencia: "Nacional" },
-    { nome: "Espetto Carioca", tipo: "Bar e restaurante", oportunidade: "Modelo híbrido físico + dark kitchen. Forte presença no RJ e expansão para interiores.", sinal: "Dark kitchen valida novas praças", contato: "espettocarioca.com.br", instagram: "@espettocarioca", abrangencia: "Nacional" },
-    // Regionais RJ/SP
-    { nome: "Gurumê", tipo: "Japonês contemporâneo", oportunidade: "Projetos arquitetônicos premiados (Triptyque, Bernardes). Orçamentos milionários para novos restaurantes no RJ e SP.", sinal: "Expansão contínua no eixo RJ/SP", contato: "japagurume.com.br", instagram: "@gurume_oficial", abrangencia: "RJ e SP" },
-    { nome: "Ráscal", tipo: "Cozinha mediterrânea", oportunidade: "Restaurantes imensos em shoppings de SP e RJ com ilhas de preparo à vista do cliente. Complexidade máxima de exaustão.", sinal: "Sempre renovando unidades antigas", contato: "rascal.com.br", instagram: "@rascalrestaurante", abrangencia: "SP e RJ" },
-    { nome: "Grupo Irajá (Pedro de Artagão)", tipo: "Grupo gastronômico multimarcas", oportunidade: "Dono de marcas como Irajá, Formidable e Bastarda no RJ. Lançam novos conceitos anualmente exigindo identidade visual única.", sinal: "Criação de novas marcas e pontos", contato: "grupoiraja.com.br", instagram: "@grupoiraja", abrangencia: "Rio de Janeiro" },
-    { nome: "Famiglia Mancini", tipo: "Cantinas italianas", oportunidade: "Dominam a Rua Avanhandava em SP. Operações gigantescas que requerem manutenção e expansão constantes da retaguarda.", sinal: "Expansão do império na mesma rua", contato: "famigliamancini.com.br", instagram: "@famigliamancini", abrangencia: "São Paulo" }
+    { nome: "Gurumê", tipo: "Japonês contemporâneo", oportunidade: "Projetos arquitetónicos premiados. Orçamentos altíssimos para novos espaços.", sinal: "Expansão contínua no eixo RJ/SP", contato: "japagurume.com.br", instagram: "@gurume_oficial", abrangencia: "RJ e SP",
+      dor: "Dificuldade em gerir fornecedores de acabamentos premium garantindo a funcionalidade bruta da cozinha quente asiática.",
+      abordagem: "Posicione-se não como concorrente dos grandes designers, mas como o Parceiro Técnico para desenhar a cozinha invisível perfeita." },
+    { nome: "Divino Fogão", tipo: "Culinária brasileira", oportunidade: "Megaloja de 600m² inaugurada, forçando a atualização do conceito visual da rede.", sinal: "Novo conceito visual", contato: "divinofogao.com.br", instagram: "@divinofogao", abrangencia: "Nacional",
+      dor: "O sistema de banho-maria e frio do grande buffet requer muita manutenção e desperdiça energia se mal desenhado.",
+      abordagem: "Proponha eficiência energética através da correta especificação e alinhamento do maquinário de self-service." }
   ],
   "Buffet Self-Service": [
-    // Nacionais
-    { nome: "Churras Express Brasil", tipo: "Espetos e grelhados", oportunidade: "Múltiplos formatos (loja, quiosque, container). Cada franqueado precisa de adaptação de projeto.", sinal: "Alta adaptabilidade", contato: "churrasexpress.com.br", instagram: "", abrangencia: "Nacional" },
-    { nome: "Brasileirinho Delivery", tipo: "Culinária brasileira", oportunidade: "Cozinha com produção em larga escala exige projeto técnico detalhado de fluxo.", sinal: "Novos pontos buscados", contato: "brasileirinho.com.br", instagram: "", abrangencia: "Nacional" },
-    // Regionais RJ/SP
-    { nome: "Frontera", tipo: "Buffet internacional", oportunidade: "Rede carioca com amplos salões e ilhas temáticas complexas de cocção ao vivo (pizzas, grelhados).", sinal: "Retrofit de lojas clássicas", contato: "frontera.com.br", instagram: "@fronterarestaurante", abrangencia: "Rio de Janeiro" },
-    { nome: "Manihi Sushi", tipo: "Rodízio japonês premium", oportunidade: "Em SP, rodízios de alto padrão exigem balcões de sushiman extensos e cozinhas quentes de alta vazão.", sinal: "Alta competitividade no setor, forçando reformas", contato: "manihisushi.com.br", instagram: "@manihisushi", abrangencia: "São Paulo" },
-    { nome: "A Mineira", tipo: "Comida regional em buffet", oportunidade: "Unidades gigantes no RJ (Niterói, Zona Sul, Tijuca). Estilo rústico com cozinhas pesadas (fogão a lenha, caldeirões).", sinal: "Constante necessidade de otimização de fluxo", contato: "amineira.com.br", instagram: "@restauranteamineira", abrangencia: "Rio de Janeiro" }
+    { nome: "A Mineira", tipo: "Buffet com comida regional", oportunidade: "Unidades gigantes no RJ. Estilo rústico com cozinhas pesadas.", sinal: "Constante necessidade de otimização de fluxo", contato: "amineira.com.br", instagram: "@restauranteamineira", abrangencia: "RJ",
+      dor: "A reposição constante do buffet colide com o fluxo de clientes no salão durante o pico do almoço.",
+      abordagem: "Ofereça soluções de layout anti-colisão: desenhe vias secundárias apenas para a equipa circular com bandejas quentes." }
   ]
 };
 
-// Lookup global para prospects da base (evita JSON em atributos onclick)
 const BASE_LOOKUP = {};
 
 function renderBaseProspects(segmentos) {
@@ -1393,7 +1065,7 @@ function renderBaseProspects(segmentos) {
 
   const header = document.createElement('div');
   header.className = 'base-header';
-  header.innerHTML = '<span class="base-title">Base Praxs Leads Light — redes em expansão</span>';
+  header.innerHTML = '<span class="base-title">Praxs Radar — Oportunidades Estratégicas</span>';
   section.appendChild(header);
 
   segmentos.forEach(seg => {
@@ -1402,10 +1074,7 @@ function renderBaseProspects(segmentos) {
 
     const segEl = document.createElement('div');
     segEl.style.marginBottom = '20px';
-    segEl.innerHTML = `<div class="base-header">
-      <span class="base-title" style="color:var(--text-muted)">${escapeHtml(seg)}</span>
-      <span class="base-count">${prospects.length} redes</span>
-    </div>`;
+    segEl.innerHTML = `<div class="base-header"><span class="base-title" style="color:var(--text-muted)">${escapeHtml(seg)}</span><span class="base-count">${prospects.length} resultados premium</span></div>`;
 
     const cardsEl = document.createElement('div');
     cardsEl.className = 'base-cards';
@@ -1418,11 +1087,14 @@ function renderBaseProspects(segmentos) {
       card.className = 'base-card';
       card.id = cardId;
 
-      const searchQuery = encodeURIComponent(p.nome + ' franquia food service');
-      const siteLink = `<a href="https://www.google.com/search?q=${searchQuery}" target="_blank" class="prospect-link">🔍 Pesquisar</a>`;
-      const instaLink = p.instagram
-        ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${escapeHtml(p.instagram)}</a>`
-        : '';
+      const searchQuery = encodeURIComponent(p.nome + ' franquia restaurante');
+      const siteLink = `<a href="https://www.google.com/search?q=${searchQuery}" target="_blank" class="prospect-link">🔍 Explorar Marca</a>`;
+      const instaLink = p.instagram ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${escapeHtml(p.instagram)}</a>` : '';
+
+      // Novo bloco de Inteligência
+      const dorHtml = p.dor ? `<div class="intel-item intel-dor"><strong>⚠️ Ponto Crítico:</strong> <span style="color:var(--text-dim)">${escapeHtml(p.dor)}</span></div>` : '';
+      const abordHtml = p.abordagem ? `<div class="intel-item intel-abord"><strong>💡 Estratégia:</strong> <span style="color:var(--text-dim)">${escapeHtml(p.abordagem)}</span></div>` : '';
+      const intelHtml = (dorHtml || abordHtml) ? `<div class="base-card-intel">${dorHtml}${abordHtml}</div>` : '';
 
       card.innerHTML = `
         <div class="base-card-header">
@@ -1434,14 +1106,14 @@ function renderBaseProspects(segmentos) {
         </div>
         <div class="base-card-oportunidade">${escapeHtml(p.oportunidade)}</div>
         <div class="base-card-sinal">${escapeHtml(p.sinal)}</div>
+        ${intelHtml}
         <div class="base-card-links">
           ${siteLink}${instaLink}
-          <span class="base-card-abrangencia">${escapeHtml(p.abrangencia)}</span>
+          <span class="base-card-abrangencia" style="margin-left:auto">${escapeHtml(p.abrangencia)}</span>
         </div>`;
 
       const btn = card.querySelector('button');
       btn.addEventListener('click', () => addFromBase(cardId));
-
       cardsEl.appendChild(card);
     });
 
@@ -1449,16 +1121,11 @@ function renderBaseProspects(segmentos) {
     section.appendChild(segEl);
   });
 
-  // NOVO CÓDIGO INSERIDO AQUI: Botão "Fazer Nova Busca" no final da seção
   const btnNovaBusca = document.createElement('button');
   btnNovaBusca.className = 'btn-nova-busca';
   btnNovaBusca.textContent = '↑ Fazer Nova Busca';
-  btnNovaBusca.onclick = () => {
-    novaBusca(); // Limpa o chat e exibe o formulário novamente
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
-  };
+  btnNovaBusca.onclick = () => { novaBusca(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
   section.appendChild(btnNovaBusca);
-  // FIM DO NOVO CÓDIGO
 
   msgs.appendChild(section);
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1468,6 +1135,12 @@ function addFromBase(cardId) {
   const p = BASE_LOOKUP[cardId];
   if (!p) return;
   const id = 'p_' + Date.now();
+  
+  // Magia a acontecer: a inteligência vai para as observações do CRM!
+  let anotacoes = p.oportunidade;
+  if (p.dor) anotacoes += `\n\n⚠️ DOR: ${p.dor}`;
+  if (p.abordagem) anotacoes += `\n\n💡 ABORDAGEM: ${p.abordagem}`;
+
   funil[id] = {
     name: p.nome,
     meta: p.tipo,
@@ -1476,7 +1149,7 @@ function addFromBase(cardId) {
     phone: '',
     instagram: p.instagram || '',
     maps: '',
-    notes: p.oportunidade
+    notes: anotacoes
   };
   saveFunil();
   renderFunil();
