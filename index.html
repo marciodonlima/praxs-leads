@@ -47,7 +47,7 @@
 
   .app { flex: 1; display: flex; min-height: 0; }
 
-  /* SIDEBAR */
+  /* SIDEBAR E FUNIL */
   .sidebar { width: 300px; flex-shrink: 0; border-right: 1px solid var(--border); display: flex; flex-direction: column; background: var(--surface); }
   .sidebar-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
   .sidebar-title { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; }
@@ -60,8 +60,15 @@
   .prospect-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
   .prospect-meta { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; line-height: 1.4; }
   .prospect-notes { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top: 5px; line-height: 1.5; font-style: italic; max-height: 60px; overflow: hidden; text-overflow: ellipsis; }
-  .prospect-actions { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; border-top: 1px dashed var(--border); padding-top: 8px; }
   
+  /* LINKS DE CONTATO */
+  .prospect-links { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .prospect-link { font-size: 9px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 2px; color: var(--text-muted); text-decoration: none; font-family: 'DM Mono', monospace; letter-spacing: .04em; transition: all .15s; display: inline-flex; align-items: center; gap: 4px; background: var(--surface); }
+  .prospect-link:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .prospect-link.insta:hover { border-color: #E1306C; color: #E1306C; }
+  .prospect-link.site:hover { border-color: #4a9eff; color: #4a9eff; }
+
+  .prospect-actions { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; border-top: 1px dashed var(--border); padding-top: 8px; }
   .stage-btn { font-size: 9px; padding: 4px 8px; border: 1px solid var(--border2); border-radius: 2px; background: transparent; color: var(--text-muted); cursor: pointer; font-family: 'DM Mono', monospace; letter-spacing: .04em; transition: all .15s; }
   .stage-btn:hover { border-color: var(--gold-dim); color: var(--text); }
   .stage-btn.highlight { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); width: 100%; margin-bottom: 4px; font-size: 10px; padding: 6px; }
@@ -134,10 +141,14 @@
   .thinking-dots span:nth-child(2) { animation-delay: .2s; }
   .thinking-dots span:nth-child(3) { animation-delay: .4s; }
 
-  /* MODALS */
+  /* MODALS GERAIS E BOTÃO DE FECHAR "X" */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 1000; display: flex; align-items: center; justify-content: center; animation: fadeIn .2s ease; }
-  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 28px; width: 460px; max-width: 90vw; display: flex; flex-direction: column; gap: 18px; max-height: 90vh; overflow-y: auto; }
-  .modal-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: -4px; }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 28px; width: 460px; max-width: 90vw; display: flex; flex-direction: column; gap: 18px; max-height: 90vh; overflow-y: auto; position: relative; }
+  
+  .btn-close-x { position: absolute; top: 16px; right: 20px; background: transparent; border: none; color: var(--text-muted); font-size: 26px; line-height: 1; cursor: pointer; transition: color .2s; }
+  .btn-close-x:hover { color: var(--red); }
+
+  .modal-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: -4px; padding-right: 20px; }
   .modal-subtitle { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top:-14px; }
   .modal-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-bottom: 5px; display: block; }
   .modal input, .modal textarea { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; font-family: 'Sora', sans-serif; font-size: 13px; border-radius: 2px; outline: none; transition: border-color .2s; width: 100%; }
@@ -231,6 +242,7 @@
 
 <div id="profile-modal" class="modal-overlay" style="display:none;">
   <div class="modal">
+    <button class="btn-close-x" onclick="closeProfileModal()">&times;</button>
     <div>
       <div class="modal-title">Meu Perfil Profissional</div>
       <p style="font-size:12px; color:var(--text-dim); margin-top:6px;">Estes dados personalizam automaticamente os seus scripts de abordagem. Tudo fica salvo apenas no seu navegador.</p>
@@ -256,6 +268,7 @@
 
 <div id="script-modal" class="modal-overlay" style="display:none;">
   <div class="modal" style="width:600px;">
+    <button class="btn-close-x" onclick="closeScriptModal()">&times;</button>
     <div>
       <div class="modal-title">✨ Gerador de Abordagem</div>
       <div class="modal-subtitle" id="script-lead-name" style="margin-top:4px; font-size:13px; color:var(--gold);">Nome do Lead</div>
@@ -292,8 +305,7 @@
       <label class="modal-label" style="color:var(--gold-dim)">Resultado Gerado (Edite livremente)</label>
       <textarea id="script-output"></textarea>
       <div class="modal-actions" style="margin-top:12px;">
-        <button class="btn-modal-cancel" style="flex:1;" onclick="closeScriptModal()">Fechar</button>
-        <button class="btn-modal-save" style="flex:2;" id="btn-copy-script" onclick="copyScript()">Copiar Script</button>
+        <button class="btn-modal-save" style="width:100%; padding:14px;" id="btn-copy-script" onclick="copyScript()">Copiar Script</button>
       </div>
     </div>
   </div>
@@ -361,9 +373,14 @@ function renderFunil() {
       const otherStages = STAGES.filter(s => s.key !== stage.key);
       const stageBtns = otherStages.map(s => `<button class="stage-btn" onclick="moveStage('${id}','${s.key}')">${s.label.split(' ')[0]}</button>`).join('');
       
+      const siteLink = p.contato ? `<a href="https://${p.contato.replace('https://','')}" target="_blank" class="prospect-link site">🔗 Site</a>` : '';
+      const instaLink = p.instagram ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${escapeHtml(p.instagram)}</a>` : '';
+      const linksHtml = (siteLink || instaLink) ? `<div class="prospect-links" style="margin-bottom:8px;">${siteLink}${instaLink}</div>` : '';
+
       card.innerHTML = `
         <div class="prospect-name">${escapeHtml(p.name)}</div>
         <div class="prospect-meta">${escapeHtml(p.meta)}</div>
+        ${linksHtml}
         <div class="prospect-notes">${escapeHtml(p.notes || '')}</div>
         <div class="prospect-actions">
           <button class="stage-btn highlight" onclick="openScriptModal('${id}')">✨ Gerar Script</button>
@@ -464,48 +481,49 @@ function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').re
 document.querySelectorAll('.chip-group .chip').forEach(chip => { chip.addEventListener('click', () => chip.classList.toggle('selected')); });
 function getSelected(groupId) { return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val); }
 
+// BASE PREMIUM: DADOS COMPLETOS RESTAURADOS COM INSTAGRAM E SITE (CONTATO)
 const PROSPECTS_BASE = {
   "Dark Kitchen": [
-    { nome: "ATW Delivery Brands", tipo: "Holding de dark kitchens", oportunidade: "Maior holding do mundo. Operam 3 marcas em cada cozinha.", sinal: "Buscando franqueados", abrangencia: "Nacional", dor: "Cruzamento do fluxo de motoboys com o lixo e reposição de estoque", abordagem: "Desenhar layouts que impedem a contaminação cruzada e aprovam rápido" },
-    { nome: "Grupo HSH (Home Sushi)", tipo: "Rede de dark kitchens", oportunidade: "Meta de 15 novas franquias. Alta padronização exigida.", sinal: "Expansão agressiva", abrangencia: "Nacional", dor: "Dificuldade de replicar eficiência operacional em imóveis de formatos variados", abordagem: "Oferecer projeto modular base que se adapta fácil a qualquer locação" },
-    { nome: "China in Box / Gendai", tipo: "Grupo multimarcas", oportunidade: "Foco na expansão de unidades apenas para delivery (Dark).", sinal: "Expansão contínua", abrangencia: "Nacional", dor: "Gestão do altíssimo volume de óleo e fritura em espaços menores", abordagem: "Especialização em caixas de gordura de alta performance e filtragem" },
-    { nome: "KitchenCentral", tipo: "Hub de cozinhas compartilhadas", oportunidade: "Complexos enormes alugados para dezenas de operações simultâneas.", sinal: "Novas capitais", abrangencia: "SP, RJ, BH", dor: "Superaquecimento estrutural e subdimensionamento da exaustão central", abordagem: "Compatibilização rigorosa de sistemas pesados de AVAC" },
-    { nome: "Mimic", tipo: "Hub para marcas digitais", oportunidade: "Parceira de marcas gigantes. Fluxo e volume intensos.", sinal: "Crescimento em SP", abrangencia: "SP", dor: "Cozinhas operando no limite absoluto de pessoas e equipamentos", abordagem: "Foco em ergonomia operacional para cortar segundos vitais na montagem" },
-    { nome: "Local Kitchens RJ", tipo: "Galpões adaptados", oportunidade: "Grandes espaços focados em polo de delivery na Zona Sul e Tijuca.", sinal: "Alta rotatividade", abrangencia: "RJ", dor: "Readequação constante de pontos elétricos e de gás a cada novo inquilino", abordagem: "Desenho de infraestrutura 'plug and play' flexível para rodízio de operadores" },
-    { nome: "Smart Kitchens", tipo: "Cozinhas modulares", oportunidade: "Módulos de 15m² a 30m² otimizados para iFood.", sinal: "Novos polos", abrangencia: "SP e RJ", dor: "Aproveitamento milimétrico do espaço sem perder área fria de estocagem", abordagem: "Layout em formato 'Tetris' unindo a engenharia do cardápio à arquitetura" }
+    { nome: "ATW Delivery Brands", contato: "atwdeliverybrands.com.br", instagram: "@atwdeliverybrands", tipo: "Holding de dark kitchens", oportunidade: "Maior holding do mundo. Operam 3 marcas em cada cozinha.", sinal: "Buscando franqueados", abrangencia: "Nacional", dor: "Cruzamento do fluxo de motoboys com o lixo e reposição de estoque", abordagem: "Desenhar layouts que impedem a contaminação cruzada e aprovam rápido" },
+    { nome: "Grupo HSH (Home Sushi)", contato: "homesushihome.com.br", instagram: "@homesushihome", tipo: "Rede de dark kitchens", oportunidade: "Meta de 15 novas franquias. Alta padronização exigida.", sinal: "Expansão agressiva", abrangencia: "Nacional", dor: "Dificuldade de replicar eficiência operacional em imóveis de formatos variados", abordagem: "Oferecer projeto modular base que se adapta fácil a qualquer locação" },
+    { nome: "China in Box / Gendai", contato: "chinainbox.com.br", instagram: "@chinainboxbrasil", tipo: "Grupo multimarcas", oportunidade: "Foco na expansão de unidades apenas para delivery (Dark).", sinal: "Expansão contínua", abrangencia: "Nacional", dor: "Gestão do altíssimo volume de óleo e fritura em espaços menores", abordagem: "Especialização em caixas de gordura de alta performance e filtragem" },
+    { nome: "KitchenCentral", contato: "kitchencentral.com.br", instagram: "@kitchencentral", tipo: "Hub de cozinhas compartilhadas", oportunidade: "Complexos enormes alugados para dezenas de operações simultâneas.", sinal: "Novas capitais", abrangencia: "SP, RJ, BH", dor: "Superaquecimento estrutural e subdimensionamento da exaustão central", abordagem: "Compatibilização rigorosa de sistemas pesados de AVAC" },
+    { nome: "Mimic", contato: "mimic.com.br", instagram: "@mimicbrasil", tipo: "Hub para marcas digitais", oportunidade: "Parceira de marcas gigantes. Fluxo e volume intensos.", sinal: "Crescimento em SP", abrangencia: "SP", dor: "Cozinhas operando no limite absoluto de pessoas e equipamentos", abordagem: "Foco em ergonomia operacional para cortar segundos vitais na montagem" },
+    { nome: "Local Kitchens RJ", contato: "", instagram: "", tipo: "Galpões adaptados", oportunidade: "Grandes espaços focados em polo de delivery na Zona Sul e Tijuca.", sinal: "Alta rotatividade", abrangencia: "RJ", dor: "Readequação constante de pontos elétricos e de gás a cada novo inquilino", abordagem: "Desenho de infraestrutura 'plug and play' flexível para rodízio de operadores" },
+    { nome: "Smart Kitchens", contato: "smartkitchens.com.br", instagram: "@smartkitchens", tipo: "Cozinhas modulares", oportunidade: "Módulos de 15m² a 30m² otimizados para iFood.", sinal: "Novos polos", abrangencia: "SP e RJ", dor: "Aproveitamento milimétrico do espaço sem perder área fria de estocagem", abordagem: "Layout em formato 'Tetris' unindo a engenharia do cardápio à arquitetura" }
   ],
   "Hamburgueria": [
-    { nome: "La Brasa Burger", tipo: "Artesanal", oportunidade: "140 unidades com operações pesadas. Meta de 20 novas lojas.", sinal: "Expansão ativa", abrangencia: "Nacional", dor: "Fumaça e gordura pesada das chapas invadindo a área de clientes", abordagem: "Diagnóstico e readequação potente do sistema de exaustão" },
-    { nome: "Cabana Burger", tipo: "Premium", oportunidade: "Unidades padrão de 120m² que exigem projeto técnico completo.", sinal: "Entrada em novos estados", abrangencia: "SP, RJ, MG", dor: "Manter o alto padrão estético alinhado a uma cozinha de guerra hiper produtiva", abordagem: "Conexão perfeita entre o design de interiores e a retaguarda invisível" },
-    { nome: "Johnny Rockets", tipo: "Temática", oportunidade: "Segunda maior operação do mundo. Obras exigentes em shoppings.", sinal: "Crescimento franchising", abrangencia: "Nacional", dor: "Limitações rigorosas de shoppings para aprovação de coifas e ar-condicionado", abordagem: "Especialização nos trâmites e aprovações junto à engenharia de shoppings" },
-    { nome: "T.T. Burger", tipo: "Premium (Grupo Trigo)", oportunidade: "Marca carioca com forte expansão em SP e shoppings do RJ.", sinal: "Novas lojas", abrangencia: "RJ e SP", dor: "Adaptar a estética industrial bruta aos guias de loja fechados dos shoppings", abordagem: "Harmonização de materiais industriais aprováveis pelas fiscalizações" },
-    { nome: "Patties", tipo: "Ultra-smash burger", oportunidade: "Fenômeno de fluxo. Lojas super compactas focadas em volume extremo.", sinal: "Expansão acelerada", abrangencia: "SP", dor: "Linha de montagem e fluxo de motoboys congestionando espaços minúsculos", abordagem: "Otimização milimétrica de bancadas para produção em formato de esteira contínua" },
-    { nome: "B de Burger", tipo: "Na brasa", oportunidade: "Rede carioca focada em grelhas parilla. Orçamentos robustos.", sinal: "Retrofit e expansão", abrangencia: "RJ", dor: "Calor extremo irradiado pelas grelhas afetando a produtividade da equipe", abordagem: "Soluções de conforto térmico e sistemas de compensação de ar inteligente" },
-    { nome: "Z Deli Sandwiches", tipo: "Premiada", oportunidade: "Operação no limite da capacidade. Necessidade de salões e apoios extras.", sinal: "Abertura de apoios", abrangencia: "SP", dor: "Falta de área física para gerir o alto volume de insumos frescos diários", abordagem: "Criação de centros de preparação isolados (commissary kitchens) muito eficientes" }
+    { nome: "La Brasa Burger", contato: "labrasaburger.com.br", instagram: "@labrasaburger", tipo: "Artesanal", oportunidade: "140 unidades com operações pesadas. Meta de 20 novas lojas.", sinal: "Expansão ativa", abrangencia: "Nacional", dor: "Fumaça e gordura pesada das chapas invadindo a área de clientes", abordagem: "Diagnóstico e readequação potente do sistema de exaustão" },
+    { nome: "Cabana Burger", contato: "cabanaburger.com.br", instagram: "@cabanaburger", tipo: "Premium", oportunidade: "Unidades padrão de 120m² que exigem projeto técnico completo.", sinal: "Entrada em novos estados", abrangencia: "SP, RJ, MG", dor: "Manter o alto padrão estético alinhado a uma cozinha de guerra hiper produtiva", abordagem: "Conexão perfeita entre o design de interiores e a retaguarda invisível" },
+    { nome: "Johnny Rockets", contato: "johnnyrockets.com.br", instagram: "@johnnyrocketsbrasil", tipo: "Temática", oportunidade: "Segunda maior operação do mundo. Obras exigentes em shoppings.", sinal: "Crescimento franchising", abrangencia: "Nacional", dor: "Limitações rigorosas de shoppings para aprovação de coifas e ar-condicionado", abordagem: "Especialização nos trâmites e aprovações junto à engenharia de shoppings" },
+    { nome: "T.T. Burger", contato: "ttburger.com.br", instagram: "@t.t.burger", tipo: "Premium (Grupo Trigo)", oportunidade: "Marca carioca com forte expansão em SP e shoppings do RJ.", sinal: "Novas lojas", abrangencia: "RJ e SP", dor: "Adaptar a estética industrial bruta aos guias de loja fechados dos shoppings", abordagem: "Harmonização de materiais industriais aprováveis pelas fiscalizações" },
+    { nome: "Patties", contato: "patties.com.br", instagram: "@pattiesburger", tipo: "Ultra-smash burger", oportunidade: "Fenômeno de fluxo. Lojas super compactas focadas em volume extremo.", sinal: "Expansão acelerada", abrangencia: "SP", dor: "Linha de montagem e fluxo de motoboys congestionando espaços minúsculos", abordagem: "Otimização milimétrica de bancadas para produção em formato de esteira contínua" },
+    { nome: "B de Burger", contato: "bdeburger.com", instagram: "@bdeburger", tipo: "Na brasa", oportunidade: "Rede carioca focada em grelhas parilla. Orçamentos robustos.", sinal: "Retrofit e expansão", abrangencia: "RJ", dor: "Calor extremo irradiado pelas grelhas afetando a produtividade da equipe", abordagem: "Soluções de conforto térmico e sistemas de compensação de ar inteligente" },
+    { nome: "Z Deli Sandwiches", contato: "zdeli.com.br", instagram: "@zdelisandwiches", tipo: "Premiada", oportunidade: "Operação no limite da capacidade. Necessidade de salões e apoios extras.", sinal: "Abertura de apoios", abrangencia: "SP", dor: "Falta de área física para gerir o alto volume de insumos frescos diários", abordagem: "Criação de centros de preparação isolados (commissary kitchens) muito eficientes" }
   ],
   "Café": [
-    { nome: "Cheirin Bão", tipo: "Café especial", oportunidade: "Mais de 900 unidades. Maior rede de cafeterias do país.", sinal: "Sempre captando", abrangencia: "Nacional", dor: "Padronização visual e de fluxo em pontos comerciais de tamanhos muito variados", abordagem: "Desenvolvimento de manualização arquitetônica para padronizar franqueados" },
-    { nome: "Sterna Café", tipo: "Premium", oportunidade: "Meta de 40 novas unidades. Foco em lojas instagramáveis.", sinal: "Contratos assinados", abrangencia: "Nacional", dor: "O salão é lindo, mas a retaguarda e área de lavagem ficam caóticas e visíveis", abordagem: "Projetar o 'coração escondido' que garante a beleza e a limpeza contínua" },
-    { nome: "Casa Bauducco", tipo: "Cafeteria + empório", oportunidade: "Dois formatos vitais: quiosque menor e loja completa.", sinal: "Expansão contínua", abrangencia: "Nacional", dor: "Exposição de produtos secos concorrendo com o espaço das estufas quentes", abordagem: "Marcenaria inteligente voltada 100% para o vitrinismo e venda por impulso" },
-    { nome: "The Slow Bakery", tipo: "Padaria e café", oportunidade: "Mistura fábrica de pães com salão. Altíssimo nível de exigência técnica.", sinal: "Filiais-satélite", abrangencia: "RJ", dor: "Controle térmico sensível da fermentação natural colidindo com o calor dos fornos", abordagem: "Especialização em conforto térmico e desenho de vitrines técnicas refrigeradas" },
-    { nome: "We Coffee", tipo: "Instagramável", oportunidade: "Lojas que são obras de arquitetura futurista. Investimentos imensos.", sinal: "Expansão viral", abrangencia: "SP", dor: "Gestão do fluxo brutal de filas sem destruir a experiência acústica do salão", abordagem: "Integração de tratamento acústico premium com fluxo limpo de clientes" },
-    { nome: "Curto Café", tipo: "Torrefação", oportunidade: "Modelo de negócio no Centro do RJ com ilhas de serviço independentes.", sinal: "Expansão orgânica", abrangencia: "RJ", dor: "Layout aberto onde o cliente interage com os equipamentos livremente (risco)", abordagem: "Desenho de fluxos intuitivos e proteção sutil do maquinário de torra" },
-    { nome: "Coffee Lab", tipo: "Laboratório de torra", oportunidade: "O maquinário de torra faz parte da experiência visual de interiores.", sinal: "Sempre em obras", abrangencia: "SP", dor: "Extração de gases da torra do café sem afetar o cheiro agradável do ambiente", abordagem: "Engenharia sutil de micro-exaustão para áreas sensíveis" }
+    { nome: "Cheirin Bão", contato: "cheirinbao.com.br", instagram: "@cheirinbao", tipo: "Café especial", oportunidade: "Mais de 900 unidades. Maior rede de cafeterias do país.", sinal: "Sempre captando", abrangencia: "Nacional", dor: "Padronização visual e de fluxo em pontos comerciais de tamanhos muito variados", abordagem: "Desenvolvimento de manualização arquitetônica para padronizar franqueados" },
+    { nome: "Sterna Café", contato: "sternacafe.com.br", instagram: "@sternacafe", tipo: "Premium", oportunidade: "Meta de 40 novas unidades. Foco em lojas instagramáveis.", sinal: "Contratos assinados", abrangencia: "Nacional", dor: "O salão é lindo, mas a retaguarda e área de lavagem ficam caóticas e visíveis", abordagem: "Projetar o 'coração escondido' que garante a beleza e a limpeza contínua" },
+    { nome: "Casa Bauducco", contato: "casabauducco.com.br", instagram: "@casabauducco", tipo: "Cafeteria + empório", oportunidade: "Dois formatos vitais: quiosque menor e loja completa.", sinal: "Expansão contínua", abrangencia: "Nacional", dor: "Exposição de produtos secos concorrendo com o espaço das estufas quentes", abordagem: "Marcenaria inteligente voltada 100% para o vitrinismo e venda por impulso" },
+    { nome: "The Slow Bakery", contato: "theslowbakery.com.br", instagram: "@theslowbakery", tipo: "Padaria e café", oportunidade: "Mistura fábrica de pães com salão. Altíssimo nível de exigência técnica.", sinal: "Filiais-satélite", abrangencia: "RJ", dor: "Controle térmico sensível da fermentação natural colidindo com o calor dos fornos", abordagem: "Especialização em conforto térmico e desenho de vitrines técnicas refrigeradas" },
+    { nome: "We Coffee", contato: "wecoffee.com.br", instagram: "@wecoffee.br", tipo: "Instagramável", oportunidade: "Lojas que são obras de arquitetura futurista. Investimentos imensos.", sinal: "Expansão viral", abrangencia: "SP", dor: "Gestão do fluxo brutal de filas sem destruir a experiência acústica do salão", abordagem: "Integração de tratamento acústico premium com fluxo limpo de clientes" },
+    { nome: "Curto Café", contato: "curtocafe.com.br", instagram: "@curtocafe", tipo: "Torrefação", oportunidade: "Modelo de negócio no Centro do RJ com ilhas de serviço independentes.", sinal: "Expansão orgânica", abrangencia: "RJ", dor: "Layout aberto onde o cliente interage com os equipamentos livremente (risco)", abordagem: "Desenho de fluxos intuitivos e proteção sutil do maquinário de torra" },
+    { nome: "Coffee Lab", contato: "coffeelab.com.br", instagram: "@coffeelab_br", tipo: "Laboratório de torra", oportunidade: "O maquinário de torra faz parte da experiência visual de interiores.", sinal: "Sempre em obras", abrangencia: "SP", dor: "Extração de gases da torra do café sem afetar o cheiro agradável do ambiente", abordagem: "Engenharia sutil de micro-exaustão para áreas sensíveis" }
   ],
   "Restaurante À la Carte": [
-    { nome: "Divino Fogão", tipo: "Culinária brasileira", oportunidade: "Novo conceito de megaloja de 600m² exigindo revisão arquitetônica.", sinal: "Novo conceito", abrangencia: "Nacional", dor: "Sistemas de banho-maria desperdiçando muita energia elétrica e hídrica", abordagem: "Eficiência energética através de especificação técnica sustentável" },
-    { nome: "Espetto Carioca", tipo: "Bar e restaurante", oportunidade: "Modelo híbrido físico + dark kitchen. Forte presença.", sinal: "Expansão interior", abrangencia: "Nacional", dor: "Integração do bar, salão de alto fluxo e saída intensa de pedidos via motoboy", abordagem: "Separação arquitetônica clara entre as rotas de garçons e entregadores" },
-    { nome: "Gurumê", tipo: "Japonês contemporâneo", oportunidade: "Projetos arquitetônicos premiados. Orçamentos milionários.", sinal: "Expansão contínua", abrangencia: "RJ e SP", dor: "Garantir a funcionalidade suja da cozinha quente sob acabamentos de altíssimo luxo", abordagem: "Atuar como Parceiro Técnico especializado desenhando a retaguarda invisível" },
-    { nome: "Ráscal", tipo: "Cozinha mediterrânea", oportunidade: "Restaurantes imensos com ilhas de preparo à vista do cliente.", sinal: "Renovando lojas", abrangencia: "SP e RJ", dor: "Exaustão complexa de grandes ilhas centrais sem bloquear a visão do salão", abordagem: "Soluções avançadas de coifas arquitetônicas de alto padrão sem ruído" },
-    { nome: "Grupo Irajá", tipo: "Multimarcas", oportunidade: "Grupo gastronômico renomado lançando novos conceitos anualmente.", sinal: "Novas marcas", abrangencia: "RJ", dor: "Velocidade na virada de chave de obra para inaugurar num imóvel existente", abordagem: "Gerenciamento ágil de projetos executivos focados em retrofit de rápida execução" },
-    { nome: "Famiglia Mancini", tipo: "Cantinas italianas", oportunidade: "Operações gigantescas na mesma rua que requerem manutenção.", sinal: "Expansão local", abrangencia: "SP", dor: "Cozinhas muito antigas que precisam de modernização sem parar o restaurante", abordagem: "Projetos de intervenção cirúrgica e modernização faseada de retaguarda" }
+    { nome: "Divino Fogão", contato: "divinofogao.com.br", instagram: "@divinofogao", tipo: "Culinária brasileira", oportunidade: "Novo conceito de megaloja de 600m² exigindo revisão arquitetônica.", sinal: "Novo conceito", abrangencia: "Nacional", dor: "Sistemas de banho-maria desperdiçando muita energia elétrica e hídrica", abordagem: "Eficiência energética através de especificação técnica sustentável" },
+    { nome: "Espetto Carioca", contato: "espettocarioca.com.br", instagram: "@espettocarioca", tipo: "Bar e restaurante", oportunidade: "Modelo híbrido físico + dark kitchen. Forte presença.", sinal: "Expansão interior", abrangencia: "Nacional", dor: "Integração do bar, salão de alto fluxo e saída intensa de pedidos via motoboy", abordagem: "Separação arquitetônica clara entre as rotas de garçons e entregadores" },
+    { nome: "Gurumê", contato: "japagurume.com.br", instagram: "@gurume_oficial", tipo: "Japonês contemporâneo", oportunidade: "Projetos arquitetônicos premiados. Orçamentos milionários.", sinal: "Expansão contínua", abrangencia: "RJ e SP", dor: "Garantir a funcionalidade suja da cozinha quente sob acabamentos de altíssimo luxo", abordagem: "Atuar como Parceiro Técnico especializado desenhando a retaguarda invisível" },
+    { nome: "Ráscal", contato: "rascal.com.br", instagram: "@rascalrestaurante", tipo: "Cozinha mediterrânea", oportunidade: "Restaurantes imensos com ilhas de preparo à vista do cliente.", sinal: "Renovando lojas", abrangencia: "SP e RJ", dor: "Exaustão complexa de grandes ilhas centrais sem bloquear a visão do salão", abordagem: "Soluções avançadas de coifas arquitetônicas de alto padrão sem ruído" },
+    { nome: "Grupo Irajá", contato: "grupoiraja.com.br", instagram: "@grupoiraja", tipo: "Multimarcas", oportunidade: "Grupo gastronômico renomado lançando novos conceitos anualmente.", sinal: "Novas marcas", abrangencia: "RJ", dor: "Velocidade na virada de chave de obra para inaugurar num imóvel existente", abordagem: "Gerenciamento ágil de projetos executivos focados em retrofit de rápida execução" },
+    { nome: "Famiglia Mancini", contato: "famigliamancini.com.br", instagram: "@famigliamancini", tipo: "Cantinas italianas", oportunidade: "Operações gigantescas na mesma rua que requerem manutenção.", sinal: "Expansão local", abrangencia: "SP", dor: "Cozinhas muito antigas que precisam de modernização sem parar o restaurante", abordagem: "Projetos de intervenção cirúrgica e modernização faseada de retaguarda" }
   ],
   "Buffet Self-Service": [
-    { nome: "Churras Express", tipo: "Grelhados", oportunidade: "Múltiplos formatos: loja, quiosque, container. Muito adaptável.", sinal: "Alta demanda", abrangencia: "Nacional", dor: "Necessidade de aprovar exaustão de grelhados em formatos compactos como containers", abordagem: "Soluções de filtragem eletrostática para fumaça em espaços onde não há duto externo" },
-    { nome: "Brasileirinho", tipo: "Delivery e buffet", oportunidade: "Cozinha com produção de altíssima escala exige projeto detalhado.", sinal: "Novos pontos", abrangencia: "Nacional", dor: "Dimensionamento incorreto das panelas industriais e fogões gerando perda de calor", abordagem: "Consultoria técnica no correto dimensionamento térmico e fluxo de lavagem pesada" },
-    { nome: "Frontera", tipo: "Buffet internacional", oportunidade: "Amplos salões e ilhas temáticas complexas de cocção ao vivo.", sinal: "Retrofit de lojas", abrangencia: "RJ", dor: "Fluxo cruzado constante entre reposição pesada da equipe e fila de clientes", abordagem: "Layout estratégico com vias de serviço ocultas e ilhas frontais independentes" },
-    { nome: "Manihi Sushi", tipo: "Rodízio premium", oportunidade: "Rodízios de alto padrão com grandes balcões frios integrados.", sinal: "Alta competição", abrangencia: "SP", dor: "Vazão da cozinha quente atrasando o ritmo agressivo dos pedidos via tablet na mesa", abordagem: "Redesenho completo das praças quentes e área de expedição exclusiva para o salão" },
-    { nome: "A Mineira", tipo: "Comida regional", oportunidade: "Unidades gigantes no RJ. Estilo rústico com cozinhas super pesadas.", sinal: "Otimização", abrangencia: "RJ", dor: "Manutenção cara de pisos e drenagem destruídos por panelões e alta temperatura", abordagem: "Especificação exata de pisos de ultra-resistência, ralos sifonados e canaletas" }
+    { nome: "Churras Express", contato: "churrasexpress.com.br", instagram: "@churrasexpress", tipo: "Grelhados", oportunidade: "Múltiplos formatos: loja, quiosque, container. Muito adaptável.", sinal: "Alta demanda", abrangencia: "Nacional", dor: "Necessidade de aprovar exaustão de grelhados em formatos compactos como containers", abordagem: "Soluções de filtragem eletrostática para fumaça em espaços onde não há duto externo" },
+    { nome: "Brasileirinho", contato: "brasileirinho.com.br", instagram: "@brasileirinho", tipo: "Delivery e buffet", oportunidade: "Cozinha com produção de altíssima escala exige projeto detalhado.", sinal: "Novos pontos", abrangencia: "Nacional", dor: "Dimensionamento incorreto das panelas industriais e fogões gerando perda de calor", abordagem: "Consultoria técnica no correto dimensionamento térmico e fluxo de lavagem pesada" },
+    { nome: "Frontera", contato: "frontera.com.br", instagram: "@fronterarestaurante", tipo: "Buffet internacional", oportunidade: "Amplos salões e ilhas temáticas complexas de cocção ao vivo.", sinal: "Retrofit de lojas", abrangencia: "RJ", dor: "Fluxo cruzado constante entre reposição pesada da equipe e fila de clientes", abordagem: "Layout estratégico com vias de serviço ocultas e ilhas frontais independentes" },
+    { nome: "Manihi Sushi", contato: "manihisushi.com.br", instagram: "@manihisushi", tipo: "Rodízio premium", oportunidade: "Rodízios de alto padrão com grandes balcões frios integrados.", sinal: "Alta competição", abrangencia: "SP", dor: "Vazão da cozinha quente atrasando o ritmo agressivo dos pedidos via tablet na mesa", abordagem: "Redesenho completo das praças quentes e área de expedição exclusiva para o salão" },
+    { nome: "A Mineira", contato: "amineira.com.br", instagram: "@restauranteamineira", tipo: "Comida regional", oportunidade: "Unidades gigantes no RJ. Estilo rústico com cozinhas super pesadas.", sinal: "Otimização", abrangencia: "RJ", dor: "Manutenção cara de pisos e drenagem destruídos por panelões e alta temperatura", abordagem: "Especificação exata de pisos de ultra-resistência, ralos sifonados e canaletas" }
   ]
 };
 const BASE_LOOKUP = {};
@@ -552,6 +570,10 @@ async function gerarPlano() {
       const dorHtml = p.dor ? `<div class="intel-item intel-dor"><strong>⚠️ Ponto Crítico:</strong> <span>${escapeHtml(p.dor)}</span></div>` : '';
       const abordHtml = p.abordagem ? `<div class="intel-item intel-abord"><strong>💡 Estratégia:</strong> <span>${escapeHtml(p.abordagem)}</span></div>` : '';
       
+      const siteLink = p.contato ? `<a href="https://${p.contato.replace('https://','')}" target="_blank" class="prospect-link site">🔗 Site</a>` : '';
+      const instaLink = p.instagram ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${escapeHtml(p.instagram)}</a>` : '';
+      const linksHtml = (siteLink || instaLink) ? `<div class="prospect-links">${siteLink}${instaLink}</div>` : '';
+
       card.innerHTML = `
         <div class="base-card-header">
           <div style="flex:1">
@@ -562,6 +584,7 @@ async function gerarPlano() {
         </div>
         <div class="base-card-oportunidade">${escapeHtml(p.oportunidade)} <br><span style="color:var(--green-bright); font-size:11px;">↑ ${escapeHtml(p.sinal)}</span></div>
         ${dorHtml || abordHtml ? `<div class="base-card-intel">${dorHtml}${abordHtml}</div>` : ''}
+        ${linksHtml}
       `;
       cardsEl.appendChild(card);
     });
@@ -636,7 +659,8 @@ function addFromBase(cardId) {
 
   funil[id] = {
     name: p.nome, meta: p.tipo, stage: 'novo', addedAt: new Date().toISOString(),
-    notes: anotacoes, dor_str: p.dor || '', abord_str: p.abordagem || ''
+    notes: anotacoes, dor_str: p.dor || '', abord_str: p.abordagem || '',
+    contato: p.contato || '', instagram: p.instagram || ''
   };
   saveFunil(); renderFunil();
   const btn = document.getElementById('btn_' + cardId);
