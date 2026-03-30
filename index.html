@@ -53,403 +53,131 @@
     align-items: center;
   }
 
-  .praxs-word {
-    font-family: 'Sora', sans-serif;
-    font-size: 24px;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.02em;
-  }
+  .praxs-word { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
   .praxs-word .a-letter { color: var(--gold); }
-
   .praxs-divider { width: 1px; height: 20px; background: var(--border2); margin: 0 14px; }
+  .header-text h1 { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+  .header-text p { font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 3px; font-family: 'DM Mono', monospace; }
 
-  .header-text h1 {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-dim);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .header-text p {
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-top: 3px;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .status-dot {
-    margin-left: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    color: var(--text-muted);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--green-bright);
-    box-shadow: 0 0 8px var(--green-bright);
-    animation: pulse 2s ease-in-out infinite;
-  }
+  .status-dot { margin-left: 16px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-bright); box-shadow: 0 0 8px var(--green-bright); animation: pulse 2s ease-in-out infinite; }
 
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
 
   .app { flex: 1; display: flex; min-height: 0; }
 
-  /* SIDEBAR */
-  .sidebar {
-    width: 290px;
-    flex-shrink: 0;
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    background: var(--surface);
-  }
-
-  .sidebar-header {
-    padding: 18px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .sidebar-title {
-    font-size: 10px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .sidebar-count {
-    font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    color: var(--gold-dim);
-    background: var(--gold-glow);
-    padding: 2px 8px;
-    border-radius: 2px;
-  }
-
-  .funil-stages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .stage-label {
-    font-size: 9px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-family: 'DM Mono', monospace;
-    padding: 0 4px;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .prospect-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 12px;
-    margin-bottom: 5px;
-    cursor: default;
-    transition: border-color .15s;
-  }
-
+  .sidebar { width: 300px; flex-shrink: 0; border-right: 1px solid var(--border); display: flex; flex-direction: column; background: var(--surface); }
+  .sidebar-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .sidebar-title { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+  .sidebar-count { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--gold-dim); background: var(--gold-glow); padding: 2px 8px; border-radius: 2px; }
+  .funil-stages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 14px; }
+  .stage-label { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; padding: 0 4px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
+  
+  .prospect-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; margin-bottom: 5px; transition: border-color .15s; }
   .prospect-card:hover { border-color: var(--border2); }
-
-  .prospect-name { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .prospect-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
   .prospect-meta { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; line-height: 1.4; }
+  .prospect-notes { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top: 5px; line-height: 1.5; font-style: italic; max-height: 60px; overflow: hidden; text-overflow: ellipsis; }
 
-  .prospect-actions { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
-
-  .stage-btn {
-    font-size: 9px;
-    padding: 4px 8px;
-    border: 1px solid var(--border2);
-    border-radius: 2px;
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: .04em;
-    transition: all .15s;
-  }
-
+  .prospect-actions { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; border-top: 1px dashed var(--border); padding-top: 8px; }
+  .stage-btn { font-size: 9px; padding: 4px 8px; border: 1px solid var(--border2); border-radius: 2px; background: transparent; color: var(--text-muted); cursor: pointer; font-family: 'DM Mono', monospace; letter-spacing: .04em; transition: all .15s; }
   .stage-btn:hover { border-color: var(--gold-dim); color: var(--text); }
-  .stage-btn.highlight { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
+  .stage-btn.highlight { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); width: 100%; margin-bottom: 4px; font-size: 10px; padding: 6px; }
   .stage-btn.highlight:hover { background: rgba(245,184,0,0.2); }
   .stage-btn.del:hover { border-color: var(--red); color: #d47a66; }
 
-  .prospect-links { display: flex; gap: 6px; margin-top: 7px; flex-wrap: wrap; }
+  .btn-profile { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; background: transparent; border: 1px solid var(--border2); border-radius: 4px; font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; cursor: pointer; transition: all .2s; }
+  .btn-profile:hover { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
 
-  .prospect-link {
-    font-size: 9px;
-    padding: 3px 8px;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: .04em;
-    transition: all .15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    background: none;
-  }
-  .prospect-link:hover { border-color: var(--gold-dim); color: var(--gold); }
-  
-  .prospect-notes {
-    font-size: 10px;
-    color: var(--text-muted);
-    font-family: 'DM Mono', monospace;
-    margin-top: 5px;
-    line-height: 1.5;
-    font-style: italic;
-    max-height: 60px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* MODALS GERAIS */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.8);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn .2s ease;
-  }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 10px;
-    padding: 28px;
-    width: 460px;
-    max-width: 90vw;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 1000; display: flex; align-items: center; justify-content: center; animation: fadeIn .2s ease; }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 28px; width: 460px; max-width: 90vw; display: flex; flex-direction: column; gap: 18px; max-height: 90vh; overflow-y: auto; }
   .modal-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: -4px; }
   .modal-subtitle { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top:-14px; }
-
-  .modal-label {
-    font-size: 10px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-family: 'DM Mono', monospace;
-    margin-bottom: 5px;
-    display: block;
-  }
-
-  .modal input, .modal textarea, .modal select {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 10px 12px;
-    font-family: 'Sora', sans-serif;
-    font-size: 13px;
-    font-weight: 300;
-    border-radius: 2px;
-    outline: none;
-    transition: border-color .2s;
-    width: 100%;
-  }
-
+  .modal-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-bottom: 5px; display: block; }
+  .modal input, .modal textarea { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; font-family: 'Sora', sans-serif; font-size: 13px; border-radius: 2px; outline: none; transition: border-color .2s; width: 100%; }
   .modal textarea { resize: vertical; min-height: 70px; }
-  .modal select { appearance: none; cursor: pointer; }
-  .modal input:focus, .modal textarea:focus, .modal select:focus { border-color: var(--gold-dim); }
-
-  .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal input:focus, .modal textarea:focus { border-color: var(--gold-dim); }
   .modal-actions { display: flex; gap: 10px; margin-top: 10px; }
-
-  .btn-modal-save {
-    flex: 1;
-    padding: 12px;
-    background: var(--gold);
-    color: #0e0f0c;
-    border: none;
-    border-radius: 2px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background .15s;
-  }
+  
+  .btn-modal-save { flex: 1; padding: 12px; background: var(--gold); color: #0e0f0c; border: none; border-radius: 2px; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: background .15s; }
   .btn-modal-save:hover { background: #ffc61a; }
-
-  .btn-modal-cancel {
-    padding: 12px 18px;
-    background: transparent;
-    border: 1px solid var(--border2);
-    color: var(--text-dim);
-    border-radius: 2px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all .15s;
-  }
+  .btn-modal-cancel { padding: 12px 18px; background: transparent; border: 1px solid var(--border2); color: var(--text-dim); border-radius: 2px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: all .15s; }
   .btn-modal-cancel:hover { border-color: var(--red); color: #d47a66; }
 
-  /* GERAÇÃO DE SCRIPT MODAL E CHIPS */
   .script-chip-group { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-  .script-chip {
-    padding: 6px 12px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    font-size: 11px;
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: all .15s;
-    user-select: none;
-    font-family: 'DM Mono', monospace;
-  }
+  .script-chip { padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; color: var(--text-dim); cursor: pointer; transition: all .15s; user-select: none; font-family: 'DM Mono', monospace; }
   .script-chip:hover { border-color: var(--border2); color: var(--text); }
   .script-chip.selected { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
+  #script-result-area { margin-top: 10px; padding: 14px; background: var(--surface2); border: 1px dashed var(--gold-dim); border-radius: 4px; display: none; }
+  #script-output { width: 100%; min-height: 140px; background: transparent; border: none; color: var(--text); font-family: 'Sora', sans-serif; font-size: 13px; line-height: 1.6; resize: vertical; outline: none; }
 
-  #script-result-area {
-    margin-top: 10px;
-    padding: 14px;
-    background: var(--surface2);
-    border: 1px dashed var(--gold-dim);
-    border-radius: 4px;
-    display: none;
-  }
-  #script-output {
-    width: 100%;
-    min-height: 140px;
-    background: transparent;
-    border: none;
-    color: var(--text);
-    font-family: 'Sora', sans-serif;
-    font-size: 13px;
-    line-height: 1.6;
-    resize: vertical;
-    outline: none;
-  }
-
-  .btn-profile {
-    margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 9px 18px;
-    background: transparent;
-    border: 1px solid var(--border2);
-    border-radius: 4px;
-    font-size: 11px;
-    color: var(--text-dim);
-    font-family: 'DM Mono', monospace;
-    text-decoration: none;
-    letter-spacing: .08em;
-    transition: all .2s;
-    cursor: pointer;
-  }
-  .btn-profile:hover { border-color: var(--gold-dim); color: var(--gold); }
-
-  /* MAIN AREA */
-  main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    padding: 36px 40px 100px;
-  }
-
-  #intro {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 48px 0 32px;
-    gap: 20px;
-    animation: fadeIn .5s ease;
-  }
+  main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 36px 40px 100px; }
+  #intro { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 48px 0 32px; gap: 20px; animation: fadeIn .5s ease; }
   #intro h2 { font-family: 'DM Serif Display', serif; font-size: 30px; font-weight: 400; line-height: 1.3; color: var(--text); max-width: 460px; }
   #intro h2 em { color: var(--gold); font-style: italic; }
   #intro p { color: var(--text-dim); font-size: 14px; line-height: 1.7; max-width: 400px; }
 
-  .btn-primary {
-    padding: 14px 34px;
-    background: var(--gold);
-    color: #0e0f0c;
-    font-weight: 500;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: all .2s;
-  }
-  .btn-primary:hover { background: #ffc61a; }
+  .btn { padding: 14px 34px; background: var(--gold); color: #0e0f0c; font-weight: 500; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; border: none; cursor: pointer; border-radius: 2px; transition: all .2s; }
+  .btn:hover { background: #ffc61a; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text-dim); padding: 14px 24px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; border-radius: 2px; cursor: pointer; transition: all .2s;}
+  .btn-ghost:hover { border-color: var(--gold-dim); color: var(--gold); }
 
   #form-section { display: none; flex-direction: column; gap: 22px; animation: fadeIn .4s ease; max-width: 500px; margin: 0 auto; width: 100%; }
   .form-group { display: flex; flex-direction: column; gap: 8px; }
   .form-group label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+  .form-group input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 14px; font-family: 'Sora', sans-serif; font-size: 14px; border-radius: 4px; outline: none; transition: border-color .2s; }
+  .form-group input:focus { border-color: var(--gold-dim); }
   
   .chip-group { display: flex; flex-wrap: wrap; gap: 7px; }
-  .chip { padding: 7px 14px; border: 1px solid var(--border); border-radius: 2px; font-size: 12px; color: var(--text-dim); cursor: pointer; transition: all .15s; user-select: none; }
+  .chip { padding: 8px 16px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--text-dim); cursor: pointer; transition: all .15s; user-select: none; }
   .chip:hover { border-color: var(--border2); color: var(--text); }
   .chip.selected { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
 
-  .base-section { margin-top: 40px; margin-bottom: 32px; }
-  .base-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .base-title { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-dim); font-family: 'DM Mono', monospace; }
-  .base-count { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-muted); }
-  .base-cards { display: flex; flex-direction: column; gap: 8px; }
+  #chat-section { display: none; flex-direction: column; animation: fadeIn .4s ease; width: 100%; max-width: 800px; margin: 0 auto; }
+  .messages { display: flex; flex-direction: column; gap: 24px; }
+  .msg { display: flex; flex-direction: column; gap: 7px; animation: fadeIn .4s ease; }
+  .msg-label { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-family: 'DM Mono', monospace; color: var(--text-muted); }
+  .msg.agent .msg-label { color: var(--gold-dim); }
+  .msg.user .msg-label { color: var(--green); }
+  .msg-body { line-height: 1.75; color: var(--text-dim); font-size: 14px; }
+  .msg.agent .msg-body { color: var(--text); }
+
+  .base-section { margin-top: 10px; margin-bottom: 32px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 24px;}
+  .base-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .base-title { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-dim); font-family: 'DM Mono', monospace; font-weight: 500; }
+  .base-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width: 900px){ .base-cards { grid-template-columns: 1fr; } }
   
-  .base-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; transition: border-color .15s; }
+  .base-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 16px; transition: border-color .15s; display: flex; flex-direction: column; }
   .base-card:hover { border-color: var(--border2); }
-  .base-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
-  .base-card-name { font-size: 13px; font-weight: 500; color: var(--text); }
-  .base-card-tipo { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-bottom: 6px; }
-  .base-card-oportunidade { font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-bottom: 8px; }
+  .base-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .base-card-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .base-card-tipo { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top: 4px; }
+  .base-card-oportunidade { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-bottom: 12px; flex: 1; }
   
-  .base-card-intel { margin: 12px 0; padding: 12px 0 4px 0; border-top: 1px dashed var(--border); display: flex; flex-direction: column; gap: 10px; }
-  .intel-item { font-size: 12px; line-height: 1.5; }
+  .base-card-intel { padding: 12px; background: rgba(0,0,0,0.2); border-radius: 4px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;}
+  .intel-item { font-size: 12px; line-height: 1.5; color: var(--text-dim); }
   .intel-item strong { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; margin-right: 4px; }
   .intel-dor strong { color: #d47a66; }
   .intel-abord strong { color: var(--gold); }
 
-  .btn-add-prospect { font-size: 10px; padding: 5px 12px; border: 1px solid var(--gold-dim); border-radius: 2px; background: var(--gold-glow); color: var(--gold); cursor: pointer; font-family: 'DM Mono', monospace; letter-spacing: .05em; transition: all .15s; }
+  .btn-add-prospect { font-size: 10px; padding: 6px 14px; border: 1px solid var(--gold-dim); border-radius: 4px; background: var(--gold-glow); color: var(--gold); cursor: pointer; font-family: 'DM Mono', monospace; transition: all .15s; white-space: nowrap;}
   .btn-add-prospect:hover { background: rgba(245,184,0,.2); }
   .btn-add-prospect.added { border-color: var(--green); color: var(--green-bright); background: rgba(74,124,89,.1); cursor: default; }
 
-  ::-webkit-scrollbar { width: 3px; }
+  .btn-nova-busca { display: block; width: 100%; max-width: 300px; margin: 40px auto 20px auto; padding: 16px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; text-align: center; cursor: pointer; border-radius: 4px; transition: all 0.2s;}
+  .btn-nova-busca:hover { background: var(--border); color: var(--gold); }
+
+  .thinking { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 12px; font-family: 'DM Mono', monospace; padding: 12px; background: var(--surface2); border-radius: 6px; border: 1px dashed var(--border2); margin-top: 20px;}
+  .thinking-dots span { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--gold-dim); animation: blink 1.2s ease-in-out infinite; margin: 0 2px; }
+  .thinking-dots span:nth-child(2) { animation-delay: .2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: .4s; }
+
+  ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -475,20 +203,24 @@
       <span class="sidebar-title">Meu funil</span>
       <span class="sidebar-count" id="total-count">0 prospects</span>
     </div>
-    <div class="funil-stages" id="funil-stages">
-      </div>
+    <div class="funil-stages" id="funil-stages"></div>
   </div>
 
   <main>
     <div id="intro">
       <h2>Descubra oportunidades reais de <em>food service</em> na sua cidade</h2>
-      <p>O radar mapeia oportunidades estratégicas e o assistente integrado gera scripts de abordagem perfeitos para cada fase do funil.</p>
-      <button class="btn-primary" onclick="showForm()">Explorar Base de Dados →</button>
+      <p>O radar mapeia oportunidades estratégicas e a IA gera scripts de abordagem perfeitos para cada fase do seu funil.</p>
+      <button class="btn" style="padding:14px 34px" onclick="showForm()">Iniciar prospecção →</button>
     </div>
 
     <div id="form-section">
       <div class="form-group">
-        <label>Selecione os Segmentos Alvo</label>
+        <label>Cidade onde você atua <span>*</span></label>
+        <input type="text" id="cidade" placeholder="Ex: Rio de Janeiro, São Paulo, Curitiba...">
+      </div>
+      
+      <div class="form-group">
+        <label>Segmento Alvo <span>*</span></label>
         <div class="chip-group" id="segmentos">
           <div class="chip" data-val="Café">Café</div>
           <div class="chip" data-val="Hamburgueria">Hamburgueria</div>
@@ -497,13 +229,20 @@
           <div class="chip" data-val="Dark Kitchen">Dark Kitchen</div>
         </div>
       </div>
+      
+      <div class="form-group">
+        <label>Perfil de cliente ideal / Observações</label>
+        <input type="text" id="perfil" placeholder="Ex: Negócios em expansão, Franquias, Empreendedores locais...">
+      </div>
+      
       <div style="display:flex;gap:10px;margin-top:10px">
-        <button class="btn-primary" style="width:100%" onclick="gerarPlano()">Buscar oportunidades →</button>
+        <button class="btn-ghost" onclick="showIntro()">← Voltar</button>
+        <button class="btn" style="flex:1" onclick="gerarPlano()">Buscar oportunidades →</button>
       </div>
     </div>
 
-    <div id="chat-section" style="display:none; width:100%;">
-      <div id="messages"></div>
+    <div id="chat-section">
+      <div class="messages" id="messages"></div>
     </div>
   </main>
 </div>
@@ -512,7 +251,7 @@
   <div class="modal">
     <div>
       <div class="modal-title">Meu Perfil Profissional</div>
-      <p style="font-size:12px; color:var(--text-dim); margin-top:6px;">Estes dados serão usados para personalizar automaticamente os seus scripts de abordagem. Tudo fica salvo apenas no seu navegador.</p>
+      <p style="font-size:12px; color:var(--text-dim); margin-top:6px;">Estes dados personalizam automaticamente os seus scripts de abordagem. Tudo fica salvo apenas no seu navegador.</p>
     </div>
     <div>
       <label class="modal-label">Seu Nome / Como quer ser chamado</label>
@@ -541,7 +280,7 @@
     </div>
     
     <div id="script-warning" style="display:none; padding:10px; background:rgba(212,122,102,0.1); border:1px solid var(--red); border-radius:4px; font-size:11px; color:#d47a66;">
-      Dica: Preencha o "Meu Perfil" no topo da página para que o script saia com o seu nome e empresa já preenchidos.
+      Dica: Preencha o "Meu Perfil" no topo da página para que o script saia com os seus dados já preenchidos.
     </div>
 
     <div>
@@ -559,16 +298,16 @@
       <div class="script-chip-group" id="script-situacoes">
         <div class="script-chip selected" onclick="selectScriptChip('script-situacoes', this)" data-sit="primeiro">Primeiro contato frio</div>
         <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="followup">Follow-up após silêncio</div>
-        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="retomada">Retomada após reunião</div>
+        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="retomada">Retomada pós-reunião</div>
         <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="obj_preco">Objeção de preço</div>
-        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="ja_tem">Já tenho arquiteto</div>
+        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="ja_tem">Já tem arquiteto</div>
       </div>
     </div>
 
-    <button class="btn-primary" style="width:100%; margin-top:10px;" onclick="generateScript()">Gerar Script Personalizado</button>
+    <button class="btn" style="width:100%; margin-top:10px;" onclick="generateScript()">Gerar Script Personalizado</button>
 
     <div id="script-result-area">
-      <label class="modal-label" style="color:var(--gold-dim)">Resultado (Pode editar livremente)</label>
+      <label class="modal-label" style="color:var(--gold-dim)">Resultado Gerado (Edite livremente)</label>
       <textarea id="script-output"></textarea>
       <div class="modal-actions" style="margin-top:12px;">
         <button class="btn-modal-cancel" style="flex:1;" onclick="closeScriptModal()">Fechar</button>
@@ -579,10 +318,11 @@
 </div>
 
 <script>
+const API_URL = 'COLE_URL_DO_RENDER_AQUI';
+
 let funil = {};
 let currentLeadForScript = null;
 
-// ---- PERFIL DO USUÁRIO ----
 function getProfile() {
   try { return JSON.parse(localStorage.getItem('praxs_perfil')) || {nome:'', empresa:'', contato:''}; } 
   catch(e) { return {nome:'', empresa:'', contato:''}; }
@@ -596,16 +336,11 @@ function openProfileModal() {
 }
 function closeProfileModal() { document.getElementById('profile-modal').style.display = 'none'; }
 function saveProfile() {
-  const p = {
-    nome: document.getElementById('prof-nome').value.trim(),
-    empresa: document.getElementById('prof-empresa').value.trim(),
-    contato: document.getElementById('prof-contato').value.trim()
-  };
+  const p = { nome: document.getElementById('prof-nome').value.trim(), empresa: document.getElementById('prof-empresa').value.trim(), contato: document.getElementById('prof-contato').value.trim() };
   localStorage.setItem('praxs_perfil', JSON.stringify(p));
   closeProfileModal();
 }
 
-// ---- FUNIL ----
 const STAGES = [
   { key: 'novo',      label: 'Para contatar',    color: '#f5b800' },
   { key: 'contatado', label: 'Contatado',         color: '#6aaa7d' },
@@ -618,7 +353,6 @@ function loadFunil() { try { const raw = localStorage.getItem('praxs_leads_funil
 
 function moveStage(id, stageKey) { if (funil[id]) { funil[id].stage = stageKey; saveFunil(); renderFunil(); } }
 function removeProspect(id) { delete funil[id]; saveFunil(); renderFunil(); }
-function clearFunil() { if (!confirm('Limpar todos os prospects?')) return; funil = {}; saveFunil(); renderFunil(); }
 
 function renderFunil() {
   const container = document.getElementById('funil-stages');
@@ -626,7 +360,7 @@ function renderFunil() {
   document.getElementById('total-count').textContent = total + (total === 1 ? ' prospect' : ' prospects');
 
   if (total === 0) { 
-    container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:12px;">Nenhum prospect.<br><br>Faça uma busca.</div>'; 
+    container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:12px;">Nenhum prospect.<br><br>Faça uma busca e adicione clientes.</div>'; 
     return; 
   }
   container.innerHTML = '';
@@ -649,10 +383,9 @@ function renderFunil() {
         <div class="prospect-name">${escapeHtml(p.name)}</div>
         <div class="prospect-meta">${escapeHtml(p.meta)}</div>
         <div class="prospect-notes">${escapeHtml(p.notes || '')}</div>
-        <div class="prospect-actions" style="margin-top:10px; border-top:1px dashed var(--border); padding-top:8px;">
-          <button class="stage-btn highlight" style="width:100%; margin-bottom:6px;" onclick="openScriptModal('${id}')">✨ Gerar Script</button>
-          ${stageBtns}
-          <button class="stage-btn del" onclick="removeProspect('${id}')">X</button>
+        <div class="prospect-actions">
+          <button class="stage-btn highlight" onclick="openScriptModal('${id}')">✨ Gerar Script</button>
+          <div style="display:flex; gap:4px; width:100%">${stageBtns}<button class="stage-btn del" onclick="removeProspect('${id}')">X</button></div>
         </div>`;
       group.appendChild(card);
     });
@@ -660,7 +393,6 @@ function renderFunil() {
   });
 }
 
-// ---- GERADOR DE SCRIPTS (OFFLINE ENGINE) ----
 function selectScriptChip(groupId, el) {
   document.querySelectorAll(`#${groupId} .script-chip`).forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
@@ -676,7 +408,6 @@ function openScriptModal(leadId) {
   const p = getProfile();
   document.getElementById('script-warning').style.display = (!p.nome || !p.empresa) ? 'block' : 'none';
   
-  // Auto-seleciona a situação com base no funil
   const sitGroup = document.getElementById('script-situacoes');
   sitGroup.querySelectorAll('.script-chip').forEach(c => c.classList.remove('selected'));
   
@@ -686,7 +417,6 @@ function openScriptModal(leadId) {
   if (currentLeadForScript.stage === 'proposta') defaultSit = 'obj_preco';
   
   sitGroup.querySelector(`.script-chip[data-sit="${defaultSit}"]`).classList.add('selected');
-
   document.getElementById('script-modal').style.display = 'flex';
 }
 
@@ -698,39 +428,36 @@ function generateScript() {
   const p = getProfile();
   const l = currentLeadForScript;
   
-  const v_nome_lead = l.name.split(' ')[0]; // Tenta pegar só o primeiro nome/marca
+  const v_nome_lead = l.name.split(' ')[0]; 
   const v_meu_nome = p.nome || "[SEU NOME]";
   const v_minha_emp = p.empresa || "[SUA EMPRESA]";
   const v_contato = p.contato || "[SEU CONTATO]";
   
-  // Extrai a dor/abordagem se existir nas notas
-  let v_dor = "a operação de vocês está em crescimento";
-  let v_abordagem = "como a arquitetura técnica pode otimizar o espaço e aumentar a lucratividade";
+  let v_dor = "a operação de vocês está crescendo rápido";
+  let v_abordagem = "como a arquitetura técnica correta otimiza o espaço e evita desperdícios na cozinha";
   
   if (l.dor_str) v_dor = l.dor_str.toLowerCase();
   if (l.abord_str) v_abordagem = l.abord_str.toLowerCase();
 
   let txt = "";
 
-  // Lógica simples de templates baseada no Canal e Situação
   if (canal === 'WhatsApp' || canal === 'Instagram (DM)') {
     if (situacao === 'primeiro') {
-      txt = `Olá! Tudo bem? Sou ${v_meu_nome}, arquiteto especializado em food service da ${v_minha_emp}.\n\nAcompanho o trabalho da ${v_nome_lead} e notei o crescimento de vocês. No nosso mercado, sabemos que ${v_dor} costuma ser um gargalo invisível.\n\nPensei em algumas soluções sobre ${v_abordagem}. Faz sentido batermos um papo rápido de 10 min esta semana? Sem compromisso, apenas para compartilhar essa visão.\n\nAbraço!`;
+      txt = `Olá! Tudo bem? Sou ${v_meu_nome}, arquiteto focado em food service da ${v_minha_emp}.\n\nAcompanho a marca e notei o crescimento da ${v_nome_lead}. No nosso mercado, sabemos que ${v_dor} costuma ser um gargalo chato no dia a dia.\n\nPensei em algumas soluções práticas sobre ${v_abordagem}. Faz sentido batermos um papo rápido de 10 min esta semana? Sem compromisso nenhum, só para compartilhar a visão.\n\nAbraço!`;
     } else if (situacao === 'followup') {
-      txt = `Oi novamente! Tudo bem?\n\nSei que a rotina na ${v_nome_lead} deve estar corrida. Passo só para deixar o radar ligado sobre aquela ideia de melhorar ${v_dor}.\n\nQuando as coisas acalmarem e fizer sentido conversar sobre ${v_abordagem}, me avise! Deixo aqui meu contato direto: ${v_contato}.`;
+      txt = `Oi novamente! Tudo bem?\n\nSei que a rotina na ${v_nome_lead} deve estar uma loucura. Passo só para deixar o radar ligado sobre aquela ideia de melhorar ${v_dor}.\n\nQuando as coisas acalmarem e fizer sentido conversar sobre ${v_abordagem}, me avise! Deixo aqui meu contato direto: ${v_contato}.`;
     } else if (situacao === 'retomada') {
       txt = `Olá! Passando para retomar nosso último papo sobre a ${v_nome_lead}.\n\nConseguiu avaliar os pontos que conversamos sobre ${v_abordagem}? Estou à disposição para darmos o próximo passo.\n\nAbraço, ${v_meu_nome}.`;
     } else if (situacao === 'obj_preco') {
-      txt = `Entendo perfeitamente a questão do investimento no momento.\n\nO que costumo alinhar com operações como a ${v_nome_lead} é que o projeto técnico focado em ${v_abordagem} se paga rapidamente só com a redução de erros na operação e eficiência no salão.\n\nPodemos readequar o escopo para atacar primeiro o que é mais urgente. Que tal?`;
+      txt = `Entendo perfeitamente a questão do investimento agora.\n\nO que costumo alinhar com operações como a ${v_nome_lead} é que o projeto focado em ${v_abordagem} se paga rapidamente só com a redução de erros e ganho de eficiência da equipe.\n\nPodemos readequar o escopo para atacar primeiro o que é mais urgente. Que tal?`;
     } else if (situacao === 'ja_tem') {
-      txt = `Que excelente notícia que já estão amparados! O mercado de arquitetura é vasto.\n\nComo atuo exclusivamente como especialista técnico em food service (focado em fluxo e equipamentos pesados), muitos escritórios me contratam apenas para a compatibilização das cozinhas profissionais, enquanto eles assinam a estética.\n\nSe a ${v_nome_lead} ou seus arquitetos precisarem de apoio nos bastidores, contem comigo: ${v_contato}.`;
+      txt = `Que excelente notícia que já estão amparados! \n\nComo atuo exclusivamente como especialista técnico em food service, muitos escritórios me contratam apenas para a compatibilização pesada das cozinhas, enquanto eles assinam a estética fina.\n\nSe a ${v_nome_lead} ou seus arquitetos precisarem de apoio nos bastidores, contem comigo: ${v_contato}.`;
     }
   } else {
-    // E-mail ou LinkedIn (Mais formais)
     if (situacao === 'primeiro') {
-      txt = `Assunto: Eficiência operacional e projeto técnico - ${v_nome_lead}\n\nOlá, equipe da ${v_nome_lead}. Tudo bem?\n\nSou ${v_meu_nome}, arquiteto à frente da ${v_minha_emp}, escritório focado exclusivamente em projetos e compatibilização para Food Service.\n\nTenho acompanhado o desenvolvimento da marca e, analisando operações similares, identifiquei que ${v_dor} costuma representar uma perda oculta de lucratividade.\n\nGostaria de apresentar rapidamente nosso case sobre ${v_abordagem}, que tem resolvido exatamente esse ponto para nossos parceiros.\n\nTemos disponibilidade para uma call de alinhamento de 15 minutos na próxima terça ou quinta-feira?\n\nAtenciosamente,\n${v_meu_nome} | ${v_contato}`;
+      txt = `Assunto: Eficiência operacional e projeto técnico - ${v_nome_lead}\n\nOlá, equipe da ${v_nome_lead}. Tudo bem?\n\nSou ${v_meu_nome}, arquiteto à frente da ${v_minha_emp}, escritório focado exclusivamente em projetos e compatibilização para Food Service.\n\nTenho acompanhado o desenvolvimento da marca e, analisando operações similares, identifiquei que ${v_dor} costuma representar uma perda oculta de lucratividade e conforto.\n\nGostaria de apresentar rapidamente nosso case sobre ${v_abordagem}, que tem resolvido exatamente esse ponto para nossos parceiros.\n\nTemos disponibilidade para uma call de alinhamento de 15 minutos na próxima terça ou quinta-feira?\n\nAtenciosamente,\n${v_meu_nome} | ${v_contato}`;
     } else {
-      txt = `Olá, equipe da ${v_nome_lead}.\n\nRetomando nosso contato anterior, gostaria de saber se é o momento ideal para discutirmos soluções estratégicas para a operação de vocês, especificamente focando em ${v_abordagem}.\n\nSabemos que resolver a questão de ${v_dor} é crucial para o próximo passo de crescimento da marca.\n\nFico à disposição no contato: ${v_contato}.\n\nAtenciosamente,\n${v_meu_nome} - ${v_minha_emp}`;
+      txt = `Olá, equipe da ${v_nome_lead}.\n\nRetomando nosso contato anterior, gostaria de saber se é o momento ideal para discutirmos soluções estratégicas para a operação de vocês, especificamente focando em ${v_abordagem}.\n\nSabemos que resolver a questão de ${v_dor} é crucial para o próximo passo de crescimento sustentável da marca.\n\nFico à disposição no contato: ${v_contato}.\n\nAtenciosamente,\n${v_meu_nome} - ${v_minha_emp}`;
     }
   }
 
@@ -744,15 +471,10 @@ function copyScript() {
     const btn = document.getElementById('btn-copy-script');
     btn.textContent = 'Copiado ✓';
     btn.style.background = 'var(--green-bright)';
-    setTimeout(() => { 
-      btn.textContent = 'Copiar Script'; 
-      btn.style.background = 'var(--gold)'; 
-    }, 2000);
+    setTimeout(() => { btn.textContent = 'Copiar Script'; btn.style.background = 'var(--gold)'; }, 2000);
   });
 }
 
-
-// ---- NAVEGAÇÃO MAIN ----
 function showIntro() { document.getElementById('intro').style.display = 'flex'; document.getElementById('form-section').style.display = 'none'; document.getElementById('chat-section').style.display = 'none'; }
 function showForm() { document.getElementById('intro').style.display = 'none'; document.getElementById('form-section').style.display = 'flex'; document.getElementById('chat-section').style.display = 'none'; }
 function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>'); }
@@ -760,64 +482,81 @@ function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').re
 document.querySelectorAll('.chip-group .chip').forEach(chip => { chip.addEventListener('click', () => chip.classList.toggle('selected')); });
 function getSelected(groupId) { return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val); }
 
-// ---- BASE INTELIGENTE ----
 const PROSPECTS_BASE = {
   "Dark Kitchen": [
-    { nome: "ATW Delivery Brands", tipo: "Holding de dark kitchens", oportunidade: "Maior holding de dark kitchens do mundo.", sinal: "Buscando franqueados", abrangencia: "Nacional",
-      dor: "cruzamento constante de entregadores de marcas diferentes com o lixo",
-      abordagem: "criar layouts limpos que impedem a contaminação cruzada" },
-    { nome: "Grupo HSH", tipo: "Rede de dark kitchens", oportunidade: "Meta de 15 novas franquias.", sinal: "Expansão agressiva", abrangencia: "Nacional",
-      dor: "padronização de montagem cara para novos franqueados",
-      abordagem: "desenvolver um projeto modular base de rápida aprovação sanitária" }
+    { nome: "ATW Delivery Brands", tipo: "Holding de dark kitchens", oportunidade: "Maior holding do mundo. Operam 3 marcas em cada cozinha.", sinal: "Buscando franqueados", abrangencia: "Nacional", dor: "Cruzamento do fluxo de motoboys com o lixo e reposição de estoque", abordagem: "Desenhar layouts que impedem a contaminação cruzada e aprovam rápido" },
+    { nome: "Grupo HSH (Home Sushi)", tipo: "Rede de dark kitchens", oportunidade: "Meta de 15 novas franquias. Alta padronização exigida.", sinal: "Expansão agressiva", abrangencia: "Nacional", dor: "Dificuldade de replicar eficiência operacional em imóveis de formatos variados", abordagem: "Oferecer projeto modular base que se adapta fácil a qualquer locação" },
+    { nome: "China in Box / Gendai", tipo: "Grupo multimarcas", oportunidade: "Foco na expansão de unidades apenas para delivery (Dark).", sinal: "Expansão contínua", abrangencia: "Nacional", dor: "Gestão do altíssimo volume de óleo e fritura em espaços menores", abordagem: "Especialização em caixas de gordura de alta performance e filtragem" },
+    { nome: "KitchenCentral", tipo: "Hub de cozinhas compartilhadas", oportunidade: "Complexos enormes alugados para dezenas de operações simultâneas.", sinal: "Novas capitais", abrangencia: "SP, RJ, BH", dor: "Superaquecimento estrutural e subdimensionamento da exaustão central", abordagem: "Compatibilização rigorosa de sistemas pesados de AVAC" },
+    { nome: "Mimic", tipo: "Hub para marcas digitais", oportunidade: "Parceira de marcas gigantes. Fluxo e volume intensos.", sinal: "Crescimento em SP", abrangencia: "SP", dor: "Cozinhas operando no limite absoluto de pessoas e equipamentos", abordagem: "Foco em ergonomia operacional para cortar segundos vitais na montagem" },
+    { nome: "Local Kitchens RJ", tipo: "Galpões adaptados", oportunidade: "Grandes espaços focados em polo de delivery na Zona Sul e Tijuca.", sinal: "Alta rotatividade", abrangencia: "RJ", dor: "Readequação constante de pontos elétricos e de gás a cada novo inquilino", abordagem: "Desenho de infraestrutura 'plug and play' flexível para rodízio de operadores" },
+    { nome: "Smart Kitchens", tipo: "Cozinhas modulares", oportunidade: "Módulos de 15m² a 30m² otimizados para iFood.", sinal: "Novos polos", abrangencia: "SP e RJ", dor: "Aproveitamento milimétrico do espaço sem perder área fria de estocagem", abordagem: "Layout em formato 'Tetris' unindo a engenharia do cardápio à arquitetura" }
   ],
   "Hamburgueria": [
-    { nome: "La Brasa Burger", tipo: "Hamburgueria artesanal", oportunidade: "140 unidades com operações pesadas de chapa.", sinal: "Expansão ativa", abrangencia: "Nacional",
-      dor: "fumaça e gordura das chapas invadindo o salão",
-      abordagem: "um diagnóstico rigoroso do sistema de exaustão e retenção de odores" },
-    { nome: "Patties", tipo: "Ultra-smash burger", oportunidade: "Lojas super compactas focadas em volume e delivery intenso.", sinal: "Expansão acelerada", abrangencia: "SP",
-      dor: "linha de montagem espremida num espaço minúsculo",
-      abordagem: "ergonomia operacional para cortar segundos preciosos de cada pedido" }
+    { nome: "La Brasa Burger", tipo: "Artesanal", oportunidade: "140 unidades com operações pesadas. Meta de 20 novas lojas.", sinal: "Expansão ativa", abrangencia: "Nacional", dor: "Fumaça e gordura pesada das chapas invadindo a área de clientes", abordagem: "Diagnóstico e readequação potente do sistema de exaustão" },
+    { nome: "Cabana Burger", tipo: "Premium", oportunidade: "Unidades padrão de 120m² que exigem projeto técnico completo.", sinal: "Entrada em novos estados", abrangencia: "SP, RJ, MG", dor: "Manter o alto padrão estético alinhado a uma cozinha de guerra hiper produtiva", abordagem: "Conexão perfeita entre o design de interiores e a retaguarda invisível" },
+    { nome: "Johnny Rockets", tipo: "Temática", oportunidade: "Segunda maior operação do mundo. Obras exigentes em shoppings.", sinal: "Crescimento franchising", abrangencia: "Nacional", dor: "Limitações rigorosas de shoppings para aprovação de coifas e ar-condicionado", abordagem: "Especialização nos trâmites e aprovações junto à engenharia de shoppings" },
+    { nome: "T.T. Burger", tipo: "Premium (Grupo Trigo)", oportunidade: "Marca carioca com forte expansão em SP e shoppings do RJ.", sinal: "Novas lojas", abrangencia: "RJ e SP", dor: "Adaptar a estética industrial bruta aos guias de loja fechados dos shoppings", abordagem: "Harmonização de materiais industriais aprováveis pelas fiscalizações" },
+    { nome: "Patties", tipo: "Ultra-smash burger", oportunidade: "Fenômeno de fluxo. Lojas super compactas focadas em volume extremo.", sinal: "Expansão acelerada", abrangencia: "SP", dor: "Linha de montagem e fluxo de motoboys congestionando espaços minúsculos", abordagem: "Otimização milimétrica de bancadas para produção em formato de esteira contínua" },
+    { nome: "B de Burger", tipo: "Na brasa", oportunidade: "Rede carioca focada em grelhas parilla. Orçamentos robustos.", sinal: "Retrofit e expansão", abrangencia: "RJ", dor: "Calor extremo irradiado pelas grelhas afetando a produtividade da equipe", abordagem: "Soluções de conforto térmico e sistemas de compensação de ar inteligente" },
+    { nome: "Z Deli Sandwiches", tipo: "Premiada", oportunidade: "Operação no limite da capacidade. Necessidade de salões e apoios extras.", sinal: "Abertura de apoios", abrangencia: "SP", dor: "Falta de área física para gerir o alto volume de insumos frescos diários", abordagem: "Criação de centros de preparação isolados (commissary kitchens) muito eficientes" }
   ],
   "Café": [
-    { nome: "Sterna Café", tipo: "Cafeteria premium", oportunidade: "Foco em lojas esteticamente instagramáveis.", sinal: "Novos contratos", abrangencia: "Nacional",
-      dor: "uma retaguarda (lavagem, estoque) apertada e desorganizada",
-      abordagem: "desenhar o 'coração escondido' que sustente a operação" }
+    { nome: "Cheirin Bão", tipo: "Café especial", oportunidade: "Mais de 900 unidades. Maior rede de cafeterias do país.", sinal: "Sempre captando", abrangencia: "Nacional", dor: "Padronização visual e de fluxo em pontos comerciais de tamanhos muito variados", abordagem: "Desenvolvimento de manualização arquitetônica para padronizar franqueados" },
+    { nome: "Sterna Café", tipo: "Premium", oportunidade: "Meta de 40 novas unidades. Foco em lojas instagramáveis.", sinal: "Contratos assinados", abrangencia: "Nacional", dor: "O salão é lindo, mas a retaguarda e área de lavagem ficam caóticas e visíveis", abordagem: "Projetar o 'coração escondido' que garante a beleza e a limpeza contínua" },
+    { nome: "Casa Bauducco", tipo: "Cafeteria + empório", oportunidade: "Dois formatos vitais: quiosque menor e loja completa.", sinal: "Expansão contínua", abrangencia: "Nacional", dor: "Exposição de produtos secos concorrendo com o espaço das estufas quentes", abordagem: "Marcenaria inteligente voltada 100% para o vitrinismo e venda por impulso" },
+    { nome: "The Slow Bakery", tipo: "Padaria e café", oportunidade: "Mistura fábrica de pães com salão. Altíssimo nível de exigência técnica.", sinal: "Filiais-satélite", abrangencia: "RJ", dor: "Controle térmico sensível da fermentação natural colidindo com o calor dos fornos", abordagem: "Especialização em conforto térmico e desenho de vitrines técnicas refrigeradas" },
+    { nome: "We Coffee", tipo: "Instagramável", oportunidade: "Lojas que são obras de arquitetura futurista. Investimentos imensos.", sinal: "Expansão viral", abrangencia: "SP", dor: "Gestão do fluxo brutal de filas sem destruir a experiência acústica do salão", abordagem: "Integração de tratamento acústico premium com fluxo limpo de clientes" },
+    { nome: "Curto Café", tipo: "Torrefação", oportunidade: "Modelo de negócio no Centro do RJ com ilhas de serviço independentes.", sinal: "Expansão orgânica", abrangencia: "RJ", dor: "Layout aberto onde o cliente interage com os equipamentos livremente (risco)", abordagem: "Desenho de fluxos intuitivos e proteção sutil do maquinário de torra" },
+    { nome: "Coffee Lab", tipo: "Laboratório de torra", oportunidade: "O maquinário de torra faz parte da experiência visual de interiores.", sinal: "Sempre em obras", abrangencia: "SP", dor: "Extração de gases da torra do café sem afetar o cheiro agradável do ambiente", abordagem: "Engenharia sutil de micro-exaustão para áreas sensíveis" }
   ],
   "Restaurante À la Carte": [
-    { nome: "Gurumê", tipo: "Japonês contemporâneo", oportunidade: "Projetos arquitetônicos premiados e complexos.", sinal: "Expansão contínua", abrangencia: "RJ e SP",
-      dor: "gerir fornecedores premium garantindo a funcionalidade bruta da cozinha",
-      abordagem: "atuar como parceiro técnico focado na retaguarda da cozinha quente" }
+    { nome: "Divino Fogão", tipo: "Culinária brasileira", oportunidade: "Novo conceito de megaloja de 600m² exigindo revisão arquitetônica.", sinal: "Novo conceito", abrangencia: "Nacional", dor: "Sistemas de banho-maria desperdiçando muita energia elétrica e hídrica", abordagem: "Eficiência energética através de especificação técnica sustentável" },
+    { nome: "Espetto Carioca", tipo: "Bar e restaurante", oportunidade: "Modelo híbrido físico + dark kitchen. Forte presença.", sinal: "Expansão interior", abrangencia: "Nacional", dor: "Integração do bar, salão de alto fluxo e saída intensa de pedidos via motoboy", abordagem: "Separação arquitetônica clara entre as rotas de garçons e entregadores" },
+    { nome: "Gurumê", tipo: "Japonês contemporâneo", oportunidade: "Projetos arquitetônicos premiados. Orçamentos milionários.", sinal: "Expansão contínua", abrangencia: "RJ e SP", dor: "Garantir a funcionalidade suja da cozinha quente sob acabamentos de altíssimo luxo", abordagem: "Atuar como Parceiro Técnico especializado desenhando a retaguarda invisível" },
+    { nome: "Ráscal", tipo: "Cozinha mediterrânea", oportunidade: "Restaurantes imensos com ilhas de preparo à vista do cliente.", sinal: "Renovando lojas", abrangencia: "SP e RJ", dor: "Exaustão complexa de grandes ilhas centrais sem bloquear a visão do salão", abordagem: "Soluções avançadas de coifas arquitetônicas de alto padrão sem ruído" },
+    { nome: "Grupo Irajá", tipo: "Multimarcas", oportunidade: "Grupo gastronômico renomado lançando novos conceitos anualmente.", sinal: "Novas marcas", abrangencia: "RJ", dor: "Velocidade na virada de chave de obra para inaugurar num imóvel existente", abordagem: "Gerenciamento ágil de projetos executivos focados em retrofit de rápida execução" },
+    { nome: "Famiglia Mancini", tipo: "Cantinas italianas", oportunidade: "Operações gigantescas na mesma rua que requerem manutenção.", sinal: "Expansão local", abrangencia: "SP", dor: "Cozinhas muito antigas que precisam de modernização sem parar o restaurante", abordagem: "Projetos de intervenção cirúrgica e modernização faseada de retaguarda" }
   ],
   "Buffet Self-Service": [
-    { nome: "A Mineira", tipo: "Buffet regional", oportunidade: "Unidades gigantes com cozinhas pesadas.", sinal: "Otimização de fluxo", abrangencia: "RJ",
-      dor: "colisão entre a reposição do buffet e o fluxo de clientes",
-      abordagem: "soluções de layout anti-colisão com vias de serviço exclusivas" }
+    { nome: "Churras Express", tipo: "Grelhados", oportunidade: "Múltiplos formatos: loja, quiosque, container. Muito adaptável.", sinal: "Alta demanda", abrangencia: "Nacional", dor: "Necessidade de aprovar exaustão de grelhados em formatos compactos como containers", abordagem: "Soluções de filtragem eletrostática para fumaça em espaços onde não há duto externo" },
+    { nome: "Brasileirinho", tipo: "Delivery e buffet", oportunidade: "Cozinha com produção de altíssima escala exige projeto detalhado.", sinal: "Novos pontos", abrangencia: "Nacional", dor: "Dimensionamento incorreto das panelas industriais e fogões gerando perda de calor", abordagem: "Consultoria técnica no correto dimensionamento térmico e fluxo de lavagem pesada" },
+    { nome: "Frontera", tipo: "Buffet internacional", oportunidade: "Amplos salões e ilhas temáticas complexas de cocção ao vivo.", sinal: "Retrofit de lojas", abrangencia: "RJ", dor: "Fluxo cruzado constante entre reposição pesada da equipe e fila de clientes", abordagem: "Layout estratégico com vias de serviço ocultas e ilhas frontais independentes" },
+    { nome: "Manihi Sushi", tipo: "Rodízio premium", oportunidade: "Rodízios de alto padrão com grandes balcões frios integrados.", sinal: "Alta competição", abrangencia: "SP", dor: "Vazão da cozinha quente atrasando o ritmo agressivo dos pedidos via tablet na mesa", abordagem: "Redesenho completo das praças quentes e área de expedição exclusiva para o salão" },
+    { nome: "A Mineira", tipo: "Comida regional", oportunidade: "Unidades gigantes no RJ. Estilo rústico com cozinhas super pesadas.", sinal: "Otimização", abrangencia: "RJ", dor: "Manutenção cara de pisos e drenagem destruídos por panelões e alta temperatura", abordagem: "Especificação exata de pisos de ultra-resistência, ralos sifonados e canaletas" }
   ]
 };
-
 const BASE_LOOKUP = {};
 
-function gerarPlano() {
+async function gerarPlano() {
+  const cidadeInput = document.getElementById('cidade').value.trim();
+  const cidade = cidadeInput || 'sua região';
   const segmentos = getSelected('segmentos');
-  if (!segmentos.length) { alert('Selecione ao menos um segmento.'); return; }
+  const perfil = document.getElementById('perfil').value.trim();
+
+  if (!cidadeInput) { alert('Por favor, informe a cidade.'); return; }
+  if (!segmentos.length) { alert('Selecione ao menos um segmento alvo.'); return; }
 
   document.getElementById('form-section').style.display = 'none';
   const chat = document.getElementById('chat-section');
-  chat.style.display = 'block';
-  
+  chat.style.display = 'flex';
   const msgs = document.getElementById('messages');
   msgs.innerHTML = '';
 
   const section = document.createElement('div');
   section.className = 'base-section';
-  section.innerHTML = `<div class="base-header"><span class="base-title" style="font-size:14px;">Radar de Oportunidades</span></div>`;
+  section.innerHTML = `<div class="base-header" style="margin-bottom:0;"><span class="base-title" style="font-size:13px; color:var(--text); letter-spacing:0.05em">📡 Base Premium de Oportunidades</span></div>
+  <p style="font-size:11px; color:var(--text-dim); margin-bottom:20px;">Redes e potências regionais em expansão selecionadas para o seu radar.</p>`;
+
+  let encontrouNaBase = false;
 
   segmentos.forEach(seg => {
     const prospects = PROSPECTS_BASE[seg];
     if (!prospects) return;
+    encontrouNaBase = true;
 
     const segEl = document.createElement('div');
-    segEl.innerHTML = `<div class="base-header" style="margin-top:20px;"><span class="base-title" style="color:var(--text-muted)">${seg}</span></div>`;
+    segEl.innerHTML = `<div class="base-header" style="margin-top:15px; border-bottom:1px solid var(--border); padding-bottom:6px;"><span class="base-title" style="color:var(--gold-dim)">${seg}</span></div>`;
     const cardsEl = document.createElement('div');
     cardsEl.className = 'base-cards';
 
@@ -828,18 +567,18 @@ function gerarPlano() {
       const card = document.createElement('div');
       card.className = 'base-card';
       
-      const dorHtml = p.dor ? `<div class="intel-item intel-dor"><strong>⚠️ Ponto Crítico:</strong> <span style="color:var(--text-dim)">${escapeHtml(p.dor)}</span></div>` : '';
-      const abordHtml = p.abordagem ? `<div class="intel-item intel-abord"><strong>💡 Estratégia:</strong> <span style="color:var(--text-dim)">${escapeHtml(p.abordagem)}</span></div>` : '';
+      const dorHtml = p.dor ? `<div class="intel-item intel-dor"><strong>⚠️ Ponto Crítico:</strong> <span>${escapeHtml(p.dor)}</span></div>` : '';
+      const abordHtml = p.abordagem ? `<div class="intel-item intel-abord"><strong>💡 Estratégia:</strong> <span>${escapeHtml(p.abordagem)}</span></div>` : '';
       
       card.innerHTML = `
         <div class="base-card-header">
           <div style="flex:1">
-            <div class="base-card-name">${escapeHtml(p.nome)}</div>
+            <div class="base-card-name">${escapeHtml(p.nome)} <span style="font-size:9px; color:var(--text-muted); border:1px solid var(--border); padding:2px 4px; border-radius:2px; margin-left:6px; font-weight:normal;">${escapeHtml(p.abrangencia)}</span></div>
             <div class="base-card-tipo">${escapeHtml(p.tipo)}</div>
           </div>
           <button class="btn-add-prospect" id="btn_${cardId}" onclick="addFromBase('${cardId}')">+ Funil</button>
         </div>
-        <div class="base-card-oportunidade">${escapeHtml(p.oportunidade)}</div>
+        <div class="base-card-oportunidade">${escapeHtml(p.oportunidade)} <br><span style="color:var(--green-bright); font-size:11px;">↑ ${escapeHtml(p.sinal)}</span></div>
         ${dorHtml || abordHtml ? `<div class="base-card-intel">${dorHtml}${abordHtml}</div>` : ''}
       `;
       cardsEl.appendChild(card);
@@ -848,7 +587,60 @@ function gerarPlano() {
     section.appendChild(segEl);
   });
 
-  msgs.appendChild(section);
+  if(encontrouNaBase) msgs.appendChild(section);
+
+  addUserMsg(`Buscar inteligência local para: ${segmentos.join(', ')} em ${cidade}`);
+  showThinking();
+
+  const systemPrompt = `Você é um agente de prospecção para arquitetos de food service.
+Cidade: ${cidade}
+Segmentos: ${segmentos.join(', ')}
+Perfil: ${perfil || 'geral'}
+
+Aja rápido. Liste no máximo 4 estabelecimentos REAIS que estão crescendo nessa cidade. Para cada um use EXATAMENTE este formato numa linha separada:
+**[PROSPECT] Nome da empresa | Bairro ou Cidade | Motivo de ser uma oportunidade | instagram:@handle | tel:numero | maps:URL**
+
+Finalize dando uma única dica curta de estratégia de abordagem técnica (falando de arquitetura/exaustão/fluxo) para aplicar nesses clientes.`;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: 'Inicie a busca na web.' }]
+      })
+    });
+
+    const rawText = await res.text();
+
+    if (rawText.trim().startsWith('<') || rawText.trim().startsWith('<!')) {
+      throw new Error('A inteligência online está aquecendo os motores (Render gratuito). Aguarde 30 segundos e busque novamente. Enquanto isso, as oportunidades da Base Premium acima já estão prontas para o seu funil!');
+    }
+
+    let data;
+    try { data = JSON.parse(rawText); } catch(e) { throw new Error('Aviso: Falha temporária na IA online. Por favor, explore as oportunidades da Base Premium acima.'); }
+    if (!res.ok) throw new Error(data.error?.message || 'Erro na API');
+
+    const finalText = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    removeThinking();
+    addAgentMsg(finalText);
+
+  } catch(err) {
+    removeThinking();
+    const el = document.createElement('div');
+    el.style = 'padding:14px; background:rgba(212,122,102,0.1); border:1px solid var(--red); border-radius:4px; font-size:13px; color:#d47a66; margin-top:10px; font-family:"DM Mono",monospace; line-height:1.5;';
+    el.innerHTML = `<strong>📡 Status da IA Web:</strong> ${err.message}`;
+    msgs.appendChild(el);
+  }
+
+  const btnNovaBusca = document.createElement('button');
+  btnNovaBusca.className = 'btn-nova-busca';
+  btnNovaBusca.textContent = '↑ Fazer Nova Busca';
+  btnNovaBusca.onclick = () => { document.getElementById('messages').innerHTML = ''; showForm(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  msgs.appendChild(btnNovaBusca);
 }
 
 function addFromBase(cardId) {
@@ -857,23 +649,51 @@ function addFromBase(cardId) {
   const id = 'p_' + Date.now();
   
   let anotacoes = p.oportunidade;
-  if (p.dor) anotacoes += `\n⚠️ Dor: ${p.dor}`;
-  if (p.abordagem) anotacoes += `\n💡 Estratégia: ${p.abordagem}`;
+  if (p.dor) anotacoes += `\n\n⚠️ Dor Mapeada: ${p.dor}`;
+  if (p.abordagem) anotacoes += `\n💡 Estratégia Sugerida: ${p.abordagem}`;
 
   funil[id] = {
-    name: p.nome,
-    meta: p.tipo,
-    stage: 'novo',
-    addedAt: new Date().toISOString(),
-    notes: anotacoes,
-    dor_str: p.dor || '',
-    abord_str: p.abordagem || ''
+    name: p.nome, meta: p.tipo, stage: 'novo', addedAt: new Date().toISOString(),
+    notes: anotacoes, dor_str: p.dor || '', abord_str: p.abordagem || ''
   };
-  saveFunil();
-  renderFunil();
+  saveFunil(); renderFunil();
   const btn = document.getElementById('btn_' + cardId);
-  if (btn) { btn.textContent = 'No funil ✓'; btn.classList.add('added'); btn.disabled = true; }
+  if (btn) { btn.textContent = 'No funil ✓'; btn.style.background = 'rgba(74,124,89,.1)'; btn.style.color = 'var(--green-bright)'; btn.style.borderColor = 'var(--green)'; btn.disabled = true; }
 }
+
+function addUserMsg(text) {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = `<div class="msg-label">A sua busca</div><div class="msg-body" style="font-family:'DM Mono',monospace; font-size:12px; color:var(--gold)">${escapeHtml(text)}</div>`;
+  msgs.appendChild(el);
+}
+
+function addAgentMsg(rawText) {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg agent';
+  
+  const fmtText = rawText
+    .replace(/\[PROSPECT\]/g, '')
+    .replace(/### (.+)/g, '<h3 style="font-family:\'DM Serif Display\',serif;font-size:17px;color:var(--gold);margin:18px 0 8px;">$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--text);font-weight:500;">$1</strong>')
+    .replace(/\n\n/g, '<br><br>');
+
+  el.innerHTML = `<div class="msg-label">Radar Web em Tempo Real</div><div class="msg-body" style="background:var(--surface); border:1px dashed var(--gold-dim); padding:20px; border-radius:8px; margin-top:8px;">${fmtText}</div>`;
+  msgs.appendChild(el);
+}
+
+function showThinking() {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.id = 'thinking';
+  el.className = 'thinking';
+  el.innerHTML = `<div class="thinking-dots"><span></span><span></span><span></span></div><span style="margin-left:8px; color:var(--gold-dim)">A analisar dados da web e a gerar oportunidades personalizadas...</span>`;
+  msgs.appendChild(el);
+  el.scrollIntoView({ behavior: 'smooth' });
+}
+function removeThinking() { const el = document.getElementById('thinking'); if (el) el.remove(); }
 
 loadFunil();
 </script>
