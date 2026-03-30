@@ -61,7 +61,6 @@
   .prospect-meta { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; line-height: 1.4; }
   .prospect-notes { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top: 5px; line-height: 1.5; font-style: italic; max-height: 60px; overflow: hidden; text-overflow: ellipsis; }
   
-  /* LINKS DE CONTATO */
   .prospect-links { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
   .prospect-link { font-size: 9px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 2px; color: var(--text-muted); text-decoration: none; font-family: 'DM Mono', monospace; letter-spacing: .04em; transition: all .15s; display: inline-flex; align-items: center; gap: 4px; background: var(--surface); }
   .prospect-link:hover { border-color: var(--gold-dim); color: var(--gold); }
@@ -87,7 +86,6 @@
   .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text-dim); padding: 14px 24px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; border-radius: 2px; cursor: pointer; transition: all .2s;}
   .btn-ghost:hover { border-color: var(--gold-dim); color: var(--gold); }
 
-  /* FORMULÁRIO DE BUSCA */
   #form-section { display: none; flex-direction: column; gap: 22px; animation: fadeIn .4s ease; max-width: 500px; margin: 0 auto; width: 100%; }
   .form-group { display: flex; flex-direction: column; gap: 8px; }
   .form-group label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; }
@@ -99,7 +97,6 @@
   .chip:hover { border-color: var(--border2); color: var(--text); }
   .chip.selected { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
 
-  /* CHAT E RESULTADOS */
   #chat-section { display: none; flex-direction: column; animation: fadeIn .4s ease; width: 100%; max-width: 800px; margin: 0 auto; }
   .messages { display: flex; flex-direction: column; gap: 24px; }
   .msg { display: flex; flex-direction: column; gap: 7px; animation: fadeIn .4s ease; }
@@ -109,7 +106,6 @@
   .msg-body { line-height: 1.75; color: var(--text-dim); font-size: 14px; }
   .msg.agent .msg-body { color: var(--text); }
 
-  /* CARDS DA BASE PREMIUM */
   .base-section { margin-top: 10px; margin-bottom: 32px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 24px;}
   .base-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .base-title { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-dim); font-family: 'DM Mono', monospace; font-weight: 500; }
@@ -141,13 +137,11 @@
   .thinking-dots span:nth-child(2) { animation-delay: .2s; }
   .thinking-dots span:nth-child(3) { animation-delay: .4s; }
 
-  /* MODALS GERAIS E BOTÃO DE FECHAR "X" */
+  /* MODALS */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 1000; display: flex; align-items: center; justify-content: center; animation: fadeIn .2s ease; }
   .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 28px; width: 460px; max-width: 90vw; display: flex; flex-direction: column; gap: 18px; max-height: 90vh; overflow-y: auto; position: relative; }
-  
   .btn-close-x { position: absolute; top: 16px; right: 20px; background: transparent; border: none; color: var(--text-muted); font-size: 26px; line-height: 1; cursor: pointer; transition: color .2s; }
   .btn-close-x:hover { color: var(--red); }
-
   .modal-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: -4px; padding-right: 20px; }
   .modal-subtitle { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top:-14px; }
   .modal-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-bottom: 5px; display: block; }
@@ -160,7 +154,6 @@
   .btn-modal-cancel { padding: 12px 18px; background: transparent; border: 1px solid var(--border2); color: var(--text-dim); border-radius: 2px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: all .15s; }
   .btn-modal-cancel:hover { border-color: var(--red); color: #d47a66; }
 
-  /* SCRIPT CHIPS */
   .script-chip-group { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
   .script-chip { padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; color: var(--text-dim); cursor: pointer; transition: all .15s; user-select: none; font-family: 'DM Mono', monospace; }
   .script-chip:hover { border-color: var(--border2); color: var(--text); }
@@ -397,21 +390,16 @@ function selectScriptChip(groupId, el) {
 function openScriptModal(leadId) {
   currentLeadForScript = funil[leadId];
   if (!currentLeadForScript) return;
-  
   document.getElementById('script-lead-name').textContent = "Alvo: " + currentLeadForScript.name;
   document.getElementById('script-result-area').style.display = 'none';
-  
   const p = getProfile();
   document.getElementById('script-warning').style.display = (!p.nome || !p.empresa) ? 'block' : 'none';
-  
   const sitGroup = document.getElementById('script-situacoes');
   sitGroup.querySelectorAll('.script-chip').forEach(c => c.classList.remove('selected'));
-  
   let defaultSit = 'primeiro';
   if (currentLeadForScript.stage === 'contatado') defaultSit = 'followup';
   if (currentLeadForScript.stage === 'reuniao') defaultSit = 'retomada';
   if (currentLeadForScript.stage === 'proposta') defaultSit = 'obj_preco';
-  
   sitGroup.querySelector(`.script-chip[data-sit="${defaultSit}"]`).classList.add('selected');
   document.getElementById('script-modal').style.display = 'flex';
 }
@@ -423,7 +411,6 @@ function generateScript() {
   const situacao = document.querySelector('#script-situacoes .selected').getAttribute('data-sit');
   const p = getProfile();
   const l = currentLeadForScript;
-  
   const v_nome_lead = l.name.split(' ')[0]; 
   const v_meu_nome = p.nome || "[SEU NOME]";
   const v_minha_emp = p.empresa || "[SUA EMPRESA]";
@@ -431,7 +418,6 @@ function generateScript() {
   
   let v_dor = "a operação de vocês está crescendo rápido";
   let v_abordagem = "como a arquitetura técnica correta otimiza o espaço e evita desperdícios na cozinha";
-  
   if (l.dor_str) v_dor = l.dor_str.toLowerCase();
   if (l.abord_str) v_abordagem = l.abord_str.toLowerCase();
 
@@ -456,7 +442,6 @@ function generateScript() {
       txt = `Olá, equipe da ${v_nome_lead}.\n\nRetomando nosso contato anterior, gostaria de saber se é o momento ideal para discutirmos soluções estratégicas para a operação de vocês, especificamente focando em ${v_abordagem}.\n\nSabemos que resolver a questão de ${v_dor} é crucial para o próximo passo de crescimento sustentável da marca.\n\nFico à disposição no contato: ${v_contato}.\n\nAtenciosamente,\n${v_meu_nome} - ${v_minha_emp}`;
     }
   }
-
   document.getElementById('script-output').value = txt;
   document.getElementById('script-result-area').style.display = 'block';
 }
@@ -478,6 +463,8 @@ function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').re
 document.querySelectorAll('.chip-group .chip').forEach(chip => { chip.addEventListener('click', () => chip.classList.toggle('selected')); });
 function getSelected(groupId) { return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val); }
 
+const BASE_LOOKUP = {};
+
 async function gerarPlano() {
   const cidadeInput = document.getElementById('cidade').value.trim();
   const cidade = cidadeInput || 'sua região';
@@ -485,6 +472,21 @@ async function gerarPlano() {
 
   if (!cidadeInput) { alert('Por favor, informe a cidade.'); return; }
   if (!segmentos.length) { alert('Selecione ao menos um segmento alvo.'); return; }
+
+  // FILTRO GEOGRÁFICO INTELIGENTE
+  const cidadeNorm = cidadeInput.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+  const mapaEstados = {
+    'RIO DE JANEIRO': 'RJ', 'NITEROI': 'RJ', 'SÃO GONÇALO': 'RJ',
+    'SAO PAULO': 'SP', 'CAMPINAS': 'SP', 'SANTOS': 'SP', 'GUARULHOS': 'SP',
+    'BELO HORIZONTE': 'MG', 'UBERLANDIA': 'MG', 'JUIZ DE FORA': 'MG',
+    'VITORIA': 'ES', 'VILA VELHA': 'ES',
+    'CURITIBA': 'PR', 'LONDRINA': 'PR', 'MARINGA': 'PR',
+    'PORTO ALEGRE': 'RS', 'CAXIAS DO SUL': 'RS',
+    'FLORIANOPOLIS': 'SC', 'JOINVILLE': 'SC', 'BLUMENAU': 'SC',
+    'BRASILIA': 'DF', 'GOIANIA': 'GO',
+    'FORTALEZA': 'CE', 'RECIFE': 'PE', 'SALVADOR': 'BA'
+  };
+  const siglaEstado = mapaEstados[cidadeNorm] || cidadeNorm;
 
   document.getElementById('form-section').style.display = 'none';
   const chat = document.getElementById('chat-section');
@@ -495,15 +497,25 @@ async function gerarPlano() {
   const section = document.createElement('div');
   section.className = 'base-section';
   section.innerHTML = `<div class="base-header" style="margin-bottom:0;"><span class="base-title" style="font-size:13px; color:var(--text); letter-spacing:0.05em">📡 Base Premium de Oportunidades</span></div>
-  <p style="font-size:11px; color:var(--text-dim); margin-bottom:20px;">Redes e potências regionais em expansão selecionadas para o seu radar.</p>`;
+  <p style="font-size:11px; color:var(--text-dim); margin-bottom:20px;">Marcas "Nacionais" e locais filtradas para a sua região.</p>`;
 
   let encontrouNaBase = false;
 
-  // Garante que o PROSPECTS_BASE foi carregado pelo arquivo externo base.js
   if (typeof PROSPECTS_BASE !== 'undefined') {
     segmentos.forEach(seg => {
       const prospects = PROSPECTS_BASE[seg];
       if (!prospects) return;
+
+      // APENAS MOSTRA LEADS DA REGIÃO DIGITADA OU "NACIONAL"
+      const prospectsFiltrados = prospects.filter(p => {
+        const abr = (p.abrangencia || '').toUpperCase();
+        if (abr.includes('NACIONAL')) return true;
+        if (abr.includes(siglaEstado)) return true;
+        if (abr.includes(cidadeNorm)) return true;
+        return false;
+      });
+
+      if (prospectsFiltrados.length === 0) return;
       encontrouNaBase = true;
 
       const segEl = document.createElement('div');
@@ -511,7 +523,7 @@ async function gerarPlano() {
       const cardsEl = document.createElement('div');
       cardsEl.className = 'base-cards';
 
-      prospects.forEach((p, idx) => {
+      prospectsFiltrados.forEach((p, idx) => {
         const cardId = 'base_' + seg.replace(/[^a-z0-9]/gi,'_') + '_' + idx;
         BASE_LOOKUP[cardId] = p;
 
@@ -520,7 +532,6 @@ async function gerarPlano() {
         
         const dorHtml = p.dor ? `<div class="intel-item intel-dor"><strong>⚠️ Ponto Crítico:</strong> <span>${escapeHtml(p.dor)}</span></div>` : '';
         const abordHtml = p.abordagem ? `<div class="intel-item intel-abord"><strong>💡 Estratégia:</strong> <span>${escapeHtml(p.abordagem)}</span></div>` : '';
-        
         const siteLink = p.contato ? `<a href="https://${p.contato.replace('https://','')}" target="_blank" class="prospect-link site">🔗 Site</a>` : '';
         const instaLink = p.instagram ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${escapeHtml(p.instagram)}</a>` : '';
         const linksHtml = (siteLink || instaLink) ? `<div class="prospect-links">${siteLink}${instaLink}</div>` : '';
@@ -571,13 +582,12 @@ Finalize dando uma única dica curta de estratégia de abordagem técnica (falan
     });
 
     const rawText = await res.text();
-
     if (rawText.trim().startsWith('<') || rawText.trim().startsWith('<!')) {
-      throw new Error('A inteligência online está aquecendo os motores (Render gratuito). Aguarde 30 segundos e busque novamente. Enquanto isso, as oportunidades da Base Premium acima já estão prontas para o seu funil!');
+      throw new Error('A inteligência online está aquecendo os motores. Aguarde e tente de novo.');
     }
 
     let data;
-    try { data = JSON.parse(rawText); } catch(e) { throw new Error('Aviso: Falha temporária na IA online. Por favor, explore as oportunidades da Base Premium acima.'); }
+    try { data = JSON.parse(rawText); } catch(e) { throw new Error('Falha temporária na IA online. Explore a Base Premium.'); }
     if (!res.ok) throw new Error(data.error?.message || 'Erro na API');
 
     const finalText = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
@@ -603,7 +613,6 @@ function addFromBase(cardId) {
   const p = BASE_LOOKUP[cardId];
   if (!p) return;
   const id = 'p_' + Date.now();
-  
   let anotacoes = p.oportunidade;
   if (p.dor) anotacoes += `\n\n⚠️ Dor Mapeada: ${p.dor}`;
   if (p.abordagem) anotacoes += `\n💡 Estratégia Sugerida: ${p.abordagem}`;
@@ -630,13 +639,11 @@ function addAgentMsg(rawText) {
   const msgs = document.getElementById('messages');
   const el = document.createElement('div');
   el.className = 'msg agent';
-  
   const fmtText = rawText
     .replace(/\[PROSPECT\]/g, '')
     .replace(/### (.+)/g, '<h3 style="font-family:\'DM Serif Display\',serif;font-size:17px;color:var(--gold);margin:18px 0 8px;">$1</h3>')
     .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--text);font-weight:500;">$1</strong>')
     .replace(/\n\n/g, '<br><br>');
-
   el.innerHTML = `<div class="msg-label">Radar Web em Tempo Real</div><div class="msg-body" style="background:var(--surface); border:1px dashed var(--gold-dim); padding:20px; border-radius:8px; margin-top:8px;">${fmtText}</div>`;
   msgs.appendChild(el);
 }
