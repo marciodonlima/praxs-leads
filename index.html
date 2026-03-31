@@ -9,68 +9,65 @@
         :root {
             --bg: #0a0a0a;
             --surface: #161616;
-            --primary: #f5b800; /* Amarelo Praxs */
+            --primary: #f5b800;
             --text: #ffffff;
             --text-dim: #a0a0a0;
             --border: #262626;
         }
 
-        * { margin: 0; padding: 0; box-box: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 20px; }
         
         .container { max-width: 900px; margin: 40px auto; }
         
-        /* Header */
-        header { text-align: center; margin-bottom: 50px; }
+        header { text-align: center; margin-bottom: 40px; }
         header h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -1px; }
         header h1 span { color: var(--primary); }
-        header p { color: var(--text-dim); margin-top: 10px; }
+        header p { color: var(--text-dim); margin-top: 10px; font-size: 1.1rem; }
 
-        /* Form Card */
-        .card { background: var(--surface); border: 1px solid var(--border); padding: 30px; border-radius: 12px; }
-        .form-group { margin-bottom: 25px; display: flex; flex-direction: column; gap: 12px; }
-        .form-group label { font-weight: 600; font-size: 0.9rem; color: var(--text-dim); }
-        .form-group label span { color: var(--primary); }
+        .intro-text { text-align: center; margin-bottom: 30px; color: var(--text-dim); font-size: 0.9rem; max-width: 600px; margin-inline: auto; }
 
-        /* Chips */
+        .card { background: var(--surface); border: 1px solid var(--border); padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        .form-group { margin-bottom: 25px; display: flex; flex-direction: column; gap: 12px; animation: fadeIn 0.5s ease forwards; }
+        .form-group label { font-weight: 600; font-size: 0.85rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+
         .chip-group { display: flex; flex-wrap: wrap; gap: 10px; }
         .chip { 
-            padding: 10px 20px; background: var(--bg); border: 1px solid var(--border); 
-            border-radius: 50px; cursor: pointer; font-size: 14px; transition: 0.2s; 
+            padding: 12px 18px; background: var(--bg); border: 1px solid var(--border); 
+            border-radius: 8px; cursor: pointer; font-size: 13px; transition: 0.2s; color: var(--text-dim);
         }
-        .chip:hover { border-color: var(--primary); }
-        .chip.selected { background: var(--primary); color: #000; border-color: var(--primary); font-weight: 600; }
+        .chip:hover { border-color: var(--primary); color: var(--text); }
+        .chip.selected { background: var(--primary); color: #000; border-color: var(--primary); font-weight: 700; }
 
-        /* Select Styling */
         select {
             background: var(--bg); border: 1px solid var(--border); color: var(--text);
-            padding: 14px; font-family: 'Sora', sans-serif; font-size: 14px;
-            border-radius: 8px; outline: none; width: 100%; appearance: none;
-            cursor: pointer;
+            padding: 14px; font-family: 'Sora', sans-serif; font-size: 15px;
+            border-radius: 8px; outline: none; width: 100%; cursor: pointer;
         }
 
-        /* Buttons */
         .btn { 
-            background: var(--primary); color: #000; padding: 16px 30px; border: none; 
+            background: var(--primary); color: #000; padding: 18px; border: none; 
             border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; width: 100%;
-            transition: 0.3s;
+            transition: 0.3s; margin-top: 10px;
         }
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn:hover { background: #fff; transform: translateY(-2px); }
 
-        /* Result Section */
         #results { margin-top: 50px; display: none; }
+        .result-header { border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+
         .lead-card { 
-            background: var(--surface); border-left: 4px solid var(--primary); 
-            padding: 20px; margin-bottom: 20px; border-radius: 0 8px 8px 0;
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 25px; margin-bottom: 20px; border-radius: 12px;
             animation: slideIn 0.4s ease forwards;
         }
-        .lead-card h3 { font-size: 1.2rem; margin-bottom: 5px; color: var(--primary); }
-        .lead-meta { font-size: 12px; color: var(--text-dim); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .pain-point { background: #2a1b00; padding: 12px; border-radius: 6px; margin: 10px 0; border: 1px solid #4d3800; }
-        .strategy { border: 1px dashed var(--primary); padding: 12px; border-radius: 6px; margin-top: 10px; }
+        .lead-card h3 { font-size: 1.3rem; margin-bottom: 8px; color: var(--primary); }
+        .lead-meta { font-size: 11px; color: var(--text-dim); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+        .pain-point { background: #1a1a1a; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 3px solid #ff4444; font-size: 14px; }
+        .strategy { background: #1e1e1e; padding: 15px; border-radius: 8px; border-left: 3px solid var(--primary); font-size: 14px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
 <body>
@@ -78,12 +75,14 @@
 <div class="container">
     <header>
         <h1>PRAXS<span> LEADS</span></h1>
-        <p>Gerador de oportunidades estratégicas para arquitetura comercial.</p>
+        <p>Inteligência em Prospecção Arquitetônica</p>
     </header>
 
-    <div class="card" id="main-card">
+    <p class="intro-text">Selecione os filtros abaixo para mapear as dores técnicas dos maiores players de Food Service do Brasil e gerar abordagens de alto impacto.</p>
+
+    <div class="card">
         <div class="form-group">
-            <label>1. Escolha a Região <span>*</span></label>
+            <label>1. Região Geográfica</label>
             <div class="chip-group" id="regioes-search">
                 <div class="chip" data-reg="Sudeste" onclick="selectRegiao(this)">Sudeste</div>
                 <div class="chip" data-reg="Sul" onclick="selectRegiao(this)">Sul</div>
@@ -93,14 +92,14 @@
         </div>
 
         <div class="form-group" id="group-cidade" style="display:none;">
-            <label>2. Selecione a Cidade <span>*</span></label>
+            <label>2. Cidade Foco</label>
             <select id="cidade-select" onchange="checkInputs()">
                 <option value="">Selecione uma cidade...</option>
             </select>
         </div>
         
         <div class="form-group" id="group-segmento" style="display:none;">
-            <label>3. Segmento Alvo <span>*</span></label>
+            <label>3. Segmento de Mercado</label>
             <div class="chip-group" id="segmento-search">
                 <div class="chip" data-val="Café" onclick="selectSegmento(this)">Café</div>
                 <div class="chip" data-val="Hamburgueria" onclick="selectSegmento(this)">Hamburgueria</div>
@@ -110,11 +109,14 @@
             </div>
         </div>
 
-        <button id="btn-gerar" class="btn" style="display:none;" onclick="gerarPlano()">Buscar oportunidades →</button>
+        <button id="btn-gerar" class="btn" style="display:none;" onclick="gerarPlano()">Mapear Oportunidades →</button>
     </div>
 
     <div id="results">
-        <h2 style="margin-bottom: 25px;">Oportunidades Encontradas</h2>
+        <div class="result-header">
+            <h2 id="result-title">Oportunidades</h2>
+            <span id="result-count" style="color: var(--primary); font-weight: bold;"></span>
+        </div>
         <div id="leads-container"></div>
     </div>
 </div>
@@ -122,12 +124,18 @@
 <script src="base.js"></script>
 
 <script>
-    // Mapeamento de Cidades por Região
     const MAPA_CIDADES = {
         "Sudeste": ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Vitória", "Campinas", "Niterói", "São José dos Campos", "Ribeirão Preto", "Uberlândia", "Juiz de Fora", "Santos", "Santo André", "São Bernardo do Campo"],
         "Sul": ["Curitiba", "Porto Alegre", "Florianópolis", "Balneário Camboriú", "Londrina", "Maringá", "Caxias do Sul", "Joinville"],
         "Nordeste": ["Recife", "Salvador", "Fortaleza"],
         "Centro-Oeste": ["Brasília", "Goiânia"]
+    };
+
+    // Mapeamento para o sistema entender as siglas na sua base.js
+    const SIGLAS_ESTADO = {
+        "São Paulo": "SP", "Rio de Janeiro": "RJ", "Belo Horizonte": "MG", "Vitória": "ES",
+        "Campinas": "SP", "Niterói": "RJ", "Uberlândia": "MG", "Curitiba": "PR", 
+        "Porto Alegre": "RS", "Florianópolis": "SC", "Juiz de Fora": "MG"
     };
 
     let regiaoSelecionada = "";
@@ -136,18 +144,12 @@
     function selectRegiao(el) {
         document.querySelectorAll('#regioes-search .chip').forEach(c => c.classList.remove('selected'));
         el.classList.add('selected');
-        
         regiaoSelecionada = el.dataset.reg;
-        const cidades = MAPA_CIDADES[regiaoSelecionada] || [];
         
         const select = document.getElementById('cidade-select');
         select.innerHTML = '<option value="">Selecione uma cidade...</option>';
-        
-        cidades.forEach(cid => {
-            const opt = document.createElement('option');
-            opt.value = cid;
-            opt.textContent = cid;
-            select.appendChild(opt);
+        MAPA_CIDADES[regiaoSelecionada].forEach(c => {
+            const o = document.createElement('option'); o.value = c; o.textContent = c; select.appendChild(o);
         });
         
         document.getElementById('group-cidade').style.display = 'flex';
@@ -164,47 +166,51 @@
 
     function checkInputs() {
         const cidade = document.getElementById('cidade-select').value;
-        if (regiaoSelecionada && cidade && segmentoSelecionado) {
-            document.getElementById('btn-gerar').style.display = 'block';
-        }
+        document.getElementById('btn-gerar').style.display = (regiaoSelecionada && cidade && segmentoSelecionado) ? 'block' : 'none';
     }
 
     function gerarPlano() {
         const cidade = document.getElementById('cidade-select').value;
+        const sigla = SIGLAS_ESTADO[cidade] || "";
         const container = document.getElementById('leads-container');
         container.innerHTML = "";
         
-        // Acessa a base de dados do base.js
         const leads = PROSPECTS_BASE[segmentoSelecionado] || [];
         
-        // Filtra por cidade ou sigla da região (Ex: RJ, SP)
+        // BUSCA INTELIGENTE: Procura pela Cidade OU pela Sigla do Estado
         const filtrados = leads.filter(l => 
-            l.abrangencia.includes(cidade) || 
+            l.abrangencia.toUpperCase().includes(cidade.toUpperCase()) || 
+            l.abrangencia.toUpperCase().includes(sigla) ||
             l.nome.toLowerCase().includes(cidade.toLowerCase())
         );
 
+        document.getElementById('result-count').textContent = filtrados.length + " encontrados";
+
         if (filtrados.length === 0) {
-            container.innerHTML = `<p style="color: var(--text-dim)">Nenhum lead específico para ${cidade} encontrado nesta versão da base. Tente outra cidade da região ${regiaoSelecionada}.</p>`;
+            container.innerHTML = `
+                <div style="text-align:center; padding: 40px; color: var(--text-dim); background: var(--surface); border-radius: 12px; border: 1px dashed var(--border);">
+                    <p>Nenhuma oportunidade específica para <strong>${cidade}</strong> cadastrada nesta categoria ainda.</p>
+                    <p style="font-size: 12px; margin-top: 10px;">Dica: Experimente buscar em outra cidade do <strong>${regiaoSelecionada}</strong> enquanto expandimos a base.</p>
+                </div>`;
         } else {
             filtrados.forEach(l => {
                 container.innerHTML += `
                     <div class="lead-card">
                         <div class="lead-meta">${l.tipo} | ${l.abrangencia}</div>
                         <h3>${l.nome}</h3>
-                        <p><strong>Sinal de Oportunidade:</strong> ${l.sinal}</p>
+                        <p style="font-size: 14px; margin-bottom: 10px;"><strong>Sinal:</strong> ${l.sinal}</p>
                         <div class="pain-point">
-                            <strong>Dor do Cliente:</strong><br>
-                            <small>${l.dor}</small>
+                            <strong style="color: #ff4444">DOR IDENTIFICADA:</strong><br>
+                            ${l.dor}
                         </div>
                         <div class="strategy">
-                            <strong>Abordagem Técnica (Praxs):</strong><br>
-                            <small>${l.abordagem}</small>
+                            <strong style="color: var(--primary)">ABORDAGEM PRAXS:</strong><br>
+                            ${l.abordagem}
                         </div>
-                        <p style="margin-top:10px; font-size:13px">
-                            🔗 <a href="https://instagram.com/${l.instagram.replace('@','')}" target="_blank" style="color:var(--primary)">${l.instagram}</a>
+                        <p style="margin-top:15px; font-size:13px">
+                            📸 Instagram: <a href="https://instagram.com/${l.instagram.replace('@','')}" target="_blank" style="color:var(--primary); text-decoration:none">${l.instagram}</a>
                         </p>
-                    </div>
-                `;
+                    </div>`;
             });
         }
 
