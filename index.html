@@ -89,8 +89,12 @@
   #form-section { display: none; flex-direction: column; gap: 22px; animation: fadeIn .4s ease; max-width: 500px; margin: 0 auto; width: 100%; }
   .form-group { display: flex; flex-direction: column; gap: 8px; }
   .form-group label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; }
-  .form-group input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 14px; font-family: 'Sora', sans-serif; font-size: 14px; border-radius: 4px; outline: none; transition: border-color .2s; }
-  .form-group input:focus { border-color: var(--gold-dim); }
+  .form-group input, .form-group select { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 14px; font-family: 'Sora', sans-serif; font-size: 14px; border-radius: 4px; outline: none; transition: border-color .2s; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--gold-dim); }
+  
+  /* ESTILOS EXTRAS PARA O SELECT */
+  .form-group select { cursor: pointer; appearance: none; }
+  .form-group select option { background: var(--surface2); color: var(--text); }
   
   .chip-group { display: flex; flex-wrap: wrap; gap: 7px; }
   .chip { padding: 8px 16px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--text-dim); cursor: pointer; transition: all .15s; user-select: none; }
@@ -200,13 +204,26 @@
     </div>
 
     <div id="form-section">
-      <div class="form-group">
-        <label>Cidade onde você atua <span>*</span></label>
-        <input type="text" id="cidade" placeholder="Ex: Rio de Janeiro, São Paulo, Curitiba...">
-      </div>
       
       <div class="form-group">
-        <label>Segmento Alvo <span>*</span></label>
+        <label>1. Região Geográfica <span>*</span></label>
+        <div class="chip-group" id="regioes-search">
+          <div class="chip" data-reg="Sudeste" onclick="selectRegiao(this)">Sudeste</div>
+          <div class="chip" data-reg="Sul" onclick="selectRegiao(this)">Sul</div>
+          <div class="chip" data-reg="Nordeste" onclick="selectRegiao(this)">Nordeste</div>
+          <div class="chip" data-reg="Centro-Oeste" onclick="selectRegiao(this)">Centro-Oeste</div>
+        </div>
+      </div>
+
+      <div class="form-group" id="group-cidade" style="display:none;">
+        <label>2. Cidade Foco <span>*</span></label>
+        <select id="cidade-select" onchange="checkMainInputs()">
+          <option value="">Selecione a região primeiro...</option>
+        </select>
+      </div>
+      
+      <div class="form-group" id="group-segmento" style="display:none;">
+        <label>3. Segmento Alvo <span>*</span></label>
         <div class="chip-group" id="segmentos">
           <div class="chip" data-val="Café">Café</div>
           <div class="chip" data-val="Hamburgueria">Hamburgueria</div>
@@ -218,7 +235,7 @@
       
       <div style="display:flex;gap:10px;margin-top:10px">
         <button class="btn-ghost" onclick="showIntro()">← Voltar</button>
-        <button class="btn" style="flex:1" onclick="gerarPlano()">Buscar oportunidades →</button>
+        <button class="btn" id="btn-buscar" style="flex:1; display:none;" onclick="gerarPlano()">Buscar oportunidades →</button>
       </div>
     </div>
 
@@ -326,7 +343,7 @@ function saveProfile() {
 }
 
 const STAGES = [
-  { key: 'novo',      label: 'Para contatar',    color: '#f5b800' },
+  { key: 'novo',      label: 'Para contatar',   color: '#f5b800' },
   { key: 'contatado', label: 'Contatado',         color: '#6aaa7d' },
   { key: 'reuniao',   label: 'Reunião marcada',   color: '#5b9bd5' },
   { key: 'proposta',  label: 'Proposta enviada',  color: '#9b7fdb' }
@@ -460,29 +477,79 @@ function showIntro() { document.getElementById('intro').style.display = 'flex'; 
 function showForm() { document.getElementById('intro').style.display = 'none'; document.getElementById('form-section').style.display = 'flex'; document.getElementById('chat-section').style.display = 'none'; }
 function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>'); }
 
-document.querySelectorAll('.chip-group .chip').forEach(chip => { chip.addEventListener('click', () => chip.classList.toggle('selected')); });
+// NOVA LÓGICA DO MENU DROPDOWN DE CIDADES
+const MAPA_CIDADES = {
+  "Sudeste": ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Vitória", "Campinas", "Niterói", "São José dos Campos", "Ribeirão Preto", "Uberlândia", "Juiz de Fora", "Santos", "Santo André", "São Bernardo do Campo"],
+  "Sul": ["Curitiba", "Porto Alegre", "Florianópolis", "Balneário Camboriú", "Londrina", "Maringá", "Caxias do Sul", "Joinville"],
+  "Nordeste": ["Recife", "Salvador", "Fortaleza"],
+  "Centro-Oeste": ["Brasília", "Goiânia"]
+};
+
+let regiaoSelecionada = "";
+
+function selectRegiao(el) {
+  document.querySelectorAll('#regioes-search .chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  regiaoSelecionada = el.dataset.reg;
+  
+  const select = document.getElementById('cidade-select');
+  select.innerHTML = '<option value="">Selecione uma cidade...</option>';
+  
+  if(MAPA_CIDADES[regiaoSelecionada]){
+    MAPA_CIDADES[regiaoSelecionada].forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      select.appendChild(opt);
+    });
+  }
+  
+  document.getElementById('group-cidade').style.display = 'flex';
+  document.getElementById('group-segmento').style.display = 'flex';
+  checkMainInputs();
+}
+
+function checkMainInputs() {
+  const cidade = document.getElementById('cidade-select').value;
+  const segmentos = getSelected('segmentos');
+  const btn = document.getElementById('btn-buscar');
+  if (regiaoSelecionada && cidade && segmentos.length > 0) {
+    btn.style.display = 'block';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+// Escuta os cliques nos chips de segmento para atualizar o botão buscar
+document.querySelectorAll('.chip-group .chip').forEach(chip => { 
+  chip.addEventListener('click', () => {
+    chip.classList.toggle('selected');
+    if(chip.closest('#segmentos')) checkMainInputs();
+  }); 
+});
+
 function getSelected(groupId) { return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val); }
 
 const BASE_LOOKUP = {};
 
 async function gerarPlano() {
-  const cidadeInput = document.getElementById('cidade').value.trim();
+  // ATUALIZAÇÃO: Pega o valor do select em vez do input de texto
+  const cidadeInput = document.getElementById('cidade-select').value.trim();
   const cidade = cidadeInput || 'sua região';
   const segmentos = getSelected('segmentos');
 
-  if (!cidadeInput) { alert('Por favor, informe a cidade.'); return; }
+  if (!cidadeInput) { alert('Por favor, selecione a cidade.'); return; }
   if (!segmentos.length) { alert('Selecione ao menos um segmento alvo.'); return; }
 
-  // FILTRO GEOGRÁFICO INTELIGENTE
   const cidadeNorm = cidadeInput.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
   const mapaEstados = {
     'RIO DE JANEIRO': 'RJ', 'NITEROI': 'RJ', 'SÃO GONÇALO': 'RJ',
-    'SAO PAULO': 'SP', 'CAMPINAS': 'SP', 'SANTOS': 'SP', 'GUARULHOS': 'SP',
+    'SAO PAULO': 'SP', 'CAMPINAS': 'SP', 'SANTOS': 'SP', 'GUARULHOS': 'SP', 'RIBEIRAO PRETO': 'SP', 'SAO JOSE DOS CAMPOS': 'SP', 'SANTO ANDRE': 'SP', 'SAO BERNARDO DO CAMPO': 'SP',
     'BELO HORIZONTE': 'MG', 'UBERLANDIA': 'MG', 'JUIZ DE FORA': 'MG',
     'VITORIA': 'ES', 'VILA VELHA': 'ES',
     'CURITIBA': 'PR', 'LONDRINA': 'PR', 'MARINGA': 'PR',
     'PORTO ALEGRE': 'RS', 'CAXIAS DO SUL': 'RS',
-    'FLORIANOPOLIS': 'SC', 'JOINVILLE': 'SC', 'BLUMENAU': 'SC',
+    'FLORIANOPOLIS': 'SC', 'JOINVILLE': 'SC', 'BLUMENAU': 'SC', 'BALNEARIO CAMBORIU': 'SC',
     'BRASILIA': 'DF', 'GOIANIA': 'GO',
     'FORTALEZA': 'CE', 'RECIFE': 'PE', 'SALVADOR': 'BA'
   };
@@ -501,12 +568,12 @@ async function gerarPlano() {
 
   let encontrouNaBase = false;
 
-  if (typeof PROSPECTS_BASE !== 'undefined') {
+  if (typeof PROSPEcripts_BASE !== 'undefined' || typeof PROSPECTS_BASE !== 'undefined') {
+    const base = typeof PROSPECTS_BASE !== 'undefined' ? PROSPECTS_BASE : PROSPEcripts_BASE;
     segmentos.forEach(seg => {
-      const prospects = PROSPECTS_BASE[seg];
+      const prospects = base[seg];
       if (!prospects) return;
 
-      // APENAS MOSTRA LEADS DA REGIÃO DIGITADA OU "NACIONAL"
       const prospectsFiltrados = prospects.filter(p => {
         const abr = (p.abrangencia || '').toUpperCase();
         if (abr.includes('NACIONAL')) return true;
