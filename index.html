@@ -42,10 +42,10 @@
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
 
-  .btn-profile { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; background: transparent; border: 1px solid var(--border2); border-radius: 4px; font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; cursor: pointer; transition: all .2s; }
+  .btn-profile { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; background: transparent; border: 1px solid var(--border2); border-radius: 4px; font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; cursor: pointer; transition: all .2s; position: relative; z-index: 10; }
   .btn-profile:hover { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
 
-  .app { flex: 1; display: flex; min-height: 0; }
+  .app { flex: 1; display: flex; min-height: 0; position: relative; z-index: 10; }
 
   /* SIDEBAR E FUNIL */
   .sidebar { width: 300px; flex-shrink: 0; border-right: 1px solid var(--border); display: flex; flex-direction: column; background: var(--surface); }
@@ -89,11 +89,8 @@
   #form-section { display: none; flex-direction: column; gap: 22px; animation: fadeIn .4s ease; max-width: 500px; margin: 0 auto; width: 100%; }
   .form-group { display: flex; flex-direction: column; gap: 8px; }
   .form-group label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; }
-  .form-group input, .form-group select { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 14px; font-family: 'Sora', sans-serif; font-size: 14px; border-radius: 4px; outline: none; transition: border-color .2s; }
-  .form-group input:focus, .form-group select:focus { border-color: var(--gold-dim); }
-  
-  /* ESTILOS EXTRAS PARA O SELECT */
-  .form-group select { cursor: pointer; appearance: none; }
+  .form-group select { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 14px; font-family: 'Sora', sans-serif; font-size: 14px; border-radius: 4px; outline: none; transition: border-color .2s; cursor: pointer; appearance: none; }
+  .form-group select:focus { border-color: var(--gold-dim); }
   .form-group select option { background: var(--surface2); color: var(--text); }
   
   .chip-group { display: flex; flex-wrap: wrap; gap: 7px; }
@@ -204,7 +201,6 @@
     </div>
 
     <div id="form-section">
-      
       <div class="form-group">
         <label>1. Região Geográfica <span>*</span></label>
         <div class="chip-group" id="regioes-search">
@@ -328,6 +324,7 @@ function getProfile() {
   try { return JSON.parse(localStorage.getItem('praxs_perfil')) || {nome:'', empresa:'', contato:''}; } 
   catch(e) { return {nome:'', empresa:'', contato:''}; }
 }
+
 function openProfileModal() {
   const p = getProfile();
   document.getElementById('prof-nome').value = p.nome;
@@ -335,7 +332,9 @@ function openProfileModal() {
   document.getElementById('prof-contato').value = p.contato;
   document.getElementById('profile-modal').style.display = 'flex';
 }
+
 function closeProfileModal() { document.getElementById('profile-modal').style.display = 'none'; }
+
 function saveProfile() {
   const p = { nome: document.getElementById('prof-nome').value.trim(), empresa: document.getElementById('prof-empresa').value.trim(), contato: document.getElementById('prof-contato').value.trim() };
   localStorage.setItem('praxs_perfil', JSON.stringify(p));
@@ -351,7 +350,6 @@ const STAGES = [
 
 function saveFunil() { try { localStorage.setItem('praxs_leads_funil', JSON.stringify(funil)); } catch(e) {} }
 function loadFunil() { try { const raw = localStorage.getItem('praxs_leads_funil'); if (raw) funil = JSON.parse(raw); } catch(e) { funil = {}; } renderFunil(); }
-
 function moveStage(id, stageKey) { if (funil[id]) { funil[id].stage = stageKey; saveFunil(); renderFunil(); } }
 function removeProspect(id) { delete funil[id]; saveFunil(); renderFunil(); }
 
@@ -477,7 +475,14 @@ function showIntro() { document.getElementById('intro').style.display = 'flex'; 
 function showForm() { document.getElementById('intro').style.display = 'none'; document.getElementById('form-section').style.display = 'flex'; document.getElementById('chat-section').style.display = 'none'; }
 function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>'); }
 
-// NOVA LÓGICA DO MENU DROPDOWN DE CIDADES
+// CONFIGURAÇÃO DOS CHIPS DE SEGMENTO - Isolate logic to prevent conflicts
+document.querySelectorAll('#segmentos .chip').forEach(chip => { 
+  chip.addEventListener('click', () => {
+    chip.classList.toggle('selected');
+    checkMainInputs();
+  }); 
+});
+
 const MAPA_CIDADES = {
   "Sudeste": ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Vitória", "Campinas", "Niterói", "São José dos Campos", "Ribeirão Preto", "Uberlândia", "Juiz de Fora", "Santos", "Santo André", "São Bernardo do Campo"],
   "Sul": ["Curitiba", "Porto Alegre", "Florianópolis", "Balneário Camboriú", "Londrina", "Maringá", "Caxias do Sul", "Joinville"],
@@ -511,7 +516,7 @@ function selectRegiao(el) {
 
 function checkMainInputs() {
   const cidade = document.getElementById('cidade-select').value;
-  const segmentos = getSelected('segmentos');
+  const segmentos = [...document.querySelectorAll('#segmentos .chip.selected')].map(c => c.dataset.val);
   const btn = document.getElementById('btn-buscar');
   if (regiaoSelecionada && cidade && segmentos.length > 0) {
     btn.style.display = 'block';
@@ -520,23 +525,12 @@ function checkMainInputs() {
   }
 }
 
-// Escuta os cliques nos chips de segmento para atualizar o botão buscar
-document.querySelectorAll('.chip-group .chip').forEach(chip => { 
-  chip.addEventListener('click', () => {
-    chip.classList.toggle('selected');
-    if(chip.closest('#segmentos')) checkMainInputs();
-  }); 
-});
-
-function getSelected(groupId) { return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val); }
-
 const BASE_LOOKUP = {};
 
 async function gerarPlano() {
-  // ATUALIZAÇÃO: Pega o valor do select em vez do input de texto
   const cidadeInput = document.getElementById('cidade-select').value.trim();
   const cidade = cidadeInput || 'sua região';
-  const segmentos = getSelected('segmentos');
+  const segmentos = [...document.querySelectorAll('#segmentos .chip.selected')].map(c => c.dataset.val);
 
   if (!cidadeInput) { alert('Por favor, selecione a cidade.'); return; }
   if (!segmentos.length) { alert('Selecione ao menos um segmento alvo.'); return; }
@@ -568,8 +562,8 @@ async function gerarPlano() {
 
   let encontrouNaBase = false;
 
-  if (typeof PROSPEcripts_BASE !== 'undefined' || typeof PROSPECTS_BASE !== 'undefined') {
-    const base = typeof PROSPECTS_BASE !== 'undefined' ? PROSPECTS_BASE : PROSPEcripts_BASE;
+  if (typeof PROSPECTS_BASE !== 'undefined') {
+    const base = PROSPECTS_BASE;
     segmentos.forEach(seg => {
       const prospects = base[seg];
       if (!prospects) return;
