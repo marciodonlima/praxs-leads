@@ -6654,5 +6654,3 @@ const PROSPECTS_BASE = {
     }
   ]
 };
-
-const BASE_LOOKUP = {};
