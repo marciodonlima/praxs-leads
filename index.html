@@ -1,223 +1,665 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Praxs Leads | Inteligência em Food Service</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0a0a0a;
-            --surface: #161616;
-            --primary: #f5b800;
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
-            --border: #262626;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praxs Leads — Prospecção Food Service</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f0c; --surface: #161812; --surface2: #1e2019;
+    --border: #2e3028; --border2: #3d4035;
+    --gold: #f5b800; --gold-dim: #a67d00; --gold-glow: rgba(245,184,0,0.10);
+    --green: #4a7c59; --green-bright: #6aaa7d;
+    --text: #e8e6de; --text-dim: #8a887e; --text-muted: #555550;
+    --red: #a85d4a;
+  }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 20px; }
-        
-        .container { max-width: 900px; margin: 40px auto; }
-        
-        header { text-align: center; margin-bottom: 40px; }
-        header h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -1px; }
-        header h1 span { color: var(--primary); }
-        header p { color: var(--text-dim); margin-top: 10px; font-size: 1.1rem; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .intro-text { text-align: center; margin-bottom: 30px; color: var(--text-dim); font-size: 0.9rem; max-width: 600px; margin-inline: auto; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 300;
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
 
-        .card { background: var(--surface); border: 1px solid var(--border); padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        
-        .form-group { margin-bottom: 25px; display: flex; flex-direction: column; gap: 12px; animation: fadeIn 0.5s ease forwards; }
-        .form-group label { font-weight: 600; font-size: 0.85rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.6;
+  }
 
-        .chip-group { display: flex; flex-wrap: wrap; gap: 10px; }
-        .chip { 
-            padding: 12px 18px; background: var(--bg); border: 1px solid var(--border); 
-            border-radius: 8px; cursor: pointer; font-size: 13px; transition: 0.2s; color: var(--text-dim);
-        }
-        .chip:hover { border-color: var(--primary); color: var(--text); }
-        .chip.selected { background: var(--primary); color: #000; border-color: var(--primary); font-weight: 700; }
+  header { padding: 28px 40px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; }
+  .praxs-word { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+  .praxs-word .a-letter { color: var(--gold); }
+  .praxs-divider { width: 1px; height: 20px; background: var(--border2); margin: 0 14px; }
+  .header-text h1 { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+  .header-text p { font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 3px; font-family: 'DM Mono', monospace; }
 
-        select {
-            background: var(--bg); border: 1px solid var(--border); color: var(--text);
-            padding: 14px; font-family: 'Sora', sans-serif; font-size: 15px;
-            border-radius: 8px; outline: none; width: 100%; cursor: pointer;
-        }
+  .status-dot { margin-left: 16px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-bright); box-shadow: 0 0 8px var(--green-bright); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
 
-        .btn { 
-            background: var(--primary); color: #000; padding: 18px; border: none; 
-            border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; width: 100%;
-            transition: 0.3s; margin-top: 10px;
-        }
-        .btn:hover { background: #fff; transform: translateY(-2px); }
+  .btn-profile { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; background: transparent; border: 1px solid var(--border2); border-radius: 4px; font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; cursor: pointer; transition: all .2s; }
+  .btn-profile:hover { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
 
-        #results { margin-top: 50px; display: none; }
-        .result-header { border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+  .app { flex: 1; display: flex; min-height: 0; }
 
-        .lead-card { 
-            background: var(--surface); border: 1px solid var(--border);
-            padding: 25px; margin-bottom: 20px; border-radius: 12px;
-            animation: slideIn 0.4s ease forwards;
-        }
-        .lead-card h3 { font-size: 1.3rem; margin-bottom: 8px; color: var(--primary); }
-        .lead-meta { font-size: 11px; color: var(--text-dim); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
-        .pain-point { background: #1a1a1a; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 3px solid #ff4444; font-size: 14px; }
-        .strategy { background: #1e1e1e; padding: 15px; border-radius: 8px; border-left: 3px solid var(--primary); font-size: 14px; }
+  /* SIDEBAR E FUNIL */
+  .sidebar { width: 300px; flex-shrink: 0; border-right: 1px solid var(--border); display: flex; flex-direction: column; background: var(--surface); }
+  .sidebar-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .sidebar-title { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+  .sidebar-count { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--gold-dim); background: var(--gold-glow); padding: 2px 8px; border-radius: 2px; }
+  .funil-stages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 14px; }
+  
+  .stage-label { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; padding: 0 4px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
+  .prospect-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; margin-bottom: 5px; transition: border-color .15s; }
+  .prospect-card:hover { border-color: var(--border2); }
+  .prospect-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .prospect-meta { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; line-height: 1.4; }
+  .prospect-notes { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top: 5px; line-height: 1.5; font-style: italic; max-height: 60px; overflow: hidden; text-overflow: ellipsis; }
+  
+  .prospect-links { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .prospect-link { font-size: 9px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 2px; color: var(--text-muted); text-decoration: none; font-family: 'DM Mono', monospace; letter-spacing: .04em; transition: all .15s; display: inline-flex; align-items: center; gap: 4px; background: var(--surface); }
+  .prospect-link:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .prospect-link.insta:hover { border-color: #E1306C; color: #E1306C; }
+  .prospect-link.site:hover { border-color: #4a9eff; color: #4a9eff; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
-    </style>
+  .prospect-actions { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; border-top: 1px dashed var(--border); padding-top: 8px; }
+  .stage-btn { font-size: 9px; padding: 4px 8px; border: 1px solid var(--border2); border-radius: 2px; background: transparent; color: var(--text-muted); cursor: pointer; font-family: 'DM Mono', monospace; letter-spacing: .04em; transition: all .15s; }
+  .stage-btn:hover { border-color: var(--gold-dim); color: var(--text); }
+  .stage-btn.highlight { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); width: 100%; margin-bottom: 4px; font-size: 10px; padding: 6px; }
+  .stage-btn.highlight:hover { background: rgba(245,184,0,0.2); }
+  .stage-btn.del:hover { border-color: var(--red); color: #d47a66; }
+
+  /* MAIN AREA */
+  main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 36px 40px 100px; }
+  #intro { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 48px 0 32px; gap: 20px; animation: fadeIn .5s ease; }
+  #intro h2 { font-family: 'DM Serif Display', serif; font-size: 30px; font-weight: 400; line-height: 1.3; color: var(--text); max-width: 460px; }
+  #intro h2 em { color: var(--gold); font-style: italic; }
+  #intro p { color: var(--text-dim); font-size: 14px; line-height: 1.7; max-width: 400px; }
+
+  .btn { padding: 14px 34px; background: var(--gold); color: #0e0f0c; font-weight: 500; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; border: none; cursor: pointer; border-radius: 2px; transition: all .2s; }
+  .btn:hover { background: #ffc61a; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text-dim); padding: 14px 24px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; border-radius: 2px; cursor: pointer; transition: all .2s;}
+  .btn-ghost:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+  #form-section { display: none; flex-direction: column; gap: 22px; animation: fadeIn .4s ease; max-width: 500px; margin: 0 auto; width: 100%; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+  .form-group input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 14px; font-family: 'Sora', sans-serif; font-size: 14px; border-radius: 4px; outline: none; transition: border-color .2s; }
+  .form-group input:focus { border-color: var(--gold-dim); }
+  
+  .chip-group { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip { padding: 8px 16px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--text-dim); cursor: pointer; transition: all .15s; user-select: none; }
+  .chip:hover { border-color: var(--border2); color: var(--text); }
+  .chip.selected { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
+
+  #chat-section { display: none; flex-direction: column; animation: fadeIn .4s ease; width: 100%; max-width: 800px; margin: 0 auto; }
+  .messages { display: flex; flex-direction: column; gap: 24px; }
+  .msg { display: flex; flex-direction: column; gap: 7px; animation: fadeIn .4s ease; }
+  .msg-label { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-family: 'DM Mono', monospace; color: var(--text-muted); }
+  .msg.agent .msg-label { color: var(--gold-dim); }
+  .msg.user .msg-label { color: var(--green); }
+  .msg-body { line-height: 1.75; color: var(--text-dim); font-size: 14px; }
+  .msg.agent .msg-body { color: var(--text); }
+
+  .base-section { margin-top: 10px; margin-bottom: 32px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 24px;}
+  .base-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .base-title { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-dim); font-family: 'DM Mono', monospace; font-weight: 500; }
+  .base-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width: 900px){ .base-cards { grid-template-columns: 1fr; } }
+  
+  .base-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 16px; transition: border-color .15s; display: flex; flex-direction: column; }
+  .base-card:hover { border-color: var(--border2); }
+  .base-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .base-card-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .base-card-tipo { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top: 4px; }
+  .base-card-oportunidade { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-bottom: 12px; flex: 1; }
+  
+  .base-card-intel { padding: 12px; background: rgba(0,0,0,0.2); border-radius: 4px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;}
+  .intel-item { font-size: 12px; line-height: 1.5; color: var(--text-dim); }
+  .intel-item strong { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; margin-right: 4px; }
+  .intel-dor strong { color: #d47a66; }
+  .intel-abord strong { color: var(--gold); }
+
+  .btn-add-prospect { font-size: 10px; padding: 6px 14px; border: 1px solid var(--gold-dim); border-radius: 4px; background: var(--gold-glow); color: var(--gold); cursor: pointer; font-family: 'DM Mono', monospace; transition: all .15s; white-space: nowrap;}
+  .btn-add-prospect:hover { background: rgba(245,184,0,.2); }
+  .btn-add-prospect.added { border-color: var(--green); color: var(--green-bright); background: rgba(74,124,89,.1); cursor: default; }
+
+  .btn-nova-busca { display: block; width: 100%; max-width: 300px; margin: 40px auto 20px auto; padding: 16px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; text-align: center; cursor: pointer; border-radius: 4px; transition: all 0.2s;}
+  .btn-nova-busca:hover { background: var(--border); color: var(--gold); }
+
+  .thinking { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 12px; font-family: 'DM Mono', monospace; padding: 12px; background: var(--surface2); border-radius: 6px; border: 1px dashed var(--border2); margin-top: 20px;}
+  .thinking-dots span { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--gold-dim); animation: blink 1.2s ease-in-out infinite; margin: 0 2px; }
+  .thinking-dots span:nth-child(2) { animation-delay: .2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: .4s; }
+
+  /* MODALS */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 1000; display: flex; align-items: center; justify-content: center; animation: fadeIn .2s ease; }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 28px; width: 460px; max-width: 90vw; display: flex; flex-direction: column; gap: 18px; max-height: 90vh; overflow-y: auto; position: relative; }
+  .btn-close-x { position: absolute; top: 16px; right: 20px; background: transparent; border: none; color: var(--text-muted); font-size: 26px; line-height: 1; cursor: pointer; transition: color .2s; }
+  .btn-close-x:hover { color: var(--red); }
+  .modal-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: -4px; padding-right: 20px; }
+  .modal-subtitle { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-top:-14px; }
+  .modal-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-bottom: 5px; display: block; }
+  .modal input, .modal textarea { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; font-family: 'Sora', sans-serif; font-size: 13px; border-radius: 2px; outline: none; transition: border-color .2s; width: 100%; }
+  .modal textarea { resize: vertical; min-height: 70px; }
+  .modal input:focus, .modal textarea:focus { border-color: var(--gold-dim); }
+  .modal-actions { display: flex; gap: 10px; margin-top: 10px; }
+  .btn-modal-save { flex: 1; padding: 12px; background: var(--gold); color: #0e0f0c; border: none; border-radius: 2px; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: background .15s; }
+  .btn-modal-save:hover { background: #ffc61a; }
+  .btn-modal-cancel { padding: 12px 18px; background: transparent; border: 1px solid var(--border2); color: var(--text-dim); border-radius: 2px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: all .15s; }
+  .btn-modal-cancel:hover { border-color: var(--red); color: #d47a66; }
+
+  .script-chip-group { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .script-chip { padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; color: var(--text-dim); cursor: pointer; transition: all .15s; user-select: none; font-family: 'DM Mono', monospace; }
+  .script-chip:hover { border-color: var(--border2); color: var(--text); }
+  .script-chip.selected { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
+  #script-result-area { margin-top: 10px; padding: 14px; background: var(--surface2); border: 1px dashed var(--gold-dim); border-radius: 4px; display: none; }
+  #script-output { width: 100%; min-height: 140px; background: transparent; border: none; color: var(--text); font-family: 'Sora', sans-serif; font-size: 13px; line-height: 1.6; resize: vertical; outline: none; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+</style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>PRAXS<span> LEADS</span></h1>
-        <p>Inteligência em Prospecção Arquitetônica</p>
-    </header>
+<header>
+  <div class="praxs-word">pr<span class="a-letter">a</span>xs</div>
+  <div class="praxs-divider"></div>
+  <div class="header-text">
+    <h1>Leads <span style="font-size:9px;padding:2px 7px;border:1px solid var(--gold-dim);border-radius:2px;letter-spacing:.08em;color:var(--gold-dim);margin-left:6px;vertical-align:middle">LIGHT</span></h1>
+    <p>Prospecção · Food Service</p>
+  </div>
+  
+  <button class="btn-profile" onclick="openProfileModal()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    Meu Perfil
+  </button>
+  <div class="status-dot"><div class="dot"></div> operacional</div>
+</header>
 
-    <p class="intro-text">Selecione os filtros abaixo para mapear as dores técnicas dos maiores players de Food Service do Brasil e gerar abordagens de alto impacto.</p>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">Meu funil</span>
+      <span class="sidebar-count" id="total-count">0 prospects</span>
+    </div>
+    <div class="funil-stages" id="funil-stages"></div>
+  </aside>
 
-    <div class="card">
-        <div class="form-group">
-            <label>1. Região Geográfica</label>
-            <div class="chip-group" id="regioes-search">
-                <div class="chip" data-reg="Sudeste" onclick="selectRegiao(this)">Sudeste</div>
-                <div class="chip" data-reg="Sul" onclick="selectRegiao(this)">Sul</div>
-                <div class="chip" data-reg="Nordeste" onclick="selectRegiao(this)">Nordeste</div>
-                <div class="chip" data-reg="Centro-Oeste" onclick="selectRegiao(this)">Centro-Oeste</div>
-            </div>
-        </div>
-
-        <div class="form-group" id="group-cidade" style="display:none;">
-            <label>2. Cidade Foco</label>
-            <select id="cidade-select" onchange="checkInputs()">
-                <option value="">Selecione uma cidade...</option>
-            </select>
-        </div>
-        
-        <div class="form-group" id="group-segmento" style="display:none;">
-            <label>3. Segmento de Mercado</label>
-            <div class="chip-group" id="segmento-search">
-                <div class="chip" data-val="Café" onclick="selectSegmento(this)">Café</div>
-                <div class="chip" data-val="Hamburgueria" onclick="selectSegmento(this)">Hamburgueria</div>
-                <div class="chip" data-val="Restaurante À la Carte" onclick="selectSegmento(this)">Restaurante</div>
-                <div class="chip" data-val="Buffet Self-Service" onclick="selectSegmento(this)">Buffet</div>
-                <div class="chip" data-val="Dark Kitchen" onclick="selectSegmento(this)">Dark Kitchen</div>
-            </div>
-        </div>
-
-        <button id="btn-gerar" class="btn" style="display:none;" onclick="gerarPlano()">Mapear Oportunidades →</button>
+  <main>
+    <div id="intro">
+      <h2>Descubra oportunidades reais de <em>food service</em> na sua cidade</h2>
+      <p>O radar mapeia oportunidades estratégicas e a IA gera scripts de abordagem perfeitos para cada fase do seu funil.</p>
+      <button class="btn" style="padding:14px 34px" onclick="showForm()">Iniciar prospecção →</button>
     </div>
 
-    <div id="results">
-        <div class="result-header">
-            <h2 id="result-title">Oportunidades</h2>
-            <span id="result-count" style="color: var(--primary); font-weight: bold;"></span>
+    <div id="form-section">
+      <div class="form-group">
+        <label>Cidade onde você atua <span>*</span></label>
+        <input type="text" id="cidade" placeholder="Ex: Rio de Janeiro, São Paulo, Curitiba...">
+      </div>
+      
+      <div class="form-group">
+        <label>Segmento Alvo <span>*</span></label>
+        <div class="chip-group" id="segmentos">
+          <div class="chip" data-val="Café">Café</div>
+          <div class="chip" data-val="Hamburgueria">Hamburgueria</div>
+          <div class="chip" data-val="Restaurante À la Carte">Restaurante À la Carte</div>
+          <div class="chip" data-val="Buffet Self-Service">Buffet Self-Service</div>
+          <div class="chip" data-val="Dark Kitchen">Dark Kitchen</div>
         </div>
-        <div id="leads-container"></div>
+      </div>
+      
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <button class="btn-ghost" onclick="showIntro()">← Voltar</button>
+        <button class="btn" style="flex:1" onclick="gerarPlano()">Buscar oportunidades →</button>
+      </div>
     </div>
+
+    <div id="chat-section">
+      <div class="messages" id="messages"></div>
+    </div>
+  </main>
+</div>
+
+<div id="profile-modal" class="modal-overlay" style="display:none;">
+  <div class="modal">
+    <button class="btn-close-x" onclick="closeProfileModal()">&times;</button>
+    <div>
+      <div class="modal-title">Meu Perfil Profissional</div>
+      <p style="font-size:12px; color:var(--text-dim); margin-top:6px;">Estes dados personalizam automaticamente os seus scripts de abordagem. Tudo fica salvo apenas no seu navegador.</p>
+    </div>
+    <div>
+      <label class="modal-label">Seu Nome / Como quer ser chamado</label>
+      <input type="text" id="prof-nome" placeholder="Ex: João Silva">
+    </div>
+    <div>
+      <label class="modal-label">Nome do seu Escritório / Empresa</label>
+      <input type="text" id="prof-empresa" placeholder="Ex: Studio JS Arquitetura">
+    </div>
+    <div>
+      <label class="modal-label">Seu Contato Principal (Call to action)</label>
+      <input type="text" id="prof-contato" placeholder="Ex: meu WhatsApp (21) 99999-9999 ou link na bio">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeProfileModal()">Cancelar</button>
+      <button class="btn-modal-save" onclick="saveProfile()">Salvar Perfil</button>
+    </div>
+  </div>
+</div>
+
+<div id="script-modal" class="modal-overlay" style="display:none;">
+  <div class="modal" style="width:600px;">
+    <button class="btn-close-x" onclick="closeScriptModal()">&times;</button>
+    <div>
+      <div class="modal-title">✨ Gerador de Abordagem</div>
+      <div class="modal-subtitle" id="script-lead-name" style="margin-top:4px; font-size:13px; color:var(--gold);">Nome do Lead</div>
+    </div>
+    
+    <div id="script-warning" style="display:none; padding:10px; background:rgba(212,122,102,0.1); border:1px solid var(--red); border-radius:4px; font-size:11px; color:#d47a66;">
+      Dica: Preencha o "Meu Perfil" no topo da página para que o script saia com os seus dados já preenchidos.
+    </div>
+
+    <div>
+      <label class="modal-label">1. Canal de Envio</label>
+      <div class="script-chip-group" id="script-canais">
+        <div class="script-chip selected" onclick="selectScriptChip('script-canais', this)">WhatsApp</div>
+        <div class="script-chip" onclick="selectScriptChip('script-canais', this)">Instagram (DM)</div>
+        <div class="script-chip" onclick="selectScriptChip('script-canais', this)">E-mail</div>
+        <div class="script-chip" onclick="selectScriptChip('script-canais', this)">LinkedIn</div>
+      </div>
+    </div>
+
+    <div>
+      <label class="modal-label">2. Situação / Momento do Funil</label>
+      <div class="script-chip-group" id="script-situacoes">
+        <div class="script-chip selected" onclick="selectScriptChip('script-situacoes', this)" data-sit="primeiro">Primeiro contato frio</div>
+        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="followup">Follow-up após silêncio</div>
+        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="retomada">Retomada pós-reunião</div>
+        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="obj_preco">Objeção de preço</div>
+        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="ja_tem">Já tem arquiteto</div>
+      </div>
+    </div>
+
+    <button class="btn" style="width:100%; margin-top:10px;" onclick="generateScript()">Gerar Script Personalizado</button>
+
+    <div id="script-result-area">
+      <label class="modal-label" style="color:var(--gold-dim)">Resultado Gerado (Edite livremente)</label>
+      <textarea id="script-output"></textarea>
+      <div class="modal-actions" style="margin-top:12px;">
+        <button class="btn-modal-save" style="width:100%; padding:14px;" id="btn-copy-script" onclick="copyScript()">Copiar Script</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="base.js"></script>
 
 <script>
-    const MAPA_CIDADES = {
-        "Sudeste": ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Vitória", "Campinas", "Niterói", "São José dos Campos", "Ribeirão Preto", "Uberlândia", "Juiz de Fora", "Santos", "Santo André", "São Bernardo do Campo"],
-        "Sul": ["Curitiba", "Porto Alegre", "Florianópolis", "Balneário Camboriú", "Londrina", "Maringá", "Caxias do Sul", "Joinville"],
-        "Nordeste": ["Recife", "Salvador", "Fortaleza"],
-        "Centro-Oeste": ["Brasília", "Goiânia"]
-    };
+const API_URL = 'COLE_URL_DO_RENDER_AQUI';
 
-    // Mapeamento para o sistema entender as siglas na sua base.js
-    const SIGLAS_ESTADO = {
-        "São Paulo": "SP", "Rio de Janeiro": "RJ", "Belo Horizonte": "MG", "Vitória": "ES",
-        "Campinas": "SP", "Niterói": "RJ", "Uberlândia": "MG", "Curitiba": "PR", 
-        "Porto Alegre": "RS", "Florianópolis": "SC", "Juiz de Fora": "MG"
-    };
+let funil = {};
+let currentLeadForScript = null;
 
-    let regiaoSelecionada = "";
-    let segmentoSelecionado = "";
+function getProfile() {
+  try { return JSON.parse(localStorage.getItem('praxs_perfil')) || {nome:'', empresa:'', contato:''}; } 
+  catch(e) { return {nome:'', empresa:'', contato:''}; }
+}
+function openProfileModal() {
+  const p = getProfile();
+  document.getElementById('prof-nome').value = p.nome;
+  document.getElementById('prof-empresa').value = p.empresa;
+  document.getElementById('prof-contato').value = p.contato;
+  document.getElementById('profile-modal').style.display = 'flex';
+}
+function closeProfileModal() { document.getElementById('profile-modal').style.display = 'none'; }
+function saveProfile() {
+  const p = { nome: document.getElementById('prof-nome').value.trim(), empresa: document.getElementById('prof-empresa').value.trim(), contato: document.getElementById('prof-contato').value.trim() };
+  localStorage.setItem('praxs_perfil', JSON.stringify(p));
+  closeProfileModal();
+}
 
-    function selectRegiao(el) {
-        document.querySelectorAll('#regioes-search .chip').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-        regiaoSelecionada = el.dataset.reg;
+const STAGES = [
+  { key: 'novo',      label: 'Para contatar',    color: '#f5b800' },
+  { key: 'contatado', label: 'Contatado',         color: '#6aaa7d' },
+  { key: 'reuniao',   label: 'Reunião marcada',   color: '#5b9bd5' },
+  { key: 'proposta',  label: 'Proposta enviada',  color: '#9b7fdb' }
+];
+
+function saveFunil() { try { localStorage.setItem('praxs_leads_funil', JSON.stringify(funil)); } catch(e) {} }
+function loadFunil() { try { const raw = localStorage.getItem('praxs_leads_funil'); if (raw) funil = JSON.parse(raw); } catch(e) { funil = {}; } renderFunil(); }
+
+function moveStage(id, stageKey) { if (funil[id]) { funil[id].stage = stageKey; saveFunil(); renderFunil(); } }
+function removeProspect(id) { delete funil[id]; saveFunil(); renderFunil(); }
+
+function renderFunil() {
+  const container = document.getElementById('funil-stages');
+  const total = Object.keys(funil).length;
+  document.getElementById('total-count').textContent = total + (total === 1 ? ' prospect' : ' prospects');
+
+  if (total === 0) { 
+    container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:12px;">Nenhum prospect.<br><br>Faça uma busca e adicione clientes.</div>'; 
+    return; 
+  }
+  container.innerHTML = '';
+
+  STAGES.forEach(stage => {
+    const items = Object.entries(funil).filter(([,v]) => v.stage === stage.key);
+    if (!items.length) return;
+    
+    const group = document.createElement('div');
+    group.innerHTML = `<div class="stage-label"><span>${stage.label}</span><span style="background:${stage.color};width:6px;height:6px;border-radius:50%;display:inline-block"></span></div>`;
+
+    items.forEach(([id, p]) => {
+      const card = document.createElement('div');
+      card.className = 'prospect-card';
+      
+      const otherStages = STAGES.filter(s => s.key !== stage.key);
+      const stageBtns = otherStages.map(s => `<button class="stage-btn" onclick="moveStage('${id}','${s.key}')">${s.label.split(' ')[0]}</button>`).join('');
+      
+      const siteLink = p.contato ? `<a href="https://${p.contato.replace('https://','')}" target="_blank" class="prospect-link site">🔗 Site</a>` : '';
+      const instaLink = p.instagram ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${escapeHtml(p.instagram)}</a>` : '';
+      const linksHtml = (siteLink || instaLink) ? `<div class="prospect-links">${siteLink}${instaLink}</div>` : '';
+
+      card.innerHTML = `
+        <div class="prospect-name">${escapeHtml(p.name)}</div>
+        <div class="prospect-meta">${escapeHtml(p.meta)}</div>
+        ${linksHtml}
+        <div class="prospect-notes">${escapeHtml(p.notes || '')}</div>
+        <div class="prospect-actions">
+          <button class="stage-btn highlight" onclick="openScriptModal('${id}')">✨ Gerar Script</button>
+          <div style="display:flex; gap:4px; width:100%">${stageBtns}<button class="stage-btn del" onclick="removeProspect('${id}')">X</button></div>
+        </div>`;
+      group.appendChild(card);
+    });
+    container.appendChild(group);
+  });
+}
+
+function selectScriptChip(groupId, el) {
+  document.querySelectorAll(`#${groupId} .script-chip`).forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function openScriptModal(leadId) {
+  currentLeadForScript = funil[leadId];
+  if (!currentLeadForScript) return;
+  document.getElementById('script-lead-name').textContent = "Alvo: " + currentLeadForScript.name;
+  document.getElementById('script-result-area').style.display = 'none';
+  const p = getProfile();
+  document.getElementById('script-warning').style.display = (!p.nome || !p.empresa) ? 'block' : 'none';
+  const sitGroup = document.getElementById('script-situacoes');
+  sitGroup.querySelectorAll('.script-chip').forEach(c => c.classList.remove('selected'));
+  let defaultSit = 'primeiro';
+  if (currentLeadForScript.stage === 'contatado') defaultSit = 'followup';
+  if (currentLeadForScript.stage === 'reuniao') defaultSit = 'retomada';
+  if (currentLeadForScript.stage === 'proposta') defaultSit = 'obj_preco';
+  sitGroup.querySelector(`.script-chip[data-sit="${defaultSit}"]`).classList.add('selected');
+  document.getElementById('script-modal').style.display = 'flex';
+}
+
+function closeScriptModal() { document.getElementById('script-modal').style.display = 'none'; }
+
+function generateScript() {
+  const canal = document.querySelector('#script-canais .selected').textContent;
+  const situacao = document.querySelector('#script-situacoes .selected').getAttribute('data-sit');
+  const p = getProfile();
+  const l = currentLeadForScript;
+  const v_nome_lead = l.name.split(' ')[0]; 
+  const v_meu_nome = p.nome || "[SEU NOME]";
+  const v_minha_emp = p.empresa || "[SUA EMPRESA]";
+  const v_contato = p.contato || "[SEU CONTATO]";
+  
+  let v_dor = "a operação de vocês está crescendo rápido";
+  let v_abordagem = "como a arquitetura técnica correta otimiza o espaço e evita desperdícios na cozinha";
+  if (l.dor_str) v_dor = l.dor_str.toLowerCase();
+  if (l.abord_str) v_abordagem = l.abord_str.toLowerCase();
+
+  let txt = "";
+
+  if (canal === 'WhatsApp' || canal === 'Instagram (DM)') {
+    if (situacao === 'primeiro') {
+      txt = `Olá! Tudo bem? Sou ${v_meu_nome}, arquiteto focado em food service da ${v_minha_emp}.\n\nAcompanho a marca e notei o crescimento da ${v_nome_lead}. No nosso mercado, sabemos que ${v_dor} costuma ser um gargalo chato no dia a dia.\n\nPensei em algumas soluções práticas sobre ${v_abordagem}. Faz sentido batermos um papo rápido de 10 min esta semana? Sem compromisso nenhum, só para compartilhar a visão.\n\nAbraço!`;
+    } else if (situacao === 'followup') {
+      txt = `Oi novamente! Tudo bem?\n\nSei que a rotina na ${v_nome_lead} deve estar uma loucura. Passo só para deixar o radar ligado sobre aquela ideia de melhorar ${v_dor}.\n\nQuando as coisas acalmarem e fizer sentido conversar sobre ${v_abordagem}, me avise! Deixo aqui meu contato direto: ${v_contato}.`;
+    } else if (situacao === 'retomada') {
+      txt = `Olá! Passando para retomar nosso último papo sobre a ${v_nome_lead}.\n\nConseguiu avaliar os pontos que conversamos sobre ${v_abordagem}? Estou à disposição para darmos o próximo passo.\n\nAbraço, ${v_meu_nome}.`;
+    } else if (situacao === 'obj_preco') {
+      txt = `Entendo perfeitamente a questão do investimento agora.\n\nO que costumo alinhar com operações como a ${v_nome_lead} é que o projeto focado em ${v_abordagem} se paga rapidamente só com a redução de erros e ganho de eficiência da equipe.\n\nPodemos readequar o escopo para atacar primeiro o que é mais urgente. Que tal?`;
+    } else if (situacao === 'ja_tem') {
+      txt = `Que excelente notícia que já estão amparados! \n\nComo atuo exclusivamente como especialista técnico em food service, muitos escritórios me contratam apenas para a compatibilização pesada das cozinhas, enquanto eles assinam a estética fina.\n\nSe a ${v_nome_lead} ou seus arquitetos precisarem de apoio nos bastidores, contem comigo: ${v_contato}.`;
+    }
+  } else {
+    if (situacao === 'primeiro') {
+      txt = `Assunto: Eficiência operacional e projeto técnico - ${v_nome_lead}\n\nOlá, equipe da ${v_nome_lead}. Tudo bem?\n\nSou ${v_meu_nome}, arquiteto à frente da ${v_minha_emp}, escritório focado exclusivamente em projetos e compatibilização para Food Service.\n\nTenho acompanhado o desenvolvimento da marca e, analisando operações similares, identifiquei que ${v_dor} costuma representar uma perda oculta de lucratividade e conforto.\n\nGostaria de apresentar rapidamente nosso case sobre ${v_abordagem}, que tem resolvido exatamente esse ponto para nossos parceiros.\n\nTemos disponibilidade para uma call de alinhamento de 15 minutos na próxima terça ou quinta-feira?\n\nAtenciosamente,\n${v_meu_nome} | ${v_contato}`;
+    } else {
+      txt = `Olá, equipe da ${v_nome_lead}.\n\nRetomando nosso contato anterior, gostaria de saber se é o momento ideal para discutirmos soluções estratégicas para a operação de vocês, especificamente focando em ${v_abordagem}.\n\nSabemos que resolver a questão de ${v_dor} é crucial para o próximo passo de crescimento sustentável da marca.\n\nFico à disposição no contato: ${v_contato}.\n\nAtenciosamente,\n${v_meu_nome} - ${v_minha_emp}`;
+    }
+  }
+  document.getElementById('script-output').value = txt;
+  document.getElementById('script-result-area').style.display = 'block';
+}
+
+function copyScript() {
+  const txt = document.getElementById('script-output').value;
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = document.getElementById('btn-copy-script');
+    btn.textContent = 'Copiado ✓';
+    btn.style.background = 'var(--green-bright)';
+    setTimeout(() => { btn.textContent = 'Copiar Script'; btn.style.background = 'var(--gold)'; }, 2000);
+  });
+}
+
+function showIntro() { document.getElementById('intro').style.display = 'flex'; document.getElementById('form-section').style.display = 'none'; document.getElementById('chat-section').style.display = 'none'; }
+function showForm() { document.getElementById('intro').style.display = 'none'; document.getElementById('form-section').style.display = 'flex'; document.getElementById('chat-section').style.display = 'none'; }
+function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>'); }
+
+document.querySelectorAll('.chip-group .chip').forEach(chip => { chip.addEventListener('click', () => chip.classList.toggle('selected')); });
+function getSelected(groupId) { return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val); }
+
+const BASE_LOOKUP = {};
+
+async function gerarPlano() {
+  const cidadeInput = document.getElementById('cidade').value.trim();
+  const cidade = cidadeInput || 'sua região';
+  const segmentos = getSelected('segmentos');
+
+  if (!cidadeInput) { alert('Por favor, informe a cidade.'); return; }
+  if (!segmentos.length) { alert('Selecione ao menos um segmento alvo.'); return; }
+
+  // FILTRO GEOGRÁFICO INTELIGENTE
+  const cidadeNorm = cidadeInput.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+  const mapaEstados = {
+    'RIO DE JANEIRO': 'RJ', 'NITEROI': 'RJ', 'SÃO GONÇALO': 'RJ',
+    'SAO PAULO': 'SP', 'CAMPINAS': 'SP', 'SANTOS': 'SP', 'GUARULHOS': 'SP',
+    'BELO HORIZONTE': 'MG', 'UBERLANDIA': 'MG', 'JUIZ DE FORA': 'MG',
+    'VITORIA': 'ES', 'VILA VELHA': 'ES',
+    'CURITIBA': 'PR', 'LONDRINA': 'PR', 'MARINGA': 'PR',
+    'PORTO ALEGRE': 'RS', 'CAXIAS DO SUL': 'RS',
+    'FLORIANOPOLIS': 'SC', 'JOINVILLE': 'SC', 'BLUMENAU': 'SC',
+    'BRASILIA': 'DF', 'GOIANIA': 'GO',
+    'FORTALEZA': 'CE', 'RECIFE': 'PE', 'SALVADOR': 'BA'
+  };
+  const siglaEstado = mapaEstados[cidadeNorm] || cidadeNorm;
+
+  document.getElementById('form-section').style.display = 'none';
+  const chat = document.getElementById('chat-section');
+  chat.style.display = 'flex';
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = '';
+
+  const section = document.createElement('div');
+  section.className = 'base-section';
+  section.innerHTML = `<div class="base-header" style="margin-bottom:0;"><span class="base-title" style="font-size:13px; color:var(--text); letter-spacing:0.05em">📡 Base Premium de Oportunidades</span></div>
+  <p style="font-size:11px; color:var(--text-dim); margin-bottom:20px;">Marcas "Nacionais" e locais filtradas para a sua região.</p>`;
+
+  let encontrouNaBase = false;
+
+  if (typeof PROSPECTS_BASE !== 'undefined') {
+    segmentos.forEach(seg => {
+      const prospects = PROSPECTS_BASE[seg];
+      if (!prospects) return;
+
+      // APENAS MOSTRA LEADS DA REGIÃO DIGITADA OU "NACIONAL"
+      const prospectsFiltrados = prospects.filter(p => {
+        const abr = (p.abrangencia || '').toUpperCase();
+        if (abr.includes('NACIONAL')) return true;
+        if (abr.includes(siglaEstado)) return true;
+        if (abr.includes(cidadeNorm)) return true;
+        return false;
+      });
+
+      if (prospectsFiltrados.length === 0) return;
+      encontrouNaBase = true;
+
+      const segEl = document.createElement('div');
+      segEl.innerHTML = `<div class="base-header" style="margin-top:15px; border-bottom:1px solid var(--border); padding-bottom:6px;"><span class="base-title" style="color:var(--gold-dim)">${seg}</span></div>`;
+      const cardsEl = document.createElement('div');
+      cardsEl.className = 'base-cards';
+
+      prospectsFiltrados.forEach((p, idx) => {
+        const cardId = 'base_' + seg.replace(/[^a-z0-9]/gi,'_') + '_' + idx;
+        BASE_LOOKUP[cardId] = p;
+
+        const card = document.createElement('div');
+        card.className = 'base-card';
         
-        const select = document.getElementById('cidade-select');
-        select.innerHTML = '<option value="">Selecione uma cidade...</option>';
-        MAPA_CIDADES[regiaoSelecionada].forEach(c => {
-            const o = document.createElement('option'); o.value = c; o.textContent = c; select.appendChild(o);
-        });
-        
-        document.getElementById('group-cidade').style.display = 'flex';
-        document.getElementById('group-segmento').style.display = 'flex';
-        checkInputs();
+        const dorHtml = p.dor ? `<div class="intel-item intel-dor"><strong>⚠️ Ponto Crítico:</strong> <span>${escapeHtml(p.dor)}</span></div>` : '';
+        const abordHtml = p.abordagem ? `<div class="intel-item intel-abord"><strong>💡 Estratégia:</strong> <span>${escapeHtml(p.abordagem)}</span></div>` : '';
+        const siteLink = p.contato ? `<a href="https://${p.contato.replace('https://','')}" target="_blank" class="prospect-link site">🔗 Site</a>` : '';
+        const instaLink = p.instagram ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${escapeHtml(p.instagram)}</a>` : '';
+        const linksHtml = (siteLink || instaLink) ? `<div class="prospect-links">${siteLink}${instaLink}</div>` : '';
+
+        card.innerHTML = `
+          <div class="base-card-header">
+            <div style="flex:1">
+              <div class="base-card-name">${escapeHtml(p.nome)} <span style="font-size:9px; color:var(--text-muted); border:1px solid var(--border); padding:2px 4px; border-radius:2px; margin-left:6px; font-weight:normal;">${escapeHtml(p.abrangencia)}</span></div>
+              <div class="base-card-tipo">${escapeHtml(p.tipo)}</div>
+            </div>
+            <button class="btn-add-prospect" id="btn_${cardId}" onclick="addFromBase('${cardId}')">+ Funil</button>
+          </div>
+          <div class="base-card-oportunidade">${escapeHtml(p.oportunidade)} <br><span style="color:var(--green-bright); font-size:11px;">↑ ${escapeHtml(p.sinal)}</span></div>
+          ${dorHtml || abordHtml ? `<div class="base-card-intel">${dorHtml}${abordHtml}</div>` : ''}
+          ${linksHtml}
+        `;
+        cardsEl.appendChild(card);
+      });
+      segEl.appendChild(cardsEl);
+      section.appendChild(segEl);
+    });
+  }
+
+  if(encontrouNaBase) msgs.appendChild(section);
+
+  addUserMsg(`Buscar inteligência local para: ${segmentos.join(', ')} em ${cidade}`);
+  showThinking();
+
+  const systemPrompt = `Você é um agente de prospecção para arquitetos de food service.
+Cidade: ${cidade}
+Segmentos: ${segmentos.join(', ')}
+
+Aja rápido. Liste no máximo 4 estabelecimentos REAIS que estão crescendo nessa cidade. Para cada um use EXATAMENTE este formato numa linha separada:
+**[PROSPECT] Nome da empresa | Bairro ou Cidade | Motivo de ser uma oportunidade | instagram:@handle | tel:numero | maps:URL**
+
+Finalize dando uma única dica curta de estratégia de abordagem técnica (falando de arquitetura/exaustão/fluxo) para aplicar nesses clientes.`;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: 'Inicie a busca na web.' }]
+      })
+    });
+
+    const rawText = await res.text();
+    if (rawText.trim().startsWith('<') || rawText.trim().startsWith('<!')) {
+      throw new Error('A inteligência online está aquecendo os motores. Aguarde e tente de novo.');
     }
 
-    function selectSegmento(el) {
-        document.querySelectorAll('#segmento-search .chip').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-        segmentoSelecionado = el.dataset.val;
-        checkInputs();
-    }
+    let data;
+    try { data = JSON.parse(rawText); } catch(e) { throw new Error('Falha temporária na IA online. Explore a Base Premium.'); }
+    if (!res.ok) throw new Error(data.error?.message || 'Erro na API');
 
-    function checkInputs() {
-        const cidade = document.getElementById('cidade-select').value;
-        document.getElementById('btn-gerar').style.display = (regiaoSelecionada && cidade && segmentoSelecionado) ? 'block' : 'none';
-    }
+    const finalText = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    removeThinking();
+    addAgentMsg(finalText);
 
-    function gerarPlano() {
-        const cidade = document.getElementById('cidade-select').value;
-        const sigla = SIGLAS_ESTADO[cidade] || "";
-        const container = document.getElementById('leads-container');
-        container.innerHTML = "";
-        
-        const leads = PROSPECTS_BASE[segmentoSelecionado] || [];
-        
-        // BUSCA INTELIGENTE: Procura pela Cidade OU pela Sigla do Estado
-        const filtrados = leads.filter(l => 
-            l.abrangencia.toUpperCase().includes(cidade.toUpperCase()) || 
-            l.abrangencia.toUpperCase().includes(sigla) ||
-            l.nome.toLowerCase().includes(cidade.toLowerCase())
-        );
+  } catch(err) {
+    removeThinking();
+    const el = document.createElement('div');
+    el.style = 'padding:14px; background:rgba(212,122,102,0.1); border:1px solid var(--red); border-radius:4px; font-size:13px; color:#d47a66; margin-top:10px; font-family:"DM Mono",monospace; line-height:1.5;';
+    el.innerHTML = `<strong>📡 Status da IA Web:</strong> ${err.message}`;
+    msgs.appendChild(el);
+  }
 
-        document.getElementById('result-count').textContent = filtrados.length + " encontrados";
+  const btnNovaBusca = document.createElement('button');
+  btnNovaBusca.className = 'btn-nova-busca';
+  btnNovaBusca.textContent = '↑ Fazer Nova Busca';
+  btnNovaBusca.onclick = () => { document.getElementById('messages').innerHTML = ''; showForm(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  msgs.appendChild(btnNovaBusca);
+}
 
-        if (filtrados.length === 0) {
-            container.innerHTML = `
-                <div style="text-align:center; padding: 40px; color: var(--text-dim); background: var(--surface); border-radius: 12px; border: 1px dashed var(--border);">
-                    <p>Nenhuma oportunidade específica para <strong>${cidade}</strong> cadastrada nesta categoria ainda.</p>
-                    <p style="font-size: 12px; margin-top: 10px;">Dica: Experimente buscar em outra cidade do <strong>${regiaoSelecionada}</strong> enquanto expandimos a base.</p>
-                </div>`;
-        } else {
-            filtrados.forEach(l => {
-                container.innerHTML += `
-                    <div class="lead-card">
-                        <div class="lead-meta">${l.tipo} | ${l.abrangencia}</div>
-                        <h3>${l.nome}</h3>
-                        <p style="font-size: 14px; margin-bottom: 10px;"><strong>Sinal:</strong> ${l.sinal}</p>
-                        <div class="pain-point">
-                            <strong style="color: #ff4444">DOR IDENTIFICADA:</strong><br>
-                            ${l.dor}
-                        </div>
-                        <div class="strategy">
-                            <strong style="color: var(--primary)">ABORDAGEM PRAXS:</strong><br>
-                            ${l.abordagem}
-                        </div>
-                        <p style="margin-top:15px; font-size:13px">
-                            📸 Instagram: <a href="https://instagram.com/${l.instagram.replace('@','')}" target="_blank" style="color:var(--primary); text-decoration:none">${l.instagram}</a>
-                        </p>
-                    </div>`;
-            });
-        }
+function addFromBase(cardId) {
+  const p = BASE_LOOKUP[cardId];
+  if (!p) return;
+  const id = 'p_' + Date.now();
+  let anotacoes = p.oportunidade;
+  if (p.dor) anotacoes += `\n\n⚠️ Dor Mapeada: ${p.dor}`;
+  if (p.abordagem) anotacoes += `\n💡 Estratégia Sugerida: ${p.abordagem}`;
 
-        document.getElementById('results').style.display = 'block';
-        window.scrollTo({ top: document.getElementById('results').offsetTop - 50, behavior: 'smooth' });
-    }
+  funil[id] = {
+    name: p.nome, meta: p.tipo, stage: 'novo', addedAt: new Date().toISOString(),
+    notes: anotacoes, dor_str: p.dor || '', abord_str: p.abordagem || '',
+    contato: p.contato || '', instagram: p.instagram || ''
+  };
+  saveFunil(); renderFunil();
+  const btn = document.getElementById('btn_' + cardId);
+  if (btn) { btn.textContent = 'No funil ✓'; btn.style.background = 'rgba(74,124,89,.1)'; btn.style.color = 'var(--green-bright)'; btn.style.borderColor = 'var(--green)'; btn.disabled = true; }
+}
+
+function addUserMsg(text) {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = `<div class="msg-label">A sua busca</div><div class="msg-body" style="font-family:'DM Mono',monospace; font-size:12px; color:var(--gold)">${escapeHtml(text)}</div>`;
+  msgs.appendChild(el);
+}
+
+function addAgentMsg(rawText) {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg agent';
+  const fmtText = rawText
+    .replace(/\[PROSPECT\]/g, '')
+    .replace(/### (.+)/g, '<h3 style="font-family:\'DM Serif Display\',serif;font-size:17px;color:var(--gold);margin:18px 0 8px;">$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--text);font-weight:500;">$1</strong>')
+    .replace(/\n\n/g, '<br><br>');
+  el.innerHTML = `<div class="msg-label">Radar Web em Tempo Real</div><div class="msg-body" style="background:var(--surface); border:1px dashed var(--gold-dim); padding:20px; border-radius:8px; margin-top:8px;">${fmtText}</div>`;
+  msgs.appendChild(el);
+}
+
+function showThinking() {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.id = 'thinking';
+  el.className = 'thinking';
+  el.innerHTML = `<div class="thinking-dots"><span></span><span></span><span></span></div><span style="margin-left:8px; color:var(--gold-dim)">A analisar dados da web e a gerar oportunidades personalizadas...</span>`;
+  msgs.appendChild(el);
+  el.scrollIntoView({ behavior: 'smooth' });
+}
+function removeThinking() { const el = document.getElementById('thinking'); if (el) el.remove(); }
+
+loadFunil();
 </script>
-
 </body>
 </html>
