@@ -29,7 +29,7 @@
     pointer-events: none; z-index: 9999; opacity: 0.6;
   }
 
-  header { padding: 28px 40px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; }
+  header { padding: 28px 40px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; position: relative; z-index: 10;}
   .praxs-word { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
   .praxs-word .a-letter { color: var(--gold); }
   .praxs-divider { width: 1px; height: 20px; background: var(--border2); margin: 0 14px; }
@@ -42,10 +42,10 @@
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
 
-  .btn-profile { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; background: transparent; border: 1px solid var(--border2); border-radius: 4px; font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; cursor: pointer; transition: all .2s; }
+  .btn-profile { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; background: transparent; border: 1px solid var(--border2); border-radius: 4px; font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; cursor: pointer; transition: all .2s; position: relative; z-index: 10;}
   .btn-profile:hover { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
 
-  .app { flex: 1; display: flex; min-height: 0; }
+  .app { flex: 1; display: flex; min-height: 0; position: relative; z-index: 1; }
 
   /* SIDEBAR E FUNIL */
   .sidebar { width: 300px; flex-shrink: 0; border-right: 1px solid var(--border); display: flex; flex-direction: column; background: var(--surface); }
@@ -89,8 +89,9 @@
   #form-section { display: none; flex-direction: column; gap: 22px; animation: fadeIn .4s ease; max-width: 500px; margin: 0 auto; width: 100%; }
   .form-group { display: flex; flex-direction: column; gap: 8px; }
   .form-group label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; }
-  .form-group input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 14px; font-family: 'Sora', sans-serif; font-size: 14px; border-radius: 4px; outline: none; transition: border-color .2s; }
-  .form-group input:focus { border-color: var(--gold-dim); }
+  .form-group select { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 14px; font-family: 'Sora', sans-serif; font-size: 14px; border-radius: 4px; outline: none; transition: border-color .2s; cursor: pointer; appearance: none; }
+  .form-group select:focus { border-color: var(--gold-dim); }
+  .form-group select option { background: var(--surface2); color: var(--text); }
   
   .chip-group { display: flex; flex-wrap: wrap; gap: 7px; }
   .chip { padding: 8px 16px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--text-dim); cursor: pointer; transition: all .15s; user-select: none; }
@@ -176,7 +177,7 @@
     <p>Prospecção · Food Service</p>
   </div>
   
-  <button class="btn-profile" onclick="openProfileModal()">
+  <button class="btn-profile" type="button" onclick="openProfileModal()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
     Meu Perfil
   </button>
@@ -196,29 +197,41 @@
     <div id="intro">
       <h2>Descubra oportunidades reais de <em>food service</em> na sua cidade</h2>
       <p>O radar mapeia oportunidades estratégicas e a IA gera scripts de abordagem perfeitos para cada fase do seu funil.</p>
-      <button class="btn" style="padding:14px 34px" onclick="showForm()">Iniciar prospecção →</button>
+      <button class="btn" type="button" style="padding:14px 34px" onclick="showForm()">Iniciar prospecção →</button>
     </div>
 
     <div id="form-section">
       <div class="form-group">
-        <label>Cidade onde você atua <span>*</span></label>
-        <input type="text" id="cidade" placeholder="Ex: Rio de Janeiro, São Paulo, Curitiba...">
+        <label>1. Região Geográfica <span>*</span></label>
+        <div class="chip-group" id="regioes-search">
+          <div class="chip" data-reg="Sudeste" onclick="selectRegiao(this)">Sudeste</div>
+          <div class="chip" data-reg="Sul" onclick="selectRegiao(this)">Sul</div>
+          <div class="chip" data-reg="Nordeste" onclick="selectRegiao(this)">Nordeste</div>
+          <div class="chip" data-reg="Centro-Oeste" onclick="selectRegiao(this)">Centro-Oeste</div>
+        </div>
+      </div>
+
+      <div class="form-group" id="group-cidade" style="display:none;">
+        <label>2. Cidade Foco <span>*</span></label>
+        <select id="cidade-select" onchange="checkMainInputs()">
+          <option value="">Selecione a região primeiro...</option>
+        </select>
       </div>
       
-      <div class="form-group">
-        <label>Segmento Alvo <span>*</span></label>
+      <div class="form-group" id="group-segmento" style="display:none;">
+        <label>3. Segmento Alvo <span>*</span></label>
         <div class="chip-group" id="segmentos">
-          <div class="chip" data-val="Café">Café</div>
-          <div class="chip" data-val="Hamburgueria">Hamburgueria</div>
-          <div class="chip" data-val="Restaurante À la Carte">Restaurante À la Carte</div>
-          <div class="chip" data-val="Buffet Self-Service">Buffet Self-Service</div>
-          <div class="chip" data-val="Dark Kitchen">Dark Kitchen</div>
+          <div class="chip" data-val="Café" onclick="selectSegmentoLocal(this)">Café</div>
+          <div class="chip" data-val="Hamburgueria" onclick="selectSegmentoLocal(this)">Hamburgueria</div>
+          <div class="chip" data-val="Restaurante À la Carte" onclick="selectSegmentoLocal(this)">Restaurante À la Carte</div>
+          <div class="chip" data-val="Buffet Self-Service" onclick="selectSegmentoLocal(this)">Buffet Self-Service</div>
+          <div class="chip" data-val="Dark Kitchen" onclick="selectSegmentoLocal(this)">Dark Kitchen</div>
         </div>
       </div>
       
       <div style="display:flex;gap:10px;margin-top:10px">
-        <button class="btn-ghost" onclick="showIntro()">← Voltar</button>
-        <button class="btn" style="flex:1" onclick="gerarPlano()">Buscar oportunidades →</button>
+        <button class="btn-ghost" type="button" onclick="showIntro()">← Voltar</button>
+        <button class="btn" type="button" id="btn-buscar" style="flex:1; display:none;" onclick="gerarPlano()">Buscar oportunidades →</button>
       </div>
     </div>
 
@@ -230,7 +243,7 @@
 
 <div id="profile-modal" class="modal-overlay" style="display:none;">
   <div class="modal">
-    <button class="btn-close-x" onclick="closeProfileModal()">&times;</button>
+    <button class="btn-close-x" type="button" onclick="closeProfileModal()">&times;</button>
     <div>
       <div class="modal-title">Meu Perfil Profissional</div>
       <p style="font-size:12px; color:var(--text-dim); margin-top:6px;">Estes dados personalizam automaticamente os seus scripts de abordagem. Tudo fica salvo apenas no seu navegador.</p>
@@ -248,15 +261,15 @@
       <input type="text" id="prof-contato" placeholder="Ex: meu WhatsApp (21) 99999-9999 ou link na bio">
     </div>
     <div class="modal-actions">
-      <button class="btn-modal-cancel" onclick="closeProfileModal()">Cancelar</button>
-      <button class="btn-modal-save" onclick="saveProfile()">Salvar Perfil</button>
+      <button class="btn-modal-cancel" type="button" onclick="closeProfileModal()">Cancelar</button>
+      <button class="btn-modal-save" type="button" onclick="saveProfile()">Salvar Perfil</button>
     </div>
   </div>
 </div>
 
 <div id="script-modal" class="modal-overlay" style="display:none;">
   <div class="modal" style="width:600px;">
-    <button class="btn-close-x" onclick="closeScriptModal()">&times;</button>
+    <button class="btn-close-x" type="button" onclick="closeScriptModal()">&times;</button>
     <div>
       <div class="modal-title">✨ Gerador de Abordagem</div>
       <div class="modal-subtitle" id="script-lead-name" style="margin-top:4px; font-size:13px; color:var(--gold);">Nome do Lead</div>
@@ -279,38 +292,41 @@
     <div>
       <label class="modal-label">2. Situação / Momento do Funil</label>
       <div class="script-chip-group" id="script-situacoes">
-        <div class="script-chip selected" onclick="selectScriptChip('script-situacoes', this)" data-sit="primeiro">Primeiro contato frio</div>
-        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="followup">Follow-up após silêncio</div>
-        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="retomada">Retomada pós-reunião</div>
-        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="obj_preco">Objeção de preço</div>
-        <div class="script-chip" onclick="selectScriptChip('script-situacoes', this)" data-sit="ja_tem">Já tem arquiteto</div>
+        <div class="script-chip selected" data-sit="primeiro" onclick="selectScriptChip('script-situacoes', this)">Primeiro contato frio</div>
+        <div class="script-chip" data-sit="followup" onclick="selectScriptChip('script-situacoes', this)">Follow-up após silêncio</div>
+        <div class="script-chip" data-sit="retomada" onclick="selectScriptChip('script-situacoes', this)">Retomada pós-reunião</div>
+        <div class="script-chip" data-sit="obj_preco" onclick="selectScriptChip('script-situacoes', this)">Objeção de preço</div>
+        <div class="script-chip" data-sit="ja_tem" onclick="selectScriptChip('script-situacoes', this)">Já tem arquiteto</div>
       </div>
     </div>
 
-    <button class="btn" style="width:100%; margin-top:10px;" onclick="generateScript()">Gerar Script Personalizado</button>
+    <button class="btn" type="button" style="width:100%; margin-top:10px;" onclick="generateScript()">Gerar Script Personalizado</button>
 
     <div id="script-result-area">
       <label class="modal-label" style="color:var(--gold-dim)">Resultado Gerado (Edite livremente)</label>
       <textarea id="script-output"></textarea>
       <div class="modal-actions" style="margin-top:12px;">
-        <button class="btn-modal-save" style="width:100%; padding:14px;" id="btn-copy-script" onclick="copyScript()">Copiar Script</button>
+        <button class="btn-modal-save" type="button" style="width:100%; padding:14px;" id="btn-copy-script" onclick="copyScript()">Copiar Script</button>
       </div>
     </div>
   </div>
 </div>
 
-<script src="base.js"></script>
-
 <script>
+// --- FUNÇÕES PRINCIPAIS DO SISTEMA ---
 const API_URL = 'COLE_URL_DO_RENDER_AQUI';
-
 let funil = {};
 let currentLeadForScript = null;
+
+function showIntro() { document.getElementById('intro').style.display = 'flex'; document.getElementById('form-section').style.display = 'none'; document.getElementById('chat-section').style.display = 'none'; }
+function showForm() { document.getElementById('intro').style.display = 'none'; document.getElementById('form-section').style.display = 'flex'; document.getElementById('chat-section').style.display = 'none'; }
+function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>'); }
 
 function getProfile() {
   try { return JSON.parse(localStorage.getItem('praxs_perfil')) || {nome:'', empresa:'', contato:''}; } 
   catch(e) { return {nome:'', empresa:'', contato:''}; }
 }
+
 function openProfileModal() {
   const p = getProfile();
   document.getElementById('prof-nome').value = p.nome;
@@ -318,7 +334,9 @@ function openProfileModal() {
   document.getElementById('prof-contato').value = p.contato;
   document.getElementById('profile-modal').style.display = 'flex';
 }
+
 function closeProfileModal() { document.getElementById('profile-modal').style.display = 'none'; }
+
 function saveProfile() {
   const p = { nome: document.getElementById('prof-nome').value.trim(), empresa: document.getElementById('prof-empresa').value.trim(), contato: document.getElementById('prof-contato').value.trim() };
   localStorage.setItem('praxs_perfil', JSON.stringify(p));
@@ -326,7 +344,7 @@ function saveProfile() {
 }
 
 const STAGES = [
-  { key: 'novo',      label: 'Para contatar',    color: '#f5b800' },
+  { key: 'novo',      label: 'Para contatar',   color: '#f5b800' },
   { key: 'contatado', label: 'Contatado',         color: '#6aaa7d' },
   { key: 'reuniao',   label: 'Reunião marcada',   color: '#5b9bd5' },
   { key: 'proposta',  label: 'Proposta enviada',  color: '#9b7fdb' }
@@ -335,8 +353,8 @@ const STAGES = [
 function saveFunil() { try { localStorage.setItem('praxs_leads_funil', JSON.stringify(funil)); } catch(e) {} }
 function loadFunil() { try { const raw = localStorage.getItem('praxs_leads_funil'); if (raw) funil = JSON.parse(raw); } catch(e) { funil = {}; } renderFunil(); }
 
-function moveStage(id, stageKey) { if (funil[id]) { funil[id].stage = stageKey; saveFunil(); renderFunil(); } }
-function removeProspect(id) { delete funil[id]; saveFunil(); renderFunil(); }
+window.moveStage = function(id, stageKey) { if (funil[id]) { funil[id].stage = stageKey; saveFunil(); renderFunil(); } };
+window.removeProspect = function(id) { delete funil[id]; saveFunil(); renderFunil(); };
 
 function renderFunil() {
   const container = document.getElementById('funil-stages');
@@ -361,7 +379,7 @@ function renderFunil() {
       card.className = 'prospect-card';
       
       const otherStages = STAGES.filter(s => s.key !== stage.key);
-      const stageBtns = otherStages.map(s => `<button class="stage-btn" onclick="moveStage('${id}','${s.key}')">${s.label.split(' ')[0]}</button>`).join('');
+      const stageBtns = otherStages.map(s => `<button class="stage-btn" type="button" onclick="moveStage('${id}','${s.key}')">${s.label.split(' ')[0]}</button>`).join('');
       
       const siteLink = p.contato ? `<a href="https://${p.contato.replace('https://','')}" target="_blank" class="prospect-link site">🔗 Site</a>` : '';
       const instaLink = p.instagram ? `<a href="https://instagram.com/${p.instagram.replace('@','')}" target="_blank" class="prospect-link insta">📷 ${escapeHtml(p.instagram)}</a>` : '';
@@ -373,8 +391,8 @@ function renderFunil() {
         ${linksHtml}
         <div class="prospect-notes">${escapeHtml(p.notes || '')}</div>
         <div class="prospect-actions">
-          <button class="stage-btn highlight" onclick="openScriptModal('${id}')">✨ Gerar Script</button>
-          <div style="display:flex; gap:4px; width:100%">${stageBtns}<button class="stage-btn del" onclick="removeProspect('${id}')">X</button></div>
+          <button class="stage-btn highlight" type="button" onclick="openScriptModal('${id}')">✨ Gerar Script</button>
+          <div style="display:flex; gap:4px; width:100%">${stageBtns}<button class="stage-btn del" type="button" onclick="removeProspect('${id}')">X</button></div>
         </div>`;
       group.appendChild(card);
     });
@@ -387,7 +405,7 @@ function selectScriptChip(groupId, el) {
   el.classList.add('selected');
 }
 
-function openScriptModal(leadId) {
+window.openScriptModal = function(leadId) {
   currentLeadForScript = funil[leadId];
   if (!currentLeadForScript) return;
   document.getElementById('script-lead-name').textContent = "Alvo: " + currentLeadForScript.name;
@@ -400,17 +418,26 @@ function openScriptModal(leadId) {
   if (currentLeadForScript.stage === 'contatado') defaultSit = 'followup';
   if (currentLeadForScript.stage === 'reuniao') defaultSit = 'retomada';
   if (currentLeadForScript.stage === 'proposta') defaultSit = 'obj_preco';
-  sitGroup.querySelector(`.script-chip[data-sit="${defaultSit}"]`).classList.add('selected');
+  
+  const chipToSelect = sitGroup.querySelector(`.script-chip[data-sit="${defaultSit}"]`);
+  if(chipToSelect) chipToSelect.classList.add('selected');
+  
   document.getElementById('script-modal').style.display = 'flex';
-}
+};
 
 function closeScriptModal() { document.getElementById('script-modal').style.display = 'none'; }
 
 function generateScript() {
-  const canal = document.querySelector('#script-canais .selected').textContent;
-  const situacao = document.querySelector('#script-situacoes .selected').getAttribute('data-sit');
+  const canalEl = document.querySelector('#script-canais .selected');
+  const situacaoEl = document.querySelector('#script-situacoes .selected');
+  
+  if(!canalEl || !situacaoEl) return;
+  
+  const canal = canalEl.textContent;
+  const situacao = situacaoEl.getAttribute('data-sit');
   const p = getProfile();
   const l = currentLeadForScript;
+  if (!l) return;
   const v_nome_lead = l.name.split(' ')[0]; 
   const v_meu_nome = p.nome || "[SEU NOME]";
   const v_minha_emp = p.empresa || "[SUA EMPRESA]";
@@ -456,33 +483,95 @@ function copyScript() {
   });
 }
 
-function showIntro() { document.getElementById('intro').style.display = 'flex'; document.getElementById('form-section').style.display = 'none'; document.getElementById('chat-section').style.display = 'none'; }
-function showForm() { document.getElementById('intro').style.display = 'none'; document.getElementById('form-section').style.display = 'flex'; document.getElementById('chat-section').style.display = 'none'; }
-function escapeHtml(t) { return String(t).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>'); }
+const MAPA_CIDADES = {
+  "Sudeste": ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Vitória", "Campinas", "Niterói", "São José dos Campos", "Ribeirão Preto", "Uberlândia", "Juiz de Fora", "Santos", "Santo André", "São Bernardo do Campo"],
+  "Sul": ["Curitiba", "Porto Alegre", "Florianópolis", "Balneário Camboriú", "Londrina", "Maringá", "Caxias do Sul", "Joinville"],
+  "Nordeste": ["Recife", "Salvador", "Fortaleza"],
+  "Centro-Oeste": ["Brasília", "Goiânia"]
+};
 
-document.querySelectorAll('.chip-group .chip').forEach(chip => { chip.addEventListener('click', () => chip.classList.toggle('selected')); });
-function getSelected(groupId) { return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val); }
+let regiaoSelecionada = "";
+
+function selectRegiao(el) {
+  document.querySelectorAll('#regioes-search .chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  regiaoSelecionada = el.dataset.reg;
+  
+  const select = document.getElementById('cidade-select');
+  select.innerHTML = '<option value="">Selecione uma cidade...</option>';
+  
+  if(MAPA_CIDADES[regiaoSelecionada]){
+    MAPA_CIDADES[regiaoSelecionada].forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      select.appendChild(opt);
+    });
+  }
+  
+  document.getElementById('group-cidade').style.display = 'flex';
+  document.getElementById('group-segmento').style.display = 'flex';
+  checkMainInputs();
+}
+
+function selectSegmentoLocal(el) {
+  el.classList.toggle('selected');
+  checkMainInputs();
+}
+
+function getSelected(groupId) { 
+  return [...document.querySelectorAll(`#${groupId} .chip.selected`)].map(c => c.dataset.val); 
+}
+
+function checkMainInputs() {
+  const cidade = document.getElementById('cidade-select').value;
+  const segmentos = getSelected('segmentos');
+  const btn = document.getElementById('btn-buscar');
+  
+  if (regiaoSelecionada && cidade && segmentos.length > 0) {
+    btn.style.display = 'block';
+  } else {
+    btn.style.display = 'none';
+  }
+}
 
 const BASE_LOOKUP = {};
 
+window.addFromBase = function(cardId) {
+  const p = BASE_LOOKUP[cardId];
+  if (!p) return;
+  const id = 'p_' + Date.now();
+  let anotacoes = p.oportunidade;
+  if (p.dor) anotacoes += `\n\n⚠️ Dor Mapeada: ${p.dor}`;
+  if (p.abordagem) anotacoes += `\n💡 Estratégia Sugerida: ${p.abordagem}`;
+
+  funil[id] = {
+    name: p.nome, meta: p.tipo, stage: 'novo', addedAt: new Date().toISOString(),
+    notes: anotacoes, dor_str: p.dor || '', abord_str: p.abordagem || '',
+    contato: p.contato || '', instagram: p.instagram || ''
+  };
+  saveFunil(); renderFunil();
+  const btn = document.getElementById('btn_' + cardId);
+  if (btn) { btn.textContent = 'No funil ✓'; btn.style.background = 'rgba(74,124,89,.1)'; btn.style.color = 'var(--green-bright)'; btn.style.borderColor = 'var(--green)'; btn.disabled = true; }
+};
+
 async function gerarPlano() {
-  const cidadeInput = document.getElementById('cidade').value.trim();
+  const cidadeInput = document.getElementById('cidade-select').value.trim();
   const cidade = cidadeInput || 'sua região';
   const segmentos = getSelected('segmentos');
 
-  if (!cidadeInput) { alert('Por favor, informe a cidade.'); return; }
+  if (!cidadeInput) { alert('Por favor, selecione a cidade.'); return; }
   if (!segmentos.length) { alert('Selecione ao menos um segmento alvo.'); return; }
 
-  // FILTRO GEOGRÁFICO INTELIGENTE
   const cidadeNorm = cidadeInput.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
   const mapaEstados = {
     'RIO DE JANEIRO': 'RJ', 'NITEROI': 'RJ', 'SÃO GONÇALO': 'RJ',
-    'SAO PAULO': 'SP', 'CAMPINAS': 'SP', 'SANTOS': 'SP', 'GUARULHOS': 'SP',
+    'SAO PAULO': 'SP', 'CAMPINAS': 'SP', 'SANTOS': 'SP', 'GUARULHOS': 'SP', 'RIBEIRAO PRETO': 'SP', 'SAO JOSE DOS CAMPOS': 'SP', 'SANTO ANDRE': 'SP', 'SAO BERNARDO DO CAMPO': 'SP',
     'BELO HORIZONTE': 'MG', 'UBERLANDIA': 'MG', 'JUIZ DE FORA': 'MG',
     'VITORIA': 'ES', 'VILA VELHA': 'ES',
     'CURITIBA': 'PR', 'LONDRINA': 'PR', 'MARINGA': 'PR',
     'PORTO ALEGRE': 'RS', 'CAXIAS DO SUL': 'RS',
-    'FLORIANOPOLIS': 'SC', 'JOINVILLE': 'SC', 'BLUMENAU': 'SC',
+    'FLORIANOPOLIS': 'SC', 'JOINVILLE': 'SC', 'BLUMENAU': 'SC', 'BALNEARIO CAMBORIU': 'SC',
     'BRASILIA': 'DF', 'GOIANIA': 'GO',
     'FORTALEZA': 'CE', 'RECIFE': 'PE', 'SALVADOR': 'BA'
   };
@@ -502,11 +591,11 @@ async function gerarPlano() {
   let encontrouNaBase = false;
 
   if (typeof PROSPECTS_BASE !== 'undefined') {
+    const base = PROSPECTS_BASE;
     segmentos.forEach(seg => {
-      const prospects = PROSPECTS_BASE[seg];
+      const prospects = base[seg];
       if (!prospects) return;
 
-      // APENAS MOSTRA LEADS DA REGIÃO DIGITADA OU "NACIONAL"
       const prospectsFiltrados = prospects.filter(p => {
         const abr = (p.abrangencia || '').toUpperCase();
         if (abr.includes('NACIONAL')) return true;
@@ -542,7 +631,7 @@ async function gerarPlano() {
               <div class="base-card-name">${escapeHtml(p.nome)} <span style="font-size:9px; color:var(--text-muted); border:1px solid var(--border); padding:2px 4px; border-radius:2px; margin-left:6px; font-weight:normal;">${escapeHtml(p.abrangencia)}</span></div>
               <div class="base-card-tipo">${escapeHtml(p.tipo)}</div>
             </div>
-            <button class="btn-add-prospect" id="btn_${cardId}" onclick="addFromBase('${cardId}')">+ Funil</button>
+            <button class="btn-add-prospect" id="btn_${cardId}" type="button" onclick="addFromBase('${cardId}')">+ Funil</button>
           </div>
           <div class="base-card-oportunidade">${escapeHtml(p.oportunidade)} <br><span style="color:var(--green-bright); font-size:11px;">↑ ${escapeHtml(p.sinal)}</span></div>
           ${dorHtml || abordHtml ? `<div class="base-card-intel">${dorHtml}${abordHtml}</div>` : ''}
@@ -609,24 +698,6 @@ Finalize dando uma única dica curta de estratégia de abordagem técnica (falan
   msgs.appendChild(btnNovaBusca);
 }
 
-function addFromBase(cardId) {
-  const p = BASE_LOOKUP[cardId];
-  if (!p) return;
-  const id = 'p_' + Date.now();
-  let anotacoes = p.oportunidade;
-  if (p.dor) anotacoes += `\n\n⚠️ Dor Mapeada: ${p.dor}`;
-  if (p.abordagem) anotacoes += `\n💡 Estratégia Sugerida: ${p.abordagem}`;
-
-  funil[id] = {
-    name: p.nome, meta: p.tipo, stage: 'novo', addedAt: new Date().toISOString(),
-    notes: anotacoes, dor_str: p.dor || '', abord_str: p.abordagem || '',
-    contato: p.contato || '', instagram: p.instagram || ''
-  };
-  saveFunil(); renderFunil();
-  const btn = document.getElementById('btn_' + cardId);
-  if (btn) { btn.textContent = 'No funil ✓'; btn.style.background = 'rgba(74,124,89,.1)'; btn.style.color = 'var(--green-bright)'; btn.style.borderColor = 'var(--green)'; btn.disabled = true; }
-}
-
 function addUserMsg(text) {
   const msgs = document.getElementById('messages');
   const el = document.createElement('div');
@@ -657,9 +728,19 @@ function showThinking() {
   msgs.appendChild(el);
   el.scrollIntoView({ behavior: 'smooth' });
 }
+
 function removeThinking() { const el = document.getElementById('thinking'); if (el) el.remove(); }
 
-loadFunil();
+// --- INICIALIZAÇÃO ---
+try {
+  loadFunil();
+} catch(e) {
+  console.error("Erro ao carregar os leads salvos:", e);
+}
+
 </script>
+
+<script src="base.js"></script>
+
 </body>
 </html>
