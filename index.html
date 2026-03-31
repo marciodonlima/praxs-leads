@@ -596,11 +596,19 @@ async function gerarPlano() {
       const prospects = base[seg];
       if (!prospects) return;
 
-      const prospectsFiltrados = prospects.filter(p => {
+     const prospectsFiltrados = prospects.filter(p => {
         const abr = (p.abrangencia || '').toUpperCase();
+        
+        // 1. Marcas nacionais sempre entram
         if (abr.includes('NACIONAL')) return true;
-        if (abr.includes(siglaEstado)) return true;
+        
+        // 2. Busca estrita pelo nome exato da cidade (ex: "NITERÓI")
         if (abr.includes(cidadeNorm)) return true;
+        
+        // 3. Só aceita a sigla do estado se a abrangência for EXATAMENTE a sigla
+        // Isso evita que "Rio de Janeiro - RJ" apareça na busca de Niterói
+        if (abr === siglaEstado) return true; 
+        
         return false;
       });
 
