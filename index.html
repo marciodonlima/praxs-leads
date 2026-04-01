@@ -165,6 +165,136 @@
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+  /* * ==============================================
+   * CSS RESPONSIVO PARA MOBILE (SMARTPHONES E TABLETS)
+   * ==============================================
+   */
+  @media (max-width: 768px) {
+    /* Ajustes de Cabeçalho */
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+      gap: 15px;
+    }
+    
+    .praxs-divider {
+      display: none; /* Remove a barra vertical */
+    }
+    
+    .header-text {
+      margin-top: -5px;
+    }
+    
+    .status-dot {
+      position: absolute;
+      top: 25px;
+      right: 20px;
+      margin-left: 0;
+    }
+
+    .btn-profile {
+      width: 100%;
+      justify-content: center;
+      margin-top: 10px;
+      padding: 12px;
+      font-size: 12px;
+    }
+
+    /* Alterando o layout flexível (Sidebar x Main) para empilhar verticalmente */
+    .app {
+      flex-direction: column;
+      /* Como a .app e o body têm flex 1, min-height 0 e overflow alterado, 
+         precisamos permitir que a página toda role no mobile */
+      min-height: auto; 
+    }
+    
+    body {
+       overflow-x: hidden;
+    }
+
+    /* Ajustes do Sidebar (Funil) */
+    .sidebar {
+      width: 100%;
+      border-right: none;
+      border-bottom: 2px solid var(--gold-dim);
+      /* Para o Funil não engolir toda a tela de vez, colocamos um max-height com rolagem interna */
+      max-height: 50vh; 
+    }
+    
+    .sidebar-header {
+      padding: 14px 20px;
+    }
+
+    /* Ajustes da Área Principal */
+    main {
+      padding: 30px 20px 80px;
+      overflow-y: visible; /* A página inteira vai rolar agora */
+    }
+
+    #intro {
+      padding: 20px 0;
+    }
+
+    #intro h2 {
+      font-size: 22px;
+    }
+
+    #intro p {
+      font-size: 13px;
+    }
+
+    /* Formulários e Botões (Ocupar 100% da tela) */
+    .form-group select,
+    .btn, .btn-ghost {
+      width: 100%;
+      text-align: center;
+    }
+    
+    #form-section > div[style*="display:flex"] {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Cards da Base Premium */
+    .base-section {
+      padding: 16px;
+    }
+    
+    .base-card-header {
+      flex-direction: column;
+    }
+    
+    .btn-add-prospect {
+      align-self: flex-start;
+      margin-top: 10px;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      font-size: 11px;
+    }
+
+    /* Modais */
+    .modal {
+      width: 95%;
+      padding: 20px;
+      max-height: 90vh;
+    }
+    
+    .btn-close-x {
+      top: 10px;
+      right: 15px;
+    }
+
+    .modal-actions {
+      flex-direction: column-reverse; /* Cancelar em baixo, Salvar em cima */
+    }
+    
+    .btn-modal-cancel, .btn-modal-save {
+      width: 100%;
+    }
+  }
 </style>
 </head>
 <body>
@@ -320,37 +450,37 @@ let currentLeadForScript = null;
 
 // EVENT LISTENERS
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btn-open-profile').addEventListener('click', openProfileModal);
-    document.getElementById('btn-iniciar-prospeccao').addEventListener('click', showForm);
-    document.getElementById('btn-voltar-intro').addEventListener('click', showIntro);
-    document.getElementById('btn-buscar').addEventListener('click', gerarPlano);
-    document.getElementById('btn-close-profile').addEventListener('click', closeProfileModal);
-    document.getElementById('btn-cancel-profile').addEventListener('click', closeProfileModal);
-    document.getElementById('btn-save-profile').addEventListener('click', saveProfile);
-    document.getElementById('btn-close-script').addEventListener('click', closeScriptModal);
-    document.getElementById('btn-generate-script').addEventListener('click', generateScript);
-    document.getElementById('btn-copy-script').addEventListener('click', copyScript);
-    
-    // ATUALIZADO PARA ESTADO
-    document.getElementById('estado-select').addEventListener('change', checkMainInputs);
+  document.getElementById('btn-open-profile').addEventListener('click', openProfileModal);
+  document.getElementById('btn-iniciar-prospeccao').addEventListener('click', showForm);
+  document.getElementById('btn-voltar-intro').addEventListener('click', showIntro);
+  document.getElementById('btn-buscar').addEventListener('click', gerarPlano);
+  document.getElementById('btn-close-profile').addEventListener('click', closeProfileModal);
+  document.getElementById('btn-cancel-profile').addEventListener('click', closeProfileModal);
+  document.getElementById('btn-save-profile').addEventListener('click', saveProfile);
+  document.getElementById('btn-close-script').addEventListener('click', closeScriptModal);
+  document.getElementById('btn-generate-script').addEventListener('click', generateScript);
+  document.getElementById('btn-copy-script').addEventListener('click', copyScript);
+  
+  // ATUALIZADO PARA ESTADO
+  document.getElementById('estado-select').addEventListener('change', checkMainInputs);
 
-    document.querySelectorAll('.regiao-chip').forEach(chip => {
-        chip.addEventListener('click', () => selectRegiao(chip));
-    });
+  document.querySelectorAll('.regiao-chip').forEach(chip => {
+    chip.addEventListener('click', () => selectRegiao(chip));
+  });
 
-    document.querySelectorAll('.segmento-chip').forEach(chip => {
-        chip.addEventListener('click', () => selectSegmentoLocal(chip));
-    });
+  document.querySelectorAll('.segmento-chip').forEach(chip => {
+    chip.addEventListener('click', () => selectSegmentoLocal(chip));
+  });
 
-    document.querySelectorAll('#script-canais .script-chip').forEach(chip => {
-        chip.addEventListener('click', () => selectScriptChip('script-canais', chip));
-    });
+  document.querySelectorAll('#script-canais .script-chip').forEach(chip => {
+    chip.addEventListener('click', () => selectScriptChip('script-canais', chip));
+  });
 
-    document.querySelectorAll('#script-situacoes .script-chip').forEach(chip => {
-        chip.addEventListener('click', () => selectScriptChip('script-situacoes', chip));
-    });
+  document.querySelectorAll('#script-situacoes .script-chip').forEach(chip => {
+    chip.addEventListener('click', () => selectScriptChip('script-situacoes', chip));
+  });
 
-    loadFunil();
+  loadFunil();
 });
 
 function showIntro() {
