@@ -68,11 +68,14 @@
   .prospect-link.site:hover { border-color: #4a9eff; color: #4a9eff; }
 
   .prospect-actions { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; border-top: 1px dashed var(--border); padding-top: 8px; }
-  .stage-btn { font-size: 9px; padding: 4px 8px; border: 1px solid var(--border2); border-radius: 2px; background: transparent; color: var(--text-muted); cursor: pointer; font-family: 'DM Mono', monospace; letter-spacing: .04em; transition: all .15s; }
+  .stage-btn { font-size: 9px; padding: 4px 8px; border: 1px solid var(--border2); border-radius: 2px; background: transparent; color: var(--text-muted); cursor: pointer; font-family: 'DM Mono', monospace; letter-spacing: .04em; transition: all .15s; flex: 1;}
   .stage-btn:hover { border-color: var(--gold-dim); color: var(--text); }
-  .stage-btn.highlight { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); width: 100%; margin-bottom: 4px; font-size: 10px; padding: 6px; }
+  .stage-btn.highlight { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); width: 100%; margin-bottom: 4px; font-size: 10px; padding: 6px; flex: none;}
   .stage-btn.highlight:hover { background: rgba(245,184,0,0.2); }
-  .stage-btn.del:hover { border-color: var(--red); color: #d47a66; }
+  
+  /* Botão de excluir mais visível */
+  .stage-btn.del { width: 100%; margin-top: 4px; border-color: rgba(168, 93, 74, 0.4); color: #d47a66; background: rgba(168, 93, 74, 0.05); flex: none; font-size: 10px;}
+  .stage-btn.del:hover { border-color: var(--red); color: #fff; background: var(--red); }
 
   /* MAIN AREA */
   main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 36px 40px 100px; }
@@ -171,7 +174,6 @@
    * ==============================================
    */
   @media (max-width: 768px) {
-    /* Ajustes de Cabeçalho */
     header {
       flex-direction: column;
       align-items: flex-start;
@@ -180,7 +182,7 @@
     }
     
     .praxs-divider {
-      display: none; /* Remove a barra vertical */
+      display: none; 
     }
     
     .header-text {
@@ -202,7 +204,6 @@
       font-size: 12px;
     }
 
-    /* Alterando o layout flexível (Sidebar x Main) para empilhar verticalmente */
     .app {
       flex-direction: column;
       min-height: auto; 
@@ -212,7 +213,6 @@
        overflow-x: hidden;
     }
 
-    /* Ajustes do Sidebar (Funil) */
     .sidebar {
       width: 100%;
       border-right: none;
@@ -224,7 +224,6 @@
       padding: 14px 20px;
     }
 
-    /* Ajustes da Área Principal */
     main {
       padding: 30px 20px 80px;
       overflow-y: visible; 
@@ -242,7 +241,6 @@
       font-size: 13px;
     }
 
-    /* Formulários e Botões (Ocupar 100% da tela) */
     .form-group select,
     .btn, .btn-ghost {
       width: 100%;
@@ -254,7 +252,6 @@
       gap: 12px;
     }
 
-    /* Cards da Base Premium */
     .base-section {
       padding: 16px;
     }
@@ -272,7 +269,6 @@
       font-size: 11px;
     }
 
-    /* Modais */
     .modal {
       width: 95%;
       padding: 20px;
@@ -285,7 +281,7 @@
     }
 
     .modal-actions {
-      flex-direction: column-reverse; /* Cancelar em baixo, Salvar em cima */
+      flex-direction: column-reverse; 
     }
     
     .btn-modal-cancel, .btn-modal-save {
@@ -568,7 +564,8 @@ function renderFunil() {
         <div class="prospect-notes">${escapeHtml(p.notes || '')}</div>
         <div class="prospect-actions">
           <button class="stage-btn highlight" type="button" onclick="openScriptModal('${id}')">✨ Gerar Script</button>
-          <div style="display:flex; gap:4px; width:100%">${stageBtns}<button class="stage-btn del" type="button" onclick="removeProspect('${id}')">X</button></div>
+          <div style="display:flex; gap:4px; width:100%">${stageBtns}</div>
+          <button class="stage-btn del" type="button" onclick="removeProspect('${id}')">🗑️ Remover Lead</button>
         </div>`;
       group.appendChild(card);
     });
@@ -663,7 +660,7 @@ function copyScript() {
 const MAPA_ESTADOS = {
   "Sudeste": [{uf: "SP", nome: "São Paulo"}, {uf: "RJ", nome: "Rio de Janeiro"}, {uf: "MG", nome: "Minas Gerais"}, {uf: "ES", nome: "Espírito Santo"}],
   "Sul": [{uf: "PR", nome: "Paraná"}, {uf: "SC", nome: "Santa Catarina"}, {uf: "RS", nome: "Rio Grande do Sul"}],
-  "Nordeste": [{uf: "BA", nome: "Bahia"}, {uf: "PE", nome: "Pernambuco"}, {uf: "CE", nome: "Ceará"}, {uf: "RN", nome: "Rio Grande do Norte"}, {uf: "SE", nome: "Sergipe"}, {uf: "AL", nome: "Alagoas"}, {uf: "PB", nome: "Paraíba"}, {uf: "MA", nome: "Maranhão"}, {uf: "PI", nome: "Piauí"}],
+  "Nordeste": [{uf: "BA", nome: "Bahia"}, {uf: "PE", nome: "Pernambuco"}, {uf: "CE", nome: "Ceará"}, {uf: "RN", nome: "Rio Grande do Norte"}, {uf: "SE", reductions: "Sergipe"}, {uf: "AL", nome: "Alagoas"}, {uf: "PB", nome: "Paraíba"}, {uf: "MA", nome: "Maranhão"}, {uf: "PI", nome: "Piauí"}],
   "Centro-Oeste": [{uf: "GO", nome: "Goiás"}, {uf: "MT", nome: "Mato Grosso"}, {uf: "MS", nome: "Mato Grosso do Sul"}, {uf: "DF", nome: "Distrito Federal"}]
 };
 
@@ -809,7 +806,7 @@ async function gerarPlano() {
   addUserMsg(`Buscar inteligência local para: ${segmentos.join(', ')} no estado de ${estadoInput}`);
   showThinking();
 
-  // COMANDO ADICIONADO PARA ROLAR SUAVEMENTE PARA O TOPO
+  // COMANDO PARA ROLAR SUAVEMENTE PARA O TOPO
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const systemPrompt = `Você é um agente de prospecção para arquitetos de food service.
@@ -889,7 +886,6 @@ function showThinking() {
   el.className = 'thinking';
   el.innerHTML = `<div class="thinking-dots"><span></span><span></span><span></span></div><span style="margin-left:8px; color:var(--gold-dim)">A analisar dados da web e a gerar oportunidades personalizadas...</span>`;
   msgs.appendChild(el);
-  // O comando "scrollIntoView" foi removido daqui
 }
 
 function removeThinking() { const el = document.getElementById('thinking'); if (el) el.remove(); }
