@@ -288,11 +288,58 @@
       width: 100%;
     }
   }
+
+
+  /* LOGIN SCREEN */
+  #login-screen {
+    position: fixed; inset: 0; background: var(--bg); z-index: 9998;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .login-box {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 40px 36px; width: 380px; max-width: 92vw;
+    display: flex; flex-direction: column; gap: 20px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.6);
+  }
+  .login-logo { font-family: 'Sora', sans-serif; font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.02em; text-align: center; }
+  .login-logo span { color: var(--gold); }
+  .login-subtitle { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; letter-spacing: .1em; text-transform: uppercase; text-align: center; margin-top: -10px; }
+  .login-field { display: flex; flex-direction: column; gap: 6px; }
+  .login-field label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+  .login-field input { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; font-family: 'Sora', sans-serif; font-size: 14px; border-radius: 4px; outline: none; transition: border-color .2s; width: 100%; }
+  .login-field input:focus { border-color: var(--gold-dim); }
+  .btn-login { width: 100%; padding: 14px; background: var(--gold); color: #0e0f0c; font-weight: 500; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; border: none; cursor: pointer; border-radius: 4px; transition: all .2s; }
+  .btn-login:hover { background: #ffc61a; }
+  .btn-login:disabled { opacity: .5; cursor: not-allowed; }
+  .login-error { font-size: 12px; color: #d47a66; font-family: 'DM Mono', monospace; text-align: center; padding: 10px; background: rgba(168,93,74,.1); border: 1px solid rgba(168,93,74,.3); border-radius: 4px; display: none; }
+  .btn-logout { font-size: 10px; padding: 7px 14px; background: transparent; border: 1px solid var(--border); border-radius: 4px; color: var(--text-muted); font-family: 'DM Mono', monospace; cursor: pointer; transition: all .2s; }
+  .btn-logout:hover { border-color: var(--red); color: #d47a66; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<header>
+
+<!-- TELA DE LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">pr<span>a</span>xs <span style="font-size:14px;color:var(--text-muted);font-weight:300;">leads</span></div>
+    <div class="login-subtitle">Prospecção · Food Service</div>
+    <div class="login-field">
+      <label>E-mail</label>
+      <input type="email" id="login-email" placeholder="seu@email.com" autocomplete="email">
+    </div>
+    <div class="login-field">
+      <label>Senha</label>
+      <input type="password" id="login-senha" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div class="login-error" id="login-error"></div>
+    <button class="btn-login" id="btn-login" type="button">Entrar →</button>
+    <div style="text-align:center; font-size:10px; color:var(--text-muted); font-family:'DM Mono',monospace;">Acesso exclusivo · Método Kitchen Pro</div>
+  </div>
+</div>
+
+<header style="display:none;">
   <a href="https://marciodonlima.github.io/praxs-leads/" style="text-decoration:none;"><div class="praxs-word">pr<span class="a-letter">a</span>xs</div></a>
   <div class="praxs-divider"></div>
   <div class="header-text">
@@ -305,9 +352,10 @@
     Meu Perfil
   </button>
   <div class="status-dot"><div class="dot"></div> operacional</div>
+  <button class="btn-logout" id="btn-logout" type="button">Sair</button>
 </header>
 
-<div class="app">
+<div class="app" style="display:none;">
   <aside class="sidebar">
     <div class="sidebar-header">
       <span class="sidebar-title">Meu funil</span>
@@ -435,6 +483,89 @@
     </div>
   </div>
 </div>
+
+
+<script>
+// =============================================
+// AUTENTICAÇÃO SUPABASE
+// =============================================
+const SUPA_URL = 'https://zkatihqfomtrbbfliwto.supabase.co';
+const SUPA_KEY = 'sb_publishable_Bh5UEhpTNgWAh02sdSfU1w_2ci-EDpQ';
+const { createClient } = supabase;
+const supa = createClient(SUPA_URL, SUPA_KEY);
+
+let currentUser = null;
+
+async function initAuth() {
+  const { data: { session } } = await supa.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    showApp();
+  } else {
+    showLoginScreen();
+  }
+
+  supa.auth.onAuthStateChange((_event, session) => {
+    if (session) {
+      currentUser = session.user;
+      showApp();
+    } else {
+      currentUser = null;
+      showLoginScreen();
+    }
+  });
+}
+
+function showLoginScreen() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.querySelector('header').style.display = 'none';
+  document.querySelector('.app').style.display = 'none';
+}
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.querySelector('header').style.display = 'flex';
+  document.querySelector('.app').style.display = 'flex';
+}
+
+document.getElementById('btn-login').addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const senha = document.getElementById('login-senha').value;
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('btn-login');
+
+  errEl.style.display = 'none';
+  if (!email || !senha) {
+    errEl.textContent = 'Preencha e-mail e senha.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Verificando...';
+
+  const { error } = await supa.auth.signInWithPassword({ email, password: senha });
+
+  btn.disabled = false;
+  btn.textContent = 'Entrar →';
+
+  if (error) {
+    errEl.textContent = 'E-mail ou senha incorretos.';
+    errEl.style.display = 'block';
+  }
+});
+
+document.getElementById('login-senha').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('btn-login').click();
+});
+
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  await supa.auth.signOut();
+});
+
+// Inicializa assim que o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', initAuth);
+</script>
 
 <script>
 // --- FUNÇÕES PRINCIPAIS DO SISTEMA ---
