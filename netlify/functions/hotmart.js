@@ -105,7 +105,7 @@ exports.handler = async function (event) {
         'Authorization': `Bearer ${RESEND_KEY}`
       },
       body: JSON.stringify({
-        from: 'Praxs Leads <noreply@seudominio.com.br>', // troque pelo seu domínio verificado no Resend
+        from: 'Praxs Leads <onboarding@resend.dev>', // troque pelo seu domínio verificado no Resend
         to: email,
         subject: 'Seu acesso ao Praxs Leads está pronto!',
         html: `
