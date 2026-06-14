@@ -1,0 +1,17 @@
+name: Manter Supabase Ativo
+
+on:
+  schedule:
+    # Roda a cada 3 dias às 09:00 UTC (06:00 horário de Brasília)
+    - cron: '0 9 */3 * *'
+  workflow_dispatch: {} # permite rodar manualmente também
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pingar projeto Supabase
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" \
+            "https://zkatihqfomtrbbfliwto.supabase.co/auth/v1/health" \
+            -H "apikey: sb_publishable_Bh5UEhpTNgWAh02sdSfU1w_2ci-EDpQ"
