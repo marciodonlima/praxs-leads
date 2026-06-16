@@ -352,6 +352,7 @@
     Meu Perfil
   </button>
   <div class="status-dot"><div class="dot"></div> operacional</div>
+  <button class="btn-logout" type="button" id="btn-open-help">Ajuda</button>
   <button class="btn-logout" id="btn-logout" type="button">Sair</button>
 </header>
 
@@ -411,6 +412,66 @@
       <div class="messages" id="messages"></div>
     </div>
   </main>
+</div>
+
+<div id="help-modal" class="modal-overlay" style="display:none;">
+  <div class="modal" style="width:640px; max-height:80vh; overflow-y:auto;">
+    <button class="btn-close-x" type="button" id="btn-close-help">&times;</button>
+    <div>
+      <div class="modal-title">📖 Como usar o Praxs Leads</div>
+      <p style="font-size:12px; color:var(--text-dim); margin-top:6px;">Guia rápido para você prospectar com mais eficiência.</p>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:18px; margin-top:8px;">
+
+      <div>
+        <div class="modal-label" style="color:var(--gold);">1. Faça sua busca</div>
+        <p style="font-size:13px; color:var(--text-dim); line-height:1.6; margin-top:4px;">
+          Clique em <strong>"Iniciar prospecção"</strong> na tela inicial. Escolha a <strong>Região</strong> (Sudeste, Sul, Nordeste, Centro-Oeste ou Norte), depois o <strong>Estado</strong> e o <strong>Segmento</strong> (Café, Hamburgueria, Restaurante À la Carte, Buffet Self-Service ou Dark Kitchen). Clique em <strong>"Buscar oportunidades"</strong> — a IA vai analisar a região e trazer prospects reais.
+        </p>
+      </div>
+
+      <div>
+        <div class="modal-label" style="color:var(--gold);">2. Organize seu funil</div>
+        <p style="font-size:13px; color:var(--text-dim); line-height:1.6; margin-top:4px;">
+          Na barra lateral esquerda (<strong>"Meu funil"</strong>) você acompanha quantos prospects estão em cada etapa. Use os cards de resultado para mover os prospects pelas fases conforme avança o contato.
+        </p>
+      </div>
+
+      <div>
+        <div class="modal-label" style="color:var(--gold);">3. Gere scripts de abordagem</div>
+        <p style="font-size:13px; color:var(--text-dim); line-height:1.6; margin-top:4px;">
+          Em cada prospect, clique em <strong>"✨ Gerador de Abordagem"</strong>. Escolha o canal (WhatsApp, e-mail, etc.) e o momento do funil — a IA cria uma mensagem personalizada, que você pode editar livremente antes de enviar.
+        </p>
+      </div>
+
+      <div>
+        <div class="modal-label" style="color:var(--gold);">4. Configure seu perfil</div>
+        <p style="font-size:13px; color:var(--text-dim); line-height:1.6; margin-top:4px;">
+          Clique em <strong>"Meu Perfil"</strong> no topo e preencha seu nome, empresa e contato. Esses dados são usados automaticamente nos scripts gerados, deixando tudo já pronto para enviar. Fica salvo só no seu navegador.
+        </p>
+      </div>
+
+      <div>
+        <div class="modal-label" style="color:var(--gold);">5. Nova busca</div>
+        <p style="font-size:13px; color:var(--text-dim); line-height:1.6; margin-top:4px;">
+          O botão <strong>"Fazer Nova Busca"</strong> aparece no topo e no final da tela de resultado — use para começar uma nova prospecção em outra região ou segmento.
+        </p>
+      </div>
+
+      <div style="background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:14px;">
+        <div style="font-size:11px; color:var(--text-muted); font-family:'DM Mono',monospace; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px;">💡 Dica</div>
+        <p style="font-size:13px; color:var(--text-dim); line-height:1.6; margin:0;">
+          Se a busca demorar ou aparecer aviso de "aquecendo motores", aguarde alguns segundos e tente novamente — o servidor pode estar iniciando.
+        </p>
+      </div>
+
+      <div style="text-align:center; font-size:12px; color:var(--text-muted); font-family:'DM Mono',monospace; padding-top:6px;">
+        Dúvidas ou suporte: entre em contato pelo canal de atendimento do Método Kitchen Pro.
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <div id="profile-modal" class="modal-overlay" style="display:none;">
@@ -576,6 +637,8 @@ let currentLeadForScript = null;
 // EVENT LISTENERS
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-open-profile').addEventListener('click', openProfileModal);
+  document.getElementById('btn-open-help').addEventListener('click', () => { document.getElementById('help-modal').style.display = 'flex'; });
+  document.getElementById('btn-close-help').addEventListener('click', () => { document.getElementById('help-modal').style.display = 'none'; });
   document.getElementById('btn-iniciar-prospeccao').addEventListener('click', showForm);
   document.getElementById('btn-voltar-intro').addEventListener('click', showIntro);
   document.getElementById('btn-buscar').addEventListener('click', gerarPlano);
