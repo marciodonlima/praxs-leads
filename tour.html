@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praxs Leads · Tour</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0e0f0c;--surface:#161812;--surface2:#1e2019;
+    --border:#2e3028;--border2:#3d4035;
+    --gold:#f5b800;--gold-dim:#a67d00;--gold-glow:rgba(245,184,0,0.10);
+    --green:#4a7c59;--green-bright:#6aaa7d;
+    --text:#e8e6de;--text-dim:#8a887e;--text-muted:#555550;--red:#a85d4a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;font-size:15px;font-weight:300;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.6;}
+
+  /* PROGRESS */
+  .progress-bar-wrap{height:2px;background:var(--border);position:fixed;top:0;left:0;right:0;z-index:200;}
+  .progress-bar-fill{height:100%;background:var(--gold);transition:width .4s cubic-bezier(.4,0,.2,1);}
+
+  /* HEADER */
+  .tour-header{padding:24px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;position:sticky;top:0;background:rgba(14,15,12,0.92);backdrop-filter:blur(12px);z-index:100;}
+  .praxs-word{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.02em;text-decoration:none;}
+  .praxs-word .a{color:var(--gold);}
+  .tour-badge{font-size:9px;font-family:'DM Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dim);background:var(--gold-glow);border:1px solid var(--gold-dim);padding:3px 8px;border-radius:2px;}
+  .tour-header-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+  .step-indicator{font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);letter-spacing:.08em;}
+  .step-indicator span{color:var(--gold);}
+  .btn-back-app{font-size:10px;padding:8px 16px;background:transparent;border:1px solid var(--border2);color:var(--text-dim);font-family:'DM Mono',monospace;cursor:pointer;border-radius:2px;transition:all .2s;text-decoration:none;letter-spacing:.08em;text-transform:uppercase;}
+  .btn-back-app:hover{border-color:var(--gold-dim);color:var(--gold);}
+
+  /* MAIN */
+  .tour-wrap{max-width:900px;margin:0 auto;padding:56px 40px 120px;}
+
+  /* STEP */
+  .step{display:none;flex-direction:column;gap:40px;animation:stepIn .4s cubic-bezier(.4,0,.2,1);}
+  .step.active{display:flex;}
+  @keyframes stepIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+
+  .step-eyebrow{display:flex;align-items:center;gap:12px;}
+  .step-num{font-size:9px;font-family:'DM Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);}
+  .step-line{flex:1;height:1px;background:var(--border);}
+  .step-title{font-family:'DM Serif Display',serif;font-size:34px;font-weight:400;line-height:1.2;color:var(--text);}
+  .step-title em{color:var(--gold);font-style:italic;}
+  .step-desc{font-size:15px;color:var(--text-dim);line-height:1.75;max-width:560px;}
+
+  /* MOCKUP */
+  .mockup-window{background:var(--surface);border:1px solid var(--border2);border-radius:10px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6);}
+  .mockup-titlebar{background:var(--surface2);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:8px;}
+  .dot-r{width:10px;height:10px;border-radius:50%;background:#ff5f57;}
+  .dot-y{width:10px;height:10px;border-radius:50%;background:#febc2e;}
+  .dot-g{width:10px;height:10px;border-radius:50%;background:#28c840;}
+  .dot-s{flex:1;}
+  .mockup-url{font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);background:var(--bg);padding:4px 14px;border-radius:4px;border:1px solid var(--border);}
+
+  /* MOCK LOGIN */
+  .mock-login{display:flex;align-items:center;justify-content:center;padding:48px 24px;background:var(--bg);}
+  .mock-login-box{width:320px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:32px 28px;display:flex;flex-direction:column;gap:16px;}
+  .mock-logo{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:#fff;text-align:center;}
+  .mock-logo .g{color:var(--gold);}
+  .mock-sub{font-size:9px;font-family:'DM Mono',monospace;color:var(--text-muted);text-align:center;letter-spacing:.1em;text-transform:uppercase;margin-top:-8px;}
+  .mock-label{font-size:9px;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+  .mock-input{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:10px 12px;font-size:13px;color:var(--text-dim);}
+  .mock-input.f{border-color:var(--gold-dim);}
+  .mock-btn-gold{background:var(--gold);color:#0e0f0c;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:13px;border-radius:4px;text-align:center;margin-top:4px;}
+  .mock-hint{font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);text-align:center;}
+
+  /* MOCK FORM */
+  .mock-form{padding:32px 40px;display:flex;flex-direction:column;gap:22px;}
+  .mock-form-label{font-size:9px;font-family:'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;}
+  .mock-form-label span{color:var(--gold);}
+  .mock-chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .mock-chip{padding:7px 14px;border:1px solid var(--border);border-radius:4px;font-size:12px;color:var(--text-dim);}
+  .mock-chip.s{border-color:var(--gold-dim);color:var(--gold);background:var(--gold-glow);}
+  .mock-select{background:var(--surface);border:1px solid var(--gold-dim);color:var(--text);padding:12px 14px;font-size:13px;border-radius:4px;}
+  .mock-form-actions{display:flex;gap:10px;margin-top:4px;}
+  .mock-btn-ghost{padding:12px 20px;background:transparent;border:1px solid var(--border2);color:var(--text-dim);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;}
+  .mock-btn-search{flex:1;padding:12px;background:var(--gold);color:#0e0f0c;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;text-align:center;font-weight:500;}
+
+  /* MOCK RESULT */
+  .mock-result-wrap{display:flex;}
+  .mock-sidebar{width:190px;flex-shrink:0;border-right:1px solid var(--border);background:var(--surface);padding:16px 14px;display:flex;flex-direction:column;gap:10px;}
+  .mock-sidebar-title{font-size:9px;font-family:'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);}
+  .mock-stage-lbl{font-size:9px;font-family:'DM Mono',monospace;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .mock-pm{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:7px 9px;margin-top:4px;}
+  .mock-pm-name{font-size:11px;color:var(--text);}
+  .mock-pm-meta{font-size:9px;font-family:'DM Mono',monospace;color:var(--text-muted);}
+  .mock-main{flex:1;padding:22px;display:flex;flex-direction:column;gap:14px;overflow:hidden;}
+  .mock-base-title{font-size:9px;font-family:'DM Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dim);padding-bottom:10px;border-bottom:1px solid var(--border);}
+  .mock-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .mock-card{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .mock-card.hl{border-color:var(--gold-dim);}
+  .mock-card-name{font-size:13px;font-weight:500;color:var(--text);}
+  .mock-card-tipo{font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;}
+  .mock-card-oport{font-size:11px;color:var(--text-dim);line-height:1.5;}
+  .mock-card-intel{background:rgba(0,0,0,.2);border-radius:4px;padding:10px;display:flex;flex-direction:column;gap:6px;}
+  .mock-intel{font-size:10px;color:var(--text-dim);line-height:1.4;}
+  .mock-intel strong{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;margin-right:4px;}
+  .intel-d strong{color:#d47a66;}
+  .intel-a strong{color:var(--gold);}
+  .mock-card-actions{display:flex;gap:5px;flex-wrap:wrap;border-top:1px dashed var(--border);padding-top:8px;}
+  .mock-ab{font-size:8px;padding:4px 8px;border:1px solid var(--border2);border-radius:2px;color:var(--text-muted);font-family:'DM Mono',monospace;flex:1;text-align:center;}
+  .mock-ab.gold{border-color:var(--gold-dim);color:var(--gold);background:var(--gold-glow);width:100%;flex:none;padding:6px;font-size:9px;}
+
+  /* MOCK SCRIPT */
+  .mock-script{padding:24px 32px;display:flex;flex-direction:column;gap:16px;}
+  .mock-modal-title{font-size:15px;font-weight:500;color:var(--text);}
+  .mock-modal-sub{font-size:12px;color:var(--gold);font-family:'DM Mono',monospace;margin-top:-8px;}
+  .mock-sc-chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .mock-sc{padding:5px 12px;border:1px solid var(--border);border-radius:4px;font-size:10px;color:var(--text-dim);font-family:'DM Mono',monospace;}
+  .mock-sc.s{border-color:var(--gold-dim);color:var(--gold);background:var(--gold-glow);}
+  .mock-script-out{background:var(--surface2);border:1px dashed var(--gold-dim);border-radius:4px;padding:14px;font-size:12px;color:var(--text-dim);line-height:1.7;}
+  .hn{color:var(--gold);font-weight:500;}
+  .mock-script-acts{display:flex;gap:8px;}
+  .mock-copy{padding:10px 18px;background:var(--gold);color:#0e0f0c;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;}
+  .mock-regen{padding:10px 18px;background:transparent;border:1px solid var(--border2);color:var(--text-dim);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;}
+
+  /* MOCK FUNIL */
+  .mock-funil{padding:24px;display:flex;flex-direction:column;gap:18px;}
+  .mock-f-stage{display:flex;flex-direction:column;gap:8px;}
+  .mock-f-lbl{font-size:9px;font-family:'DM Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);display:flex;align-items:center;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .mock-f-count{background:var(--gold-glow);color:var(--gold-dim);padding:2px 6px;border-radius:2px;font-size:9px;}
+  .mock-f-card{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:10px 12px;display:flex;justify-content:space-between;align-items:flex-start;}
+  .mock-f-name{font-size:12px;font-weight:500;color:var(--text);}
+  .mock-f-meta{font-size:9px;font-family:'DM Mono',monospace;color:var(--text-muted);margin-top:2px;}
+  .tag{font-size:8px;font-family:'DM Mono',monospace;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;border-radius:2px;}
+  .tag-c{background:rgba(74,124,89,.15);color:var(--green-bright);border:1px solid rgba(74,124,89,.3);}
+  .tag-p{background:rgba(245,184,0,.1);color:var(--gold);border:1px solid var(--gold-dim);}
+  .tag-q{background:rgba(74,100,200,.15);color:#8aa4ff;border:1px solid rgba(74,100,200,.3);}
+
+  /* CALLOUTS */
+  .callouts{display:flex;flex-direction:column;gap:12px;}
+  .callout{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;}
+  .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+  .callout-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace;letter-spacing:.04em;}
+  .callout-desc{font-size:13px;color:var(--text-dim);line-height:1.6;}
+  .callout.gold{border-color:var(--gold-dim);background:var(--gold-glow);}
+  .callout.gold .callout-title{color:var(--gold);}
+  .annotation{display:flex;gap:10px;align-items:flex-start;padding:12px 16px;background:rgba(245,184,0,.06);border-left:2px solid var(--gold-dim);border-radius:0 4px 4px 0;}
+  .annotation-arrow{color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;}
+  .annotation-text{font-size:13px;color:var(--text-dim);line-height:1.6;}
+  .annotation-text strong{color:var(--text);font-weight:500;}
+
+  /* NAV */
+  .tour-nav{display:flex;align-items:center;gap:12px;margin-top:8px;}
+  .btn-prev{padding:14px 24px;background:transparent;border:1px solid var(--border2);color:var(--text-dim);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;cursor:pointer;transition:all .2s;}
+  .btn-prev:hover{border-color:var(--gold-dim);color:var(--gold);}
+  .btn-prev:disabled{opacity:.3;cursor:not-allowed;}
+  .btn-prev:disabled:hover{border-color:var(--border2);color:var(--text-dim);}
+  .btn-next{flex:1;padding:14px;background:var(--gold);color:#0e0f0c;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:all .2s;text-align:center;}
+  .btn-next:hover{background:#ffc61a;}
+  .step-dots{display:flex;gap:6px;align-items:center;}
+  .step-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all .3s;cursor:pointer;}
+  .step-dot.active{background:var(--gold);width:18px;border-radius:3px;}
+
+  /* FINAL */
+  .final-screen{text-align:center;padding:24px 0;display:flex;flex-direction:column;align-items:center;gap:24px;}
+  .final-icon{width:64px;height:64px;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;}
+  .final-title{font-family:'DM Serif Display',serif;font-size:30px;color:var(--text);}
+  .final-title em{color:var(--gold);font-style:italic;}
+  .final-desc{font-size:14px;color:var(--text-dim);line-height:1.7;max-width:480px;}
+  .btn-start{padding:16px 40px;background:var(--gold);color:#0e0f0c;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border-radius:2px;text-decoration:none;transition:all .2s;display:inline-block;}
+  .btn-start:hover{background:#ffc61a;}
+
+  @media(max-width:640px){
+    .tour-header{padding:18px 20px;}
+    .tour-wrap{padding:36px 20px 100px;}
+    .step-title{font-size:26px;}
+    .mock-cards-grid{grid-template-columns:1fr;}
+    .mock-result-wrap{flex-direction:column;}
+    .mock-sidebar{width:100%;border-right:none;border-bottom:1px solid var(--border);}
+    .mock-form{padding:24px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar-wrap"><div class="progress-bar-fill" id="pfill"></div></div>
+
+<header class="tour-header">
+  <a href="https://marciodonlima.github.io/praxs-leads/" class="praxs-word">pr<span class="a">a</span>xs</a>
+  <div class="tour-badge">tour guiado</div>
+  <div class="tour-header-right">
+    <div class="step-indicator">passo <span id="hstep">1</span> de 5</div>
+    <a href="https://marciodonlima.github.io/praxs-leads/" class="btn-back-app">← Abrir app</a>
+  </div>
+</header>
+
+<div class="tour-wrap">
+
+  <!-- STEP 1: LOGIN -->
+  <div class="step active" id="step-1">
+    <div>
+      <div class="step-eyebrow"><div class="step-num">Passo 01 de 05</div><div class="step-line"></div></div>
+      <div class="step-title">Acesse com seu <em>login</em></div>
+      <p class="step-desc" style="margin-top:12px;">O Praxs Leads é de acesso exclusivo para quem tem o Método Kitchen Pro. Sua sessão fica salva — sem precisar fazer login toda vez.</p>
+    </div>
+    <div class="mockup-window">
+      <div class="mockup-titlebar"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div><div class="dot-s"></div><div class="mockup-url">marciodonlima.github.io/praxs-leads</div><div class="dot-s"></div></div>
+      <div class="mock-login">
+        <div class="mock-login-box">
+          <div class="mock-logo">pr<span class="g">a</span>xs <span style="font-size:12px;color:var(--text-muted);font-weight:300;">leads</span></div>
+          <div class="mock-sub">Prospecção · Food Service</div>
+          <div><div class="mock-label">E-mail</div><div class="mock-input f">seu@email.com</div></div>
+          <div><div class="mock-label">Senha</div><div class="mock-input">••••••••••</div></div>
+          <div class="mock-btn-gold">Entrar →</div>
+          <div class="mock-hint">Acesso exclusivo · Método Kitchen Pro</div>
+        </div>
+      </div>
+    </div>
+    <div class="callouts">
+      <div class="callout gold">
+        <div class="callout-icon">📧</div>
+        <div>
+          <div class="callout-title">Suas credenciais chegam por e-mail</div>
+          <div class="callout-desc">Logo após a compra, você recebe um e-mail automático com seu e-mail e senha de acesso. Guarde esse e-mail ou troque a senha após o primeiro login.</div>
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-icon">🔒</div>
+        <div>
+          <div class="callout-title">Acesso individual e intransferível</div>
+          <div class="callout-desc">Cada licença é vinculada ao e-mail do comprador. O app não funciona sem login válido — mesmo que alguém tenha o link.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tour-nav">
+      <button class="btn-prev" disabled id="prev-1">← Anterior</button>
+      <div class="step-dots" id="dots-1"></div>
+      <button class="btn-next" id="next-1">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: BUSCA -->
+  <div class="step" id="step-2">
+    <div>
+      <div class="step-eyebrow"><div class="step-num">Passo 02 de 05</div><div class="step-line"></div></div>
+      <div class="step-title">Configure sua <em>busca</em></div>
+      <p class="step-desc" style="margin-top:12px;">Três filtros definem onde e quem você quer prospectar. Em segundos a IA mapeia oportunidades reais na região escolhida.</p>
+    </div>
+    <div class="mockup-window">
+      <div class="mockup-titlebar"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div><div class="dot-s"></div><div class="mockup-url">praxs leads · prospecção</div><div class="dot-s"></div></div>
+      <div class="mock-form">
+        <div><div class="mock-form-label">1. Região Geográfica <span>*</span></div><div class="mock-chips"><div class="mock-chip s">Sudeste</div><div class="mock-chip">Sul</div><div class="mock-chip">Nordeste</div><div class="mock-chip">Centro-Oeste</div><div class="mock-chip">Norte</div></div></div>
+        <div><div class="mock-form-label">2. Estado Foco <span>*</span></div><div class="mock-select">Rio de Janeiro</div></div>
+        <div><div class="mock-form-label">3. Segmento Alvo <span>*</span></div><div class="mock-chips"><div class="mock-chip">Café</div><div class="mock-chip s">Hamburgueria</div><div class="mock-chip">Restaurante À la Carte</div><div class="mock-chip">Buffet Self-Service</div><div class="mock-chip">Dark Kitchen</div></div></div>
+        <div class="mock-form-actions"><div class="mock-btn-ghost">← Voltar</div><div class="mock-btn-search">Buscar oportunidades →</div></div>
+      </div>
+    </div>
+    <div class="callouts">
+      <div class="annotation"><div class="annotation-arrow">→</div><div class="annotation-text"><strong>Clique na região</strong> para ela ficar selecionada (borda dourada). Depois escolha o <strong>Estado</strong> no menu que aparece abaixo. Por fim, selecione o <strong>Segmento</strong> alvo.</div></div>
+      <div class="callout"><div class="callout-icon">⚡</div><div><div class="callout-title">A IA usa os 3 filtros para personalizar os resultados</div><div class="callout-desc">Os prospects retornados são específicos para o estado e segmento escolhidos — com análise de oportunidade, ponto de dor e abordagem recomendada para cada um.</div></div></div>
+    </div>
+    <div class="tour-nav">
+      <button class="btn-prev" id="prev-2">← Anterior</button>
+      <div class="step-dots" id="dots-2"></div>
+      <button class="btn-next" id="next-2">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: RESULTADO -->
+  <div class="step" id="step-3">
+    <div>
+      <div class="step-eyebrow"><div class="step-num">Passo 03 de 05</div><div class="step-line"></div></div>
+      <div class="step-title">Leia os <em>prospects</em></div>
+      <p class="step-desc" style="margin-top:12px;">Cada card traz um negócio real com análise estratégica: o que vender, qual a dor, e como abordar. Adicione ao funil com um clique.</p>
+    </div>
+    <div class="mockup-window">
+      <div class="mockup-titlebar"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div><div class="dot-s"></div><div class="mockup-url">praxs leads · resultado</div><div class="dot-s"></div></div>
+      <div class="mock-result-wrap">
+        <div class="mock-sidebar">
+          <div><div class="mock-sidebar-title">Meu funil</div><div style="font-size:9px;font-family:'DM Mono',monospace;color:var(--gold-dim);background:var(--gold-glow);padding:2px 6px;border-radius:2px;display:inline-block;margin-top:4px;">2 prospects</div></div>
+          <div class="mock-stage-lbl">Primeiro contato</div>
+          <div class="mock-pm"><div class="mock-pm-name">Burger Carioca</div><div class="mock-pm-meta">Hamburgueria · RJ</div></div>
+          <div class="mock-pm" style="margin-top:5px;"><div class="mock-pm-name">Smash do Leblon</div><div class="mock-pm-meta">Hamburgueria · RJ</div></div>
+        </div>
+        <div class="mock-main">
+          <div class="mock-base-title">✦ Base Premium · Hamburguerias · Rio de Janeiro</div>
+          <div class="mock-cards-grid">
+            <div class="mock-card hl">
+              <div><div class="mock-card-name">Burger Carioca</div><div class="mock-card-tipo">Hamburgueria · Botafogo, RJ</div></div>
+              <div class="mock-card-oport">Operação em crescimento, segunda unidade planejada. Cozinha improvisada não acompanha a demanda.</div>
+              <div class="mock-card-intel">
+                <div class="mock-intel intel-d"><strong>Dor:</strong> Fluxo desorganizado gera retrabalho e desperdício na prep.</div>
+                <div class="mock-intel intel-a"><strong>Abordagem:</strong> Mostrar como layout otimizado reduz custo sem ampliar equipe.</div>
+              </div>
+              <div class="mock-card-actions">
+                <div class="mock-ab gold">✨ Gerador de Abordagem</div>
+                <div class="mock-ab">Primeiro contato</div><div class="mock-ab">Proposta</div>
+              </div>
+            </div>
+            <div class="mock-card">
+              <div><div class="mock-card-name">Smash do Leblon</div><div class="mock-card-tipo">Hamburgueria · Leblon, RJ</div></div>
+              <div class="mock-card-oport">Casa nova em bairro premium, lançamento em 3 meses. Buscam identidade visual e eficiência operacional.</div>
+              <div class="mock-card-intel">
+                <div class="mock-intel intel-d"><strong>Dor:</strong> Projeto genérico não reflete o posicionamento premium.</div>
+                <div class="mock-intel intel-a"><strong>Abordagem:</strong> Apresentar cases de hamburguerias premium com ROI demonstrável.</div>
+              </div>
+              <div class="mock-card-actions">
+                <div class="mock-ab gold">✨ Gerador de Abordagem</div>
+                <div class="mock-ab">Primeiro contato</div><div class="mock-ab">Proposta</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callouts">
+      <div class="annotation"><div class="annotation-arrow">→</div><div class="annotation-text">Clique em <strong>"Primeiro contato"</strong>, <strong>"Proposta"</strong> ou outros botões para mover o prospect pelas etapas — ele aparece automaticamente na barra lateral esquerda.</div></div>
+    </div>
+    <div class="tour-nav">
+      <button class="btn-prev" id="prev-3">← Anterior</button>
+      <div class="step-dots" id="dots-3"></div>
+      <button class="btn-next" id="next-3">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: SCRIPT -->
+  <div class="step" id="step-4">
+    <div>
+      <div class="step-eyebrow"><div class="step-num">Passo 04 de 05</div><div class="step-line"></div></div>
+      <div class="step-title">Gere seu <em>script</em> de abordagem</div>
+      <p class="step-desc" style="margin-top:12px;">A IA cria uma mensagem personalizada para cada prospect, no canal certo e no momento certo do funil. Edite, copie e envie.</p>
+    </div>
+    <div class="mockup-window">
+      <div class="mockup-titlebar"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div><div class="dot-s"></div><div class="mockup-url">praxs leads · gerador de abordagem</div><div class="dot-s"></div></div>
+      <div class="mock-script">
+        <div><div class="mock-modal-title">✨ Gerador de Abordagem</div><div class="mock-modal-sub">Burger Carioca</div></div>
+        <div><div class="mock-label" style="font-size:9px;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">1. Canal de Envio</div><div class="mock-sc-chips"><div class="mock-sc s">WhatsApp</div><div class="mock-sc">E-mail</div><div class="mock-sc">Instagram DM</div><div class="mock-sc">LinkedIn</div></div></div>
+        <div><div class="mock-label" style="font-size:9px;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">2. Momento do Funil</div><div class="mock-sc-chips"><div class="mock-sc s">Primeiro contato</div><div class="mock-sc">Follow-up</div><div class="mock-sc">Envio de proposta</div><div class="mock-sc">Pós-reunião</div></div></div>
+        <div class="mock-script-out">Oi! Sou arquiteto especializado em gastronomia — trabalhei com hamburguerias em expansão aqui no Rio.<br><br>Vi que o <span class="hn">Burger Carioca</span> está crescendo em Botafogo. Tenho cases de cozinhas reformuladas que dobraram a capacidade sem aumentar equipe.<br><br>Posso te mandar em 2 min?</div>
+        <div class="mock-script-acts"><div class="mock-copy">Copiar mensagem</div><div class="mock-regen">Gerar novamente</div></div>
+      </div>
+    </div>
+    <div class="callouts">
+      <div class="callout gold"><div class="callout-icon">💡</div><div><div class="callout-title">Preencha "Meu Perfil" para scripts mais personalizados</div><div class="callout-desc">Clique em "Meu Perfil" no topo do app e informe seu nome, escritório e contato. Esses dados entram automaticamente em todas as mensagens geradas.</div></div></div>
+      <div class="annotation"><div class="annotation-arrow">→</div><div class="annotation-text">O texto é <strong>editável</strong> — ajuste o tom antes de copiar. Clique em <strong>"Gerar novamente"</strong> para uma versão diferente.</div></div>
+    </div>
+    <div class="tour-nav">
+      <button class="btn-prev" id="prev-4">← Anterior</button>
+      <div class="step-dots" id="dots-4"></div>
+      <button class="btn-next" id="next-4">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: FUNIL -->
+  <div class="step" id="step-5">
+    <div>
+      <div class="step-eyebrow"><div class="step-num">Passo 05 de 05</div><div class="step-line"></div></div>
+      <div class="step-title">Acompanhe seu <em>funil</em></div>
+      <p class="step-desc" style="margin-top:12px;">A barra lateral organiza todos os seus prospects por etapa. Mova-os conforme avança o relacionamento com cada lead.</p>
+    </div>
+    <div class="mockup-window">
+      <div class="mockup-titlebar"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div><div class="dot-s"></div><div class="mockup-url">praxs leads · meu funil</div><div class="dot-s"></div></div>
+      <div class="mock-funil">
+        <div class="mock-f-stage">
+          <div class="mock-f-lbl">Primeiro contato <div class="mock-f-count">2</div></div>
+          <div class="mock-f-card"><div><div class="mock-f-name">Burger Carioca</div><div class="mock-f-meta">Hamburgueria · Botafogo, RJ</div></div><div class="tag tag-c">Contato</div></div>
+          <div class="mock-f-card"><div><div class="mock-f-name">Cantina Paulista</div><div class="mock-f-meta">Restaurante · SP</div></div><div class="tag tag-c">Contato</div></div>
+        </div>
+        <div class="mock-f-stage">
+          <div class="mock-f-lbl">Proposta enviada <div class="mock-f-count">1</div></div>
+          <div class="mock-f-card"><div><div class="mock-f-name">Smash do Leblon</div><div class="mock-f-meta">Hamburgueria · Leblon, RJ</div></div><div class="tag tag-p">Proposta</div></div>
+        </div>
+        <div class="mock-f-stage">
+          <div class="mock-f-lbl">Qualificando <div class="mock-f-count">1</div></div>
+          <div class="mock-f-card"><div><div class="mock-f-name">Café Bravo</div><div class="mock-f-meta">Café · Belo Horizonte, MG</div></div><div class="tag tag-q">Qualif.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="callouts">
+      <div class="callout"><div class="callout-icon">🔄</div><div><div class="callout-title">Faça novas buscas para encher o funil</div><div class="callout-desc">Use <strong>"Fazer Nova Busca"</strong> para prospectar em outras regiões ou segmentos. Os prospects de buscas anteriores ficam salvos no funil.</div></div></div>
+    </div>
+    <div class="final-screen">
+      <div class="final-icon">✓</div>
+      <div class="final-title">Tour <em>concluído!</em></div>
+      <div class="final-desc">Você já sabe como buscar oportunidades, ler os prospects, gerar scripts e organizar seu funil. Agora é hora de prospectar.</div>
+      <a href="https://marciodonlima.github.io/praxs-leads/" class="btn-start">Abrir o Praxs Leads →</a>
+    </div>
+    <div class="tour-nav">
+      <button class="btn-prev" id="prev-5">← Anterior</button>
+      <div class="step-dots" id="dots-5"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const TOTAL = 5;
+  let cur = 1;
+
+  function goTo(n) {
+    if (n < 1 || n > TOTAL) return;
+    document.getElementById('step-' + cur).classList.remove('active');
+    cur = n;
+    document.getElementById('step-' + cur).classList.add('active');
+    updateUI();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateUI() {
+    document.getElementById('pfill').style.width = (cur / TOTAL * 100) + '%';
+    document.getElementById('hstep').textContent = cur;
+    for (let s = 1; s <= TOTAL; s++) {
+      const el = document.getElementById('dots-' + s);
+      if (!el) continue;
+      el.innerHTML = '';
+      for (let d = 1; d <= TOTAL; d++) {
+        const dot = document.createElement('div');
+        dot.className = 'step-dot' + (d === cur ? ' active' : '');
+        const t = d;
+        dot.addEventListener('click', () => goTo(t));
+        el.appendChild(dot);
+      }
+      const prev = document.getElementById('prev-' + s);
+      if (prev) prev.disabled = (cur === 1);
+    }
+  }
+
+  for (let s = 1; s <= TOTAL; s++) {
+    const nx = document.getElementById('next-' + s);
+    const pv = document.getElementById('prev-' + s);
+    if (nx) nx.addEventListener('click', () => goTo(cur + 1));
+    if (pv) pv.addEventListener('click', () => goTo(cur - 1));
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') goTo(cur + 1);
+    if (e.key === 'ArrowLeft')  goTo(cur - 1);
+  });
+
+  updateUI();
+</script>
+</body>
+</html>
