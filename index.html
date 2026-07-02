@@ -961,10 +961,8 @@ async function gerarPlano() {
       if (!prospects) return;
 
       const prospectsFiltrados = prospects.filter(p => {
-        const abr = (p.abrangencia || '').toUpperCase();
-        const cid = (p.cidade || '').toUpperCase();
-        const est = (p.estado || '').toUpperCase();
-        return abr.includes('NACIONAL') || abr.includes(estadoInput) || est === estadoInput || est.includes(estadoInput);
+        const est = (p.estado || '').trim().toUpperCase();
+        return est === estadoInput.trim().toUpperCase();
       });
 
       if (prospectsFiltrados.length === 0) return;
