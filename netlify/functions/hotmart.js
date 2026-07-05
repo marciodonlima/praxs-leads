@@ -114,7 +114,7 @@ exports.handler = async function (event) {
             <p>Seu acesso à ferramenta de prospecção para Food Service está liberado.</p>
             <div style="background:#1a1b18;border:1px solid #333;border-radius:8px;padding:20px;margin:24px 0;">
               <p style="margin:0 0 8px;color:#888;font-size:12px;font-family:monospace;text-transform:uppercase;letter-spacing:.1em;">Seus dados de acesso</p>
-              <p style="margin:4px 0;"><strong>Link:</strong> <a href="https://marciodonlima.github.io/praxs-leads/" style="color:#c9a84c;">praxs leads</a></p>
+              <p style="margin:4px 0;"><strong>Link:</strong> <a href="https://leads.praxs.com.br/" style="color:#c9a84c;">praxs leads</a></p>
               <p style="margin:4px 0;"><strong>E-mail:</strong> ${email}</p>
               <p style="margin:4px 0;"><strong>Senha:</strong> <code style="background:#333;padding:2px 8px;border-radius:4px;">${senha}</code></p>
             </div>
